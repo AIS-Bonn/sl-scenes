@@ -27,7 +27,6 @@ def setup_table_scene(cfg, scene):
 
     print("scene setup...")
     scene.ambient_light = AMBIENT_LIGHT
-    scene.set_camera_look_at(position=CAM_POS, look_at=CAM_LOOKAT)
     scene.light_map = get_default_light_map()
     scene.choose_random_light_position()
     scene.background_plane_size = torch.tensor([10.0, 10.0])
@@ -53,4 +52,4 @@ def setup_table_scene(cfg, scene):
         obj.set_pose(p)
         scene.add_object(obj)
 
-    return scene
+    return scene, [(CAM_POS, CAM_LOOKAT)]
