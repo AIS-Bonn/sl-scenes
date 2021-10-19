@@ -1,19 +1,14 @@
 import stillleben as sl
-import pathlib
-import random
-import torch
-from PIL import Image
 from collections import namedtuple
 from pathlib import Path
+import torch
 
-
+MESH_BASE_DIR = Path(".") / "external_data"
 FLAG_CONCAVE = (1 << 0)
-
 ObjectInfo = namedtuple('ObjectInfo', ['name', 'mesh_fp', 'weight', 'flags', 'metallic', 'roughness', 'scale'])
 
 # source: http://www.ycbbenchmarks.com/wp-content/uploads/2015/09/object-list-Sheet1.pdf
 # BOP models use millimeter units for some strange reason. sl is completely metric, so scale accordingly.
-
 OBJECT_INFO = [
     ObjectInfo('002_master_chef_can',   'ycbv_models/models_fine/obj_000001.ply',         0.414, 0,             0.6, 0.2, 0.001),
     ObjectInfo('003_cracker_box',       'ycbv_models/models_fine/obj_000002.ply',         0.411, 0,             0.1, 0.5, 0.001),
@@ -36,13 +31,13 @@ OBJECT_INFO = [
     ObjectInfo('051_large_clamp',       'ycbv_models/models_fine/obj_000019.ply',         0.125, 0,             0.1, 0.5, 0.001),
     ObjectInfo('052_extra_large_clamp', 'ycbv_models/models_fine/obj_000020.ply',         0.202, 0,             0.1, 0.5, 0.001),
     ObjectInfo('061_foam_brick',        'ycbv_models/models_fine/obj_000021.ply',         0.028, 0,             0.1, 0.7, 0.001),
+    ObjectInfo('table',                 'other_models/table/table.obj',                  20.000, 0,             0.3, 0.5, 0.010)
     #ObjectInfo('062_dice',              'other_models/bowling_ball/ball.obj',            10.000, 0,             0.3, 0.1, 1.000)
 ]
 
-OBJECT_NAMES = [ obj.name for obj in OBJECT_INFO ]
-RESOLUTION = (1920, 1080)
-INTRINSICS = (1066.778, 1067.487, 312.9869, 241.3109)
-
+# pre-defined object sets (TODO improve efficiency?)
+YCBV_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
+TABLE = [obj for obj in OBJECT_INFO if obj.name == "table"]
 
 def mesh_flags(info : ObjectInfo):
     if info.flags >= FLAG_CONCAVE:
@@ -51,58 +46,31 @@ def mesh_flags(info : ObjectInfo):
         return sl.Mesh.Flag.PHYSICS_FORCE_CONVEX_HULL
 
 
-def run():
-    ibl_path = Path(".") / "external_data" / "ibl" / "Chiricahua_Plaza" / "Chiricahua_Plaza.ibl"
-    mesh_path = Path(".") / "external_data"
-
-    print("scene setup...")
-    sl.init() # use sl.init_cuda() for CUDA interop
-    scene = sl.Scene(RESOLUTION)
-    #scene.set_camera_intrinsics(*INTRINSICS)
-    #scene.ambient_light = torch.tensor([0.7, 0.7, 0.7])
-    #scene.set_camera_look_at(position=torch.Tensor([1., 0., 0.]), look_at=torch.Tensor([0, 0, 0]))
-    scene.light_map = sl.LightMap(ibl_path)
-    #scene.choose_random_light_position()
-
-    scene.background_plane_size = torch.tensor([3.0, 3.0])
-    scene.background_color = torch.tensor([0.1, 0.1, 0.1, 1.0])
-
-    # Load all meshes
-    print("loading meshes...")
-    ycb_mesh_paths = [ (mesh_path / obj.mesh_fp).resolve() for obj in OBJECT_INFO]
-    mesh_scales = [obj.scale for obj in OBJECT_INFO]
-    flags = [ mesh_flags(info) for info in OBJECT_INFO[1:] ]
-    meshes = sl.Mesh.load_threaded(filenames=ycb_mesh_paths, flags=flags)
+def load_meshes(objects, class_index_start=0):
+    '''
+    Loads the meshes corresponding to given namedtuples 'objects'.
+    :param objects: The object information of the meshes to be loaded.
+    :param class_index_start: If specified, class index values are assigned starting from this number.
+    :return: The loaded meshes as a list, or the loaded mesh object itself if it's only one.
+    '''
+    paths = [(MESH_BASE_DIR / obj.mesh_fp).resolve() for obj in objects]
+    scales = [obj.scale for obj in objects]
+    flags = [mesh_flags(obj) for obj in objects]
+    meshes = sl.Mesh.load_threaded(filenames=paths, flags=flags)
 
     # Setup class IDs
-    for i, (mesh, scale) in enumerate(zip(meshes, mesh_scales)):
+    for i, (mesh, scale) in enumerate(zip(meshes, scales)):
         pt = torch.eye(4)
         pt[:3,:3] *= scale
         mesh.pretransform = pt
-        mesh.class_index = i+1
+        mesh.class_index = class_index_start+i+1
 
-    for mesh in random.sample(meshes[-10:], 10):
-        obj = sl.Object(mesh)
-        scene.add_object(obj)
-        print(obj.mass)
+    return meshes if len(meshes) != 1 else meshes[0]
 
-    # Let them fall in a heap
-    scene.simulate_tabletop_scene()
 
-    # Display interactive viewer
-    sl.view(scene)
-
-    # Render a frame
-    renderer = sl.RenderPass()
-    result = renderer.render(scene)
-
-    # Save as JPEG
-    # Image.fromarray(result.rgb()[:,:,:3].cpu().numpy()).save('rgb.jpeg')
-
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description=__doc__)
-    args = parser.parse_args()
-
-    run()
+def load_table_scenario_meshes():
+    '''
+    Loads the meshes required for the table scenario: A table and the YCB-Video meshes.
+    :return: The loaded meshes as a tuple: (table_mesh, ycb_video_meshes)
+    '''
+    return load_meshes(TABLE), load_meshes(YCBV_OBJECTS, class_index_start=1)
