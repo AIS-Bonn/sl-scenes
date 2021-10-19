@@ -3,7 +3,7 @@ from collections import namedtuple
 from pathlib import Path
 import torch
 
-MESH_BASE_DIR = Path(".") / "external_data"
+MESH_BASE_DIR = Path(".") / "external_data" / "object_models"
 FLAG_CONCAVE = (1 << 0)
 ObjectInfo = namedtuple('ObjectInfo', ['name', 'mesh_fp', 'weight', 'flags', 'metallic', 'roughness', 'scale'])
 
