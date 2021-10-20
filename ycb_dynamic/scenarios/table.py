@@ -3,6 +3,8 @@ import random
 import torch
 from ycb_dynamic.lighting import get_default_light_map
 from ycb_dynamic.object_models import load_table_scenario_meshes
+from ycb_dynamic.camera import Camera
+from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene
 
 
 AMBIENT_LIGHT = torch.tensor([0.7, 0.7, 0.7])
@@ -39,9 +41,11 @@ def setup_table_scene(cfg, scene):
     # place the table into the scene
     table = sl.Object(table_mesh)
     table.set_pose(TABLE_POSE)
+    add_obj_to_scene(scene, table)
     scene.add_object(table)
 
     # drop 10 random YCB-Video objects onto the table
+    ycb_objects = []
     for mesh in random.sample(obj_meshes, 10):
         obj = sl.Object(mesh)
         p = obj.pose()
@@ -50,6 +54,11 @@ def setup_table_scene(cfg, scene):
         z = random.uniform(DROP_LIMITS["z_min"], DROP_LIMITS["z_max"])
         p[:3, 3] = torch.tensor([x, y, z])
         obj.set_pose(p)
-        scene.add_object(obj)
+        ycb_objects.append(obj)
+        add_obj_to_scene(scene, obj)
 
-    return scene, [(CAM_POS, CAM_LOOKAT)]
+    main_cam = Camera("main", CAM_POS, CAM_LOOKAT, moving=False)
+    table_scenario = Scenario(name="Table", scene=scene, cameras=[main_cam],
+                              static_objects=[table], dynamic_objects=[ycb_objects])
+
+    return table_scenario
