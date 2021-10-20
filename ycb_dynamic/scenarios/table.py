@@ -38,9 +38,10 @@ def setup_table_scene(cfg, scene):
     print("loading objects...")
     table_mesh, obj_meshes = load_table_scenario_meshes()
 
-    # place the table into the scene
+    # place the static objects (table) into the scene
     table = sl.Object(table_mesh)
     table.set_pose(TABLE_POSE)
+    table.static = True
     add_obj_to_scene(scene, table)
     scene.add_object(table)
 
@@ -59,6 +60,6 @@ def setup_table_scene(cfg, scene):
 
     main_cam = Camera("main", CAM_POS, CAM_LOOKAT, moving=False)
     table_scenario = Scenario(name="Table", scene=scene, cameras=[main_cam],
-                              static_objects=[table], dynamic_objects=[ycb_objects])
+                              static_objects=[table], dynamic_objects=ycb_objects)
 
     return table_scenario

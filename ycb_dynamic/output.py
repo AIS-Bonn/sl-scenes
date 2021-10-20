@@ -128,6 +128,8 @@ class Writer(object):
 
     def write_frame(self, scenario : Scenario, result : sl.RenderPassResult):
 
+        scene = scenario.scene
+
         # RGB
         #t0 = time.time()
         rgb = result.rgb()[:,:,:3].cpu().contiguous()
@@ -220,11 +222,14 @@ class Writer(object):
         self.idx += 1
 
 
-    def assemble_rgb_video(self, fps):
+    def assemble_rgb_video(self, in_fps, out_fps):
         import glob
         from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
+        import moviepy.video.fx.all as vfx
 
-        rgb_frames = glob.glob(str(self.path / "rgb" / "*.jpg"))
-        rgb_clip = ImageSequenceClip(rgb_frames, fps=fps)
+        rgb_frames = sorted(glob.glob(str(self.path / "rgb" / "*.jpg")))
+        rgb_clip = ImageSequenceClip(rgb_frames, fps=in_fps)
+        rgb_clip = rgb_clip.set_fps(out_fps)
+        rgb_clip = rgb_clip.fx(vfx.speedx, out_fps / in_fps)  # both speedup and set_fps needed for re-setting FPS
         rgb_clip.write_videofile(str(self.path / "rgb_video.mp4"))
         rgb_clip.close()
