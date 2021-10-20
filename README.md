@@ -9,7 +9,7 @@
 ### Basic Usage
 
 ```python
-python run.py <scenario>
+python run.py --scenario <scenario>
 ```
 
 - Replace `<scenario>` with the scenario you'd like to render.
