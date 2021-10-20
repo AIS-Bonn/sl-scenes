@@ -1,13 +1,13 @@
 import stillleben as sl
 import random
 import torch
+import numpy as np
 from ycb_dynamic.lighting import get_default_light_map
-from ycb_dynamic.object_models import load_table_scenario_meshes
+from ycb_dynamic.object_models import load_table_and_ycbv
 from ycb_dynamic.camera import Camera
 from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene
 
 
-AMBIENT_LIGHT = torch.tensor([0.7, 0.7, 0.7])
 CAM_POS = torch.Tensor([0.5, 2.4, 1.5])
 CAM_LOOKAT = torch.Tensor([0, 0, 1.1])
 TABLE_POSE = torch.tensor([[0, 0, 1,    0],
@@ -28,26 +28,25 @@ def setup_table_scene(cfg, scene):
     '''
 
     print("scene setup...")
-    scene.ambient_light = AMBIENT_LIGHT
+    scene.ambient_light = torch.tensor([0.7, 0.7, 0.7])
     scene.light_map = get_default_light_map()
     scene.choose_random_light_position()
-    scene.background_plane_size = torch.tensor([10.0, 10.0])
-    scene.background_color = torch.tensor([0.1, 0.1, 0.1, 1.0])
+    #scene.background_plane_size = torch.tensor([10.0, 10.0])
+    #scene.background_color = torch.tensor([0.1, 0.1, 0.1, 1.0])
 
 
     print("loading objects...")
-    table_mesh, obj_meshes = load_table_scenario_meshes()
+    table_mesh, obj_meshes = load_table_and_ycbv()
 
     # place the static objects (table) into the scene
     table = sl.Object(table_mesh)
     table.set_pose(TABLE_POSE)
     table.static = True
     add_obj_to_scene(scene, table)
-    scene.add_object(table)
 
     # drop 10 random YCB-Video objects onto the table
-    ycb_objects = []
-    for mesh in random.sample(obj_meshes, 10):
+    dynamic_objects = []
+    for mesh in random.choices(obj_meshes, k=10):
         obj = sl.Object(mesh)
         p = obj.pose()
         x = random.uniform(DROP_LIMITS["x_min"], DROP_LIMITS["x_max"])
@@ -55,11 +54,11 @@ def setup_table_scene(cfg, scene):
         z = random.uniform(DROP_LIMITS["z_min"], DROP_LIMITS["z_max"])
         p[:3, 3] = torch.tensor([x, y, z])
         obj.set_pose(p)
-        ycb_objects.append(obj)
+        dynamic_objects.append(obj)
         add_obj_to_scene(scene, obj)
 
     main_cam = Camera("main", CAM_POS, CAM_LOOKAT, moving=False)
     table_scenario = Scenario(name="Table", scene=scene, cameras=[main_cam],
-                              static_objects=[table], dynamic_objects=ycb_objects)
+                              static_objects=[table], dynamic_objects=dynamic_objects)
 
     return table_scenario

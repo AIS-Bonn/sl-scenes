@@ -25,19 +25,24 @@ OBJECT_INFO = [
     ObjectInfo('024_bowl',              'ycbv_models/models_fine/obj_000013.ply',         0.147, FLAG_CONCAVE,  0.6, 0.3, 0.001),
     ObjectInfo('025_mug',               'ycbv_models/models_fine/obj_000014.ply',         0.118, FLAG_CONCAVE,  0.6, 0.3, 0.001),
     ObjectInfo('035_power_drill',       'ycbv_models/models_fine/obj_000015.ply',         0.895, FLAG_CONCAVE,  0.1, 0.6, 0.001),
-    ObjectInfo('036_wood_block',        'ycbv_models/models_fine/obj_000016.ply',         0.729, 0,             0.3, 0.5, 0.001),
+    ObjectInfo('036_wood_block',        'ycbv_models/models_fine/obj_000016_rotated.ply', 0.729, 0,             0.3, 0.5, 0.001),  # edited
     ObjectInfo('037_scissors',          'ycbv_models/models_fine/obj_000017.ply',         0.082, 0,             0.1, 0.5, 0.001),
     ObjectInfo('040_large_marker',      'ycbv_models/models_fine/obj_000018.ply',         0.016, 0,             0.1, 0.5, 0.001),
     ObjectInfo('051_large_clamp',       'ycbv_models/models_fine/obj_000019.ply',         0.125, 0,             0.1, 0.5, 0.001),
     ObjectInfo('052_extra_large_clamp', 'ycbv_models/models_fine/obj_000020.ply',         0.202, 0,             0.1, 0.5, 0.001),
     ObjectInfo('061_foam_brick',        'ycbv_models/models_fine/obj_000021.ply',         0.028, 0,             0.1, 0.7, 0.001),
-    ObjectInfo('table',                 'other_models/table/table.obj',                  20.000, 0,             0.3, 0.5, 0.010)
+    ObjectInfo('table',                 'other_models/table/table.obj',                  30.000, 0,             0.3, 0.5, 0.010),
+    ObjectInfo('bowling_ball',          'other_models/bowling_ball/ball_centered.obj',   10.000, 0,             0.3, 0.1, 0.010),  # https://free3d.com/3d-model/-bowling-ball-v1--953922.html
+    ObjectInfo('beach_ball',            'other_models/beach_ball/beach_ball_centered.obj',0.100, 0,             0.3, 0.1, 0.010),  # https://free3d.com/3d-model/beach-ball-v2--259926.html
     #ObjectInfo('062_dice',              'other_models/bowling_ball/ball.obj',            10.000, 0,             0.3, 0.1, 1.000)
 ]
 
-# pre-defined object sets (TODO improve efficiency?)
+# pre-defined object sets (TODO use mapping/frozendict?)
 YCBV_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
 TABLE = [obj for obj in OBJECT_INFO if obj.name == "table"]
+BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
+BEACH_BALL = [obj for obj in OBJECT_INFO if obj.name == "beach_ball"]
+WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
 
 def mesh_flags(info : ObjectInfo):
     if info.flags >= FLAG_CONCAVE:
@@ -53,6 +58,8 @@ def load_meshes(objects, class_index_start=0):
     :param class_index_start: If specified, class index values are assigned starting from this number.
     :return: The loaded meshes as a list, or the loaded mesh object itself if it's only one.
     '''
+
+    # TODO create a class that automatically increments class idx, so that it doesn't have to be passed as argument
     paths = [(MESH_BASE_DIR / obj.mesh_fp).resolve() for obj in objects]
     scales = [obj.scale for obj in objects]
     flags = [mesh_flags(obj) for obj in objects]
@@ -68,9 +75,15 @@ def load_meshes(objects, class_index_start=0):
     return meshes if len(meshes) != 1 else meshes[0]
 
 
-def load_table_scenario_meshes():
+def load_table_and_ycbv():
     '''
     Loads the meshes required for the table scenario: A table and the YCB-Video meshes.
     :return: The loaded meshes as a tuple: (table_mesh, ycb_video_meshes)
     '''
     return load_meshes(TABLE), load_meshes(YCBV_OBJECTS, class_index_start=1)
+
+
+def load_bowling():
+    return load_meshes(TABLE),\
+           load_meshes(BOWLING_BALL, class_index_start=1),\
+           load_meshes(WOOD_BLOCK, class_index_start=2)

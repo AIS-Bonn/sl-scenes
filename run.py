@@ -1,17 +1,19 @@
+import time
+
 from pathlib import Path
 from contextlib import ExitStack
 import tqdm
-
 import stillleben as sl
 
 from ycb_dynamic.scenarios.table import setup_table_scene
+from ycb_dynamic.scenarios.bowling import setup_bowling_scene
 from ycb_dynamic.output import Writer
 
 
 # ==============================================================================
 
 
-SCENARIOS = { "table": setup_table_scene }
+SCENARIOS = { "table": setup_table_scene, "bowling": setup_bowling_scene }
 
 
 # ==============================================================================
@@ -25,33 +27,46 @@ def main(cfg):
 
     # preparation
     Path(cfg.out_path).mkdir(exist_ok=True, parents=True)
-    if cfg.no_cuda:
+    if cfg.no_cuda or cfg.viewer:
         sl.init()
     else:
         sl.init_cuda()
     renderer = sl.RenderPass()
 
-    # set up scenarios and generate data
-    scenario_ids = SCENARIOS.keys() if cfg.scenario == "all" else [cfg.scenario]
-    for it in range(cfg.iterations):
-        for scenario_id in scenario_ids:
-            scene = sl.Scene(cfg.resolution)  # (re-)initialize scene
-            scenario = SCENARIOS[scenario_id](cfg, scene)  # populate scene according to scenario
-            run_and_render_scene(cfg, renderer, scenario, it)
+    if cfg.viewer:  # load scenario and view
+        scene = sl.Scene(cfg.resolution)
+        scenario = SCENARIOS[cfg.scenario](cfg, scene)
+        view_scenario(cfg, renderer, scenario)
+
+    else: # set up scenarios and generate data
+        print(f"will generate {cfg.iterations} episodes per scenario")
+        scenario_ids = SCENARIOS.keys() if cfg.scenario == "all" else [cfg.scenario]
+        for it in range(cfg.iterations):
+            for scenario_id in scenario_ids:
+                scene = sl.Scene(cfg.resolution)  # (re-)initialize scene
+                scenario = SCENARIOS[scenario_id](cfg, scene)  # populate scene according to scenario
+                run_and_render_scenario(cfg, renderer, scenario, it)
 
     return
 
 
-def run_and_render_scene(cfg, renderer, scenario, it):
+def view_scenario(cfg, renderer, scenario):
+    scene = scenario.scene
+    view_cam = scenario.cameras[0]
+    scene.set_camera_look_at(position=view_cam.pos, look_at=view_cam.lookat)
+    renderer.render(scene)
+    sl.view(scene)
+
+
+def run_and_render_scenario(cfg, renderer, scenario, it):
     '''
     TODO Doc
     '''
 
-    print(f"iteration {it}, scenario '{scenario.name}': "
-          f"executing {cfg.sim_steps_per_ep} sim steps and generating {cfg.frames} frames")
+    frame_str = "" if cfg.no_gen else f" and generating {cfg.frames} frames"
+    print(f"iteration {it}, scenario '{scenario.name}': executing {cfg.sim_steps_per_ep} sim steps{frame_str}")
 
     scene = scenario.scene
-    scene.load_physics()
     cameras = scenario.cameras
     writers = [Writer(Path(cfg.out_path) / f"{it:06}_{scenario.name}_{cam.name}") for cam in cameras]
 
@@ -67,13 +82,15 @@ def run_and_render_scene(cfg, renderer, scenario, it):
                 for writer, cam in zip(writers, cameras):
                     scene.set_camera_look_at(position=cam.pos, look_at=cam.lookat)
                     result = renderer.render(scene)
-                    writer.write_frame(scenario, result)
+                    if not cfg.no_gen:
+                        writer.write_frame(scenario, result)
                     cam.step()  # advance camera for next step if it's a moving one
 
             # sim step
             scene.simulate(1.0 / cfg.sim_steps_per_sec)
+            #time.sleep(10)
 
-        if cfg.assemble_rgb:
+        if cfg.assemble_rgb and not cfg.no_gen:
             for writer in writers:
                 writer.assemble_rgb_video(in_fps=cfg.sim_fps, out_fps=cfg.sim_fps)
 
@@ -89,6 +106,9 @@ if __name__ == "__main__":
     parser.add_argument("--no-cuda", action="store_true",
                         help="if specified, starts SL in CPU mode."
                              "This is useful if viewing a scene using a different graphics device")
+    parser.add_argument("--no-gen", action="store_true", help="if specified, only simulates (no data saving)")
+    parser.add_argument("--viewer", action="store_true",
+                        help="if specified, opens the viewer to view the scenarios rather than generating data")
     parser.add_argument("--iterations", type=int, default=1,
                         help="number of episodes to generate per scenario")
     parser.add_argument("--scenario", type=str, choices=list(SCENARIOS.keys()) + ["all"],
@@ -109,8 +129,6 @@ if __name__ == "__main__":
     if cfg.iterations < 1:
         print("parameter 'iterations' < 1, exiting...")
         exit(0)
-    else:
-        print(f"will generate {cfg.iterations} episodes per scenario")
 
     if cfg.out_path == "":
         import time
