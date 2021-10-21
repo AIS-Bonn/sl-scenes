@@ -36,11 +36,11 @@ WOOD_BLOCK_POSES = [
     torch.tensor([[1, 0, 0, 0], [0, 1, 0, -0.20], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0.20], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0], [0, 0, 1, -0.11], [0, 1, 0, 1.38], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0], [0, 0, 1, 0.11], [0, 1, 0, 1.38], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0], [0, 0, 1, -0.11], [0, -1, 0, 1.38], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0], [0, 0, 1, 0.11], [0, -1, 0, 1.38], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0], [0, 1, 0, -0.1], [0, 0, 1, 1.53], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0.1], [0, 0, 1, 1.53], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 1.68], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 1.68], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.83], [0, 0, 0, 1]]),
 ]
 
@@ -207,7 +207,7 @@ OBJECT_INFO = [
     # ObjectInfo('036_wood_block',        'ycbv_models/models_fine/obj_000016_rotated.ply', 0.729, 0,             0.3, 0.5, 0.001),  # edited
     ObjectInfo(
         "036_wood_block",
-        "ycbv_models/models_fine/obj_000016.ply",
+        "ycbv_models/models_fine/obj_000016_rotated.ply",
         0.729,
         0,
         0.3,
@@ -262,8 +262,7 @@ OBJECT_INFO = [
     ObjectInfo("table", "other_models/table/table.obj", 30.000, 0, 0.3, 0.5, 0.010),
     ObjectInfo(
         "bowling_ball",
-        # "other_models/bowling_ball/ball_centered.obj",
-        "other_models/bowling_ball/ball.obj",
+        "other_models/bowling_ball/ball_centered.obj",
         10.000,
         0,
         0.3,
