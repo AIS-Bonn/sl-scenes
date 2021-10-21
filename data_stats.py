@@ -9,6 +9,7 @@ from tqdm import tqdm
 import json
 import argparse
 import numpy as np
+import pandas as pd
 
 import ycb_dynamic.utils.utils as utils
 
@@ -44,7 +45,8 @@ class DatasetStats:
             "freq_objects": []
         }
         self.info_stats = {
-            "num_annotated_pixels": [],
+            "num_pixels": [],
+            "bbox_size": [],
             "pixel_visibility": [],
             "bbox_visibility": []
         }
@@ -70,8 +72,8 @@ class DatasetStats:
 
         # accumulating
         gt_stats = copy.deepcopy(self.gt_stats)
-        gt_stats["num_frames"].append(num_frames)
-        gt_stats["num_instances"].append(num_instances)
+        gt_stats["num_frames"] = num_frames
+        gt_stats["num_instances"] = num_instances
         gt_stats["freq_objects"].append({int(id): int(count) for id, count in zip(unique_ids, counts)})
 
         return gt_stats
@@ -86,17 +88,19 @@ class DatasetStats:
 
         # NOTE: What frequency do we want, framewise or sequence wise?. Let's go sequencewise for now
         # fetching framewise pixel and bbox information
-        cur_pixels, cur_pixel_vis, cur_bbox_vis = [], [], []
+        cur_pixels, cur_bbox, cur_pixel_vis, cur_bbox_vis = [], [], [], []
         for _, data in info_data.items():
             for obj in data:
                 cur_pixels.append(obj["px_count_all"])
+                cur_bbox.append(obj["bbox_obj"][2] * obj["bbox_obj"][3])
                 cur_pixel_vis.append(obj["visib_fract"])
                 cur_bbox_vis.append(
                         self._get_bbox_vis(bbox=obj["bbox_obj"], bbox_vis=obj["bbox_visib"])
                     )
 
         info_stats = copy.deepcopy(self.info_stats)
-        info_stats["num_annotated_pixels"].append( np.mean(cur_pixels) )
+        info_stats["num_pixels"].append( np.mean(cur_pixels) )
+        info_stats["bbox_size"].append( np.mean(cur_bbox) )
         info_stats["pixel_visibility"].append( np.mean(cur_pixel_vis) )
         info_stats["bbox_visibility"].append( np.mean(cur_bbox_vis) )
 
@@ -130,9 +134,44 @@ class DatasetStats:
     def compute_avg_stats(self):
         """ Computing overall average stats considering all sequences """
 
-        a = self.all_stats
+        stats = self.all_stats
+        df = pd.DataFrame.from_dict(self.all_stats, orient='index')
+        df.reset_index(level=0, inplace=True)
+        print(df.head())
 
-        return stats
+        avg_stats = {}
+
+        # frequency of each activity
+        scene_counts = df['scene'].value_counts().to_dict()
+        norm_scene_counts = (df['scene'].value_counts() / df["scene"].count()).to_dict()
+        avg_stats["scene_counts"] = scene_counts
+        avg_stats["norm_scene_counts"] = norm_scene_counts
+
+        # mean/min/max number of frames and instances
+        frames = [stats[str(n)]["gt_stats"]["num_frames"] for n in range(len(stats))]
+        instances = [stats[str(n)]["gt_stats"]["num_instances"] for n in range(len(stats))]
+        avg_stats["frames"] = self._add_stats(frames)
+        avg_stats["instances"] = self._add_stats(instances)
+
+        # frequency of each object
+        freqs = [freqs for n in range(len(stats)) for freqs in stats[str(n)]["gt_stats"]["freq_objects"]]
+        df = pd.DataFrame(freqs)
+        obj_freqs = df.sum(0).to_dict()
+        norm_obj_freqs = (df.sum(0) / df.sum().sum()).to_dict()
+        avg_stats["obj_freqs"] = obj_freqs
+        avg_stats["norm_obj_freqs"] = norm_obj_freqs
+
+        # mean/min/max of annotated pixels, bbox and corresponding visibilities
+        pix = [p for n in range(len(stats)) for p in stats[str(n)]["info_stats"]["num_pixels"]]
+        bbox = [b for n in range(len(stats)) for b in stats[str(n)]["info_stats"]["bbox_size"]]
+        pix_vis = [p for n in range(len(stats)) for p in stats[str(n)]["info_stats"]["pixel_visibility"]]
+        bbox_vis = [b for n in range(len(stats)) for b in stats[str(n)]["info_stats"]["bbox_visibility"]]
+        avg_stats["pix"] = self._add_stats(pix)
+        avg_stats["bbox"] = self._add_stats(bbox)
+        avg_stats["pix_visibility"] = self._add_stats(pix_vis)
+        avg_stats["bbox visibility"] = self._add_stats(bbox_vis)
+
+        return avg_stats
 
     def save_stats(self, path=None):
         """
@@ -146,8 +185,21 @@ class DatasetStats:
 
         # overall average stats
         avg_stats_file = os.path.join(path, "avg_stats.json")
+        avg_stats = self.compute_avg_stats()
+        with open(avg_stats_file, "w") as f:
+            json.dump(avg_stats, f)
 
         return
+
+    def _add_stats(self, data):
+        """ Getting mean, std, max, min for a list of measurements """
+        stats = {
+            "mean": float(np.mean(data)),
+            "std": float(np.std(data)),
+            "min": float(np.min(data)),
+            "max": float(np.max(data))
+        }
+        return stats
 
     def _get_bbox_vis(self, bbox, bbox_vis):
         """ Computing the percentage of the bbox that is visible """
