@@ -14,10 +14,16 @@ class MeshLoader:
         self.base_dir = CONSTANTS.MESH_BASE_DIR
         self.class_idx = 0
         self.loaded_meshes = []
+        # store weights separately to pass to object construction with loaded meshes
+        self.loaded_mesh_weights = []
 
     def get_meshes(self):
         """ """
         return self.loaded_meshes
+
+    def get_mesh_weights(self):
+        """ """
+        return self.loaded_mesh_weights
 
     def load_meshes(self, objects):
         """
@@ -28,6 +34,7 @@ class MeshLoader:
         """
         paths = [(self.base_dir / obj.mesh_fp).resolve() for obj in objects]
         scales = [obj.scale for obj in objects]
+        weights = [obj.weight for obj in objects]
         flags = [mesh_flags(obj) for obj in objects]
         meshes = sl.Mesh.load_threaded(filenames=paths, flags=flags)
 
@@ -40,7 +47,9 @@ class MeshLoader:
             self.class_idx += 1
 
         meshes = meshes if len(meshes) != 1 else meshes[0]
+        weights = weights if len(weights) != 1 else weights[0]
         self.loaded_meshes.append(meshes)
+        self.loaded_mesh_weights.append(weights)
         return
 
 
@@ -60,7 +69,7 @@ def load_table_and_ycbv():
     meshLoader = MeshLoader()
     meshLoader.load_meshes(CONSTANTS.TABLE),
     meshLoader.load_meshes(CONSTANTS.YCBV_OBJECTS),
-    return meshLoader.get_meshes()
+    return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
 
 
 def load_bowling():
@@ -73,7 +82,7 @@ def load_bowling():
     meshLoader.load_meshes(CONSTANTS.TABLE),
     meshLoader.load_meshes(CONSTANTS.BOWLING_BALL),
     meshLoader.load_meshes(CONSTANTS.WOOD_BLOCK),
-    return meshLoader.get_meshes()
+    return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
 
 
 def load_billiards():
@@ -86,7 +95,7 @@ def load_billiards():
     meshLoader.load_meshes(CONSTANTS.TABLE),
     meshLoader.load_meshes(CONSTANTS.BOWLING_BALL),
     meshLoader.load_meshes(CONSTANTS.BILLIARDS_OBJECTS),
-    return meshLoader.get_meshes()
+    return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
 
 
 #

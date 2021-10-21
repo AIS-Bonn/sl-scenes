@@ -25,26 +25,28 @@ def setup_table_scene(cfg, scene):
     # scene.background_color = torch.tensor([0.1, 0.1, 0.1, 1.0])
 
     print("loading objects...")
-    table_mesh, obj_meshes = load_table_and_ycbv()
+    loaded_meshes, loaded_mesh_weights = load_table_and_ycbv()
+    table_mesh, obj_meshes = loaded_meshes
+    table_weight, obj_weights = loaded_mesh_weights
 
     # place the static objects (table) into the scene
     table = sl.Object(table_mesh)
     table.set_pose(CONSTANTS.TABLE_POSE)
+    table.mass = table_weight
     table.static = True
     add_obj_to_scene(scene, table)
 
     # drop 10 random YCB-Video objects onto the table
     dynamic_objects = []
-    for mesh in random.choices(obj_meshes, k=10):
+    for (mesh, weight) in random.choices(list(zip(obj_meshes, obj_weights)), k=10):
         obj = sl.Object(mesh)
         p = obj.pose()
         x = random.uniform(CONSTANTS.DROP_LIMITS["x_min"], CONSTANTS.DROP_LIMITS["x_max"])
         y = random.uniform(CONSTANTS.DROP_LIMITS["y_min"], CONSTANTS.DROP_LIMITS["y_max"])
-        z = random.uniform(
-            CONSTANTS.DROP_LIMITS["z_min"], CONSTANTS.DROP_LIMITS["z_max"]
-        )
+        z = random.uniform(CONSTANTS.DROP_LIMITS["z_min"], CONSTANTS.DROP_LIMITS["z_max"])
         p[:3, 3] = torch.tensor([x, y, z])
         obj.set_pose(p)
+        obj.mass = weight
         dynamic_objects.append(obj)
         add_obj_to_scene(scene, obj)
 

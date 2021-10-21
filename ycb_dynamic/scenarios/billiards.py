@@ -21,11 +21,14 @@ def setup_billiards_scene(cfg, scene):
     # scene.background_color = torch.tensor([0.1, 0.1, 0.1, 1.0])
 
     print("loading objects...")
-    table_mesh, bowling_mesh, objects_triangle_mesh = load_billiards()
+    loaded_meshes, loaded_weights = load_billiards()
+    table_mesh, bowling_mesh, objects_triangle_mesh = loaded_meshes
+    table_weight, bowling_weight, objects_triangle_weights = loaded_weights
 
     # place the static objects (table) into the scene
     table = sl.Object(table_mesh)
     table.set_pose(CONSTANTS.TABLE_POSE)
+    table.mass = table_weight
     table.static = True
     add_obj_to_scene(scene, table)
 
@@ -33,9 +36,10 @@ def setup_billiards_scene(cfg, scene):
 
     # assemble several objects in a triangle-like shape
     N = len(CONSTANTS.BILLIARDS_TRIANLGE_POSES)
-    for i, mesh in enumerate(random.choices(objects_triangle_mesh, k=N)):
+    for i, (mesh, weight) in enumerate(random.choices(list(zip(objects_triangle_mesh, objects_triangle_weights)), k=N)):
         object = sl.Object(mesh)
         object.set_pose(CONSTANTS.BILLIARDS_TRIANLGE_POSES[i])
+        object.mass = weight
         dynamic_objects.append(object)
         add_obj_to_scene(scene, object)
 
@@ -43,6 +47,7 @@ def setup_billiards_scene(cfg, scene):
     bp = bowling_ball.pose()
     bp[:3, 3] = torch.tensor([-0.9, 0, 1.25])
     bowling_ball.set_pose(bp)
+    bowling_ball.mass = bowling_weight
     bowling_ball.linear_velocity = torch.tensor([2.0, 0, 0])
     dynamic_objects.append(bowling_ball)
     add_obj_to_scene(scene, bowling_ball)
