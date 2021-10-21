@@ -2,7 +2,14 @@
 Utils methods
 """
 
+import os
 import datetime
+
+
+def clear_cmd():
+    """Clearning command line window"""
+    os.system("cls" if os.name == "nt" else "clear")
+    return
 
 
 def timestamp():

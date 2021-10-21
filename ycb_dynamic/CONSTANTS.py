@@ -44,6 +44,20 @@ WOOD_BLOCK_POSES = [
     torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.83], [0, 0, 0, 1]]),
 ]
 
+# BILLIARDS
+BILLIARDS_TRIANLGE_POSES = [
+    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.10], [0, 1, 0, -0.06], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.10], [0, 1, 0, 0.06], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.20], [0, 1, 0, 0], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.20], [0, 1, 0, 0.12], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.20], [0, 1, 0, -0.12], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, -0.06], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, 0.06], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, -0.18], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, 0.18], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+]
+
 
 # Object Information
 FLAG_CONCAVE = 1 << 0
@@ -192,6 +206,15 @@ OBJECT_INFO = [
     ),
     # ObjectInfo('036_wood_block',        'ycbv_models/models_fine/obj_000016_rotated.ply', 0.729, 0,             0.3, 0.5, 0.001),  # edited
     ObjectInfo(
+        "036_wood_block",
+        "ycbv_models/models_fine/obj_000016.ply",
+        0.729,
+        0,
+        0.3,
+        0.5,
+        0.001,
+    ),  # edited
+    ObjectInfo(
         "037_scissors",
         "ycbv_models/models_fine/obj_000017.ply",
         0.082,
@@ -239,7 +262,8 @@ OBJECT_INFO = [
     ObjectInfo("table", "other_models/table/table.obj", 30.000, 0, 0.3, 0.5, 0.010),
     ObjectInfo(
         "bowling_ball",
-        "other_models/bowling_ball/ball_centered.obj",
+        # "other_models/bowling_ball/ball_centered.obj",
+        "other_models/bowling_ball/ball.obj",
         10.000,
         0,
         0.3,
@@ -265,6 +289,9 @@ TABLE = [obj for obj in OBJECT_INFO if obj.name == "table"]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 BEACH_BALL = [obj for obj in OBJECT_INFO if obj.name == "beach_ball"]
 WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
+BILLIARDS_OBJECTS = [
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in ["002", "003", "007", "008"]
+]
 
 
 #

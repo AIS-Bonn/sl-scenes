@@ -4,12 +4,19 @@ import tqdm
 import stillleben as sl
 
 import ycb_dynamic.utils.utils as utils
-from ycb_dynamic.scenarios.table import setup_table_scene
-from ycb_dynamic.scenarios.bowling import setup_bowling_scene
+from ycb_dynamic.scenarios import (
+    setup_table_scene,
+    setup_bowling_scene,
+    setup_billiards_scene,
+)
 from ycb_dynamic.output import Writer
 
 
-SCENARIOS = {"table": setup_table_scene, "bowling": setup_bowling_scene}
+SCENARIOS = {
+    "table": setup_table_scene,
+    "bowling": setup_bowling_scene,
+    "billiards": setup_billiards_scene,
+}
 
 
 def main(cfg):

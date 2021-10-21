@@ -76,4 +76,17 @@ def load_bowling():
     return meshLoader.get_meshes()
 
 
+def load_billiards():
+    """
+    Loads the meshes required for the Billiards Scenario:
+        A ball smashes through a bunch of objects placed in a pool-ball triangle manner
+    :return: The loaded meshes as a tuple: (table_mesh, ycb_video_meshes)
+    """
+    meshLoader = MeshLoader()
+    meshLoader.load_meshes(CONSTANTS.TABLE),
+    meshLoader.load_meshes(CONSTANTS.BOWLING_BALL),
+    meshLoader.load_meshes(CONSTANTS.BILLIARDS_OBJECTS),
+    return meshLoader.get_meshes()
+
+
 #
