@@ -15,6 +15,12 @@ import torch
 # Paths and Directories
 MESH_BASE_DIR = Path(".") / "external_data" / "object_models"
 
+# Lighting
+IBL_BASE_PATH = Path(".") / "external_data" / "light_maps"
+ALL_LIGHTMAPS = {
+    "default": IBL_BASE_PATH / "Chiricahua_Plaza" / "Chiricahua_Plaza.ibl",
+}
+
 
 # Scene global configureations
 CAM_POS = torch.Tensor([0.5, 2.4, 1.5])
@@ -301,6 +307,3 @@ WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
 BILLIARDS_OBJECTS = [
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in ["002", "003", "007", "008"]
 ]
-
-
-#
