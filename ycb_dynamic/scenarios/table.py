@@ -1,46 +1,35 @@
 import stillleben as sl
 import random
 import torch
-import numpy as np
+
+import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.lighting import get_default_light_map
 from ycb_dynamic.object_models import load_table_and_ycbv
 from ycb_dynamic.camera import Camera
 from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene
 
 
-CAM_POS = torch.Tensor([0.5, 2.4, 1.5])
-CAM_LOOKAT = torch.Tensor([0, 0, 1.1])
-TABLE_POSE = torch.tensor([[0, 0, 1,    0],
-                           [1, 0, 0,    0],
-                           [0, 1, 0, 0.60],
-                           [0, 0, 0,    1]])
-DROP_LIMITS = {"x_min": -0.6, "x_max": 0.6,
-               "y_min": -0.4, "y_max": 0.4,
-               "z_min":  1.2, "z_max": 1.5}
-
-
 def setup_table_scene(cfg, scene):
-    '''
+    """
     TODO Doc
     :param cfg:
     :param scene:
     :return:
-    '''
+    """
 
     print("scene setup...")
     scene.ambient_light = torch.tensor([0.7, 0.7, 0.7])
     scene.light_map = get_default_light_map()
     scene.choose_random_light_position()
-    #scene.background_plane_size = torch.tensor([10.0, 10.0])
-    #scene.background_color = torch.tensor([0.1, 0.1, 0.1, 1.0])
-
+    # scene.background_plane_size = torch.tensor([10.0, 10.0])
+    # scene.background_color = torch.tensor([0.1, 0.1, 0.1, 1.0])
 
     print("loading objects...")
     table_mesh, obj_meshes = load_table_and_ycbv()
 
     # place the static objects (table) into the scene
     table = sl.Object(table_mesh)
-    table.set_pose(TABLE_POSE)
+    table.set_pose(CONSTANTS.TABLE_POSE)
     table.static = True
     add_obj_to_scene(scene, table)
 
@@ -49,16 +38,23 @@ def setup_table_scene(cfg, scene):
     for mesh in random.choices(obj_meshes, k=10):
         obj = sl.Object(mesh)
         p = obj.pose()
-        x = random.uniform(DROP_LIMITS["x_min"], DROP_LIMITS["x_max"])
-        y = random.uniform(DROP_LIMITS["y_min"], DROP_LIMITS["y_max"])
-        z = random.uniform(DROP_LIMITS["z_min"], DROP_LIMITS["z_max"])
+        x = random.uniform(CONSTANTS.DROP_LIMITS["x_min"], CONSTANTS.DROP_LIMITS["x_max"])
+        y = random.uniform(CONSTANTS.DROP_LIMITS["y_min"], CONSTANTS.DROP_LIMITS["y_max"])
+        z = random.uniform(
+            CONSTANTS.DROP_LIMITS["z_min"], CONSTANTS.DROP_LIMITS["z_max"]
+        )
         p[:3, 3] = torch.tensor([x, y, z])
         obj.set_pose(p)
         dynamic_objects.append(obj)
         add_obj_to_scene(scene, obj)
 
-    main_cam = Camera("main", CAM_POS, CAM_LOOKAT, moving=False)
-    table_scenario = Scenario(name="Table", scene=scene, cameras=[main_cam],
-                              static_objects=[table], dynamic_objects=dynamic_objects)
+    main_cam = Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False)
+    table_scenario = Scenario(
+        name="Table",
+        scene=scene,
+        cameras=[main_cam],
+        static_objects=[table],
+        dynamic_objects=dynamic_objects,
+    )
 
     return table_scenario
