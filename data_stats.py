@@ -86,7 +86,7 @@ class DatasetStats:
         with open(file, "r") as f:
             info_data = json.load(f)
 
-        # NOTE: What frequency do we want, framewise or sequence wise?. Let's go sequencewise for now
+        # NOTE: What frequency do we want, framewise or sequence wise?. Let"s go sequencewise for now
         # fetching framewise pixel and bbox information
         cur_pixels, cur_bbox, cur_pixel_vis, cur_bbox_vis = [], [], [], []
         for _, data in info_data.items():
@@ -131,30 +131,28 @@ class DatasetStats:
 
         return
 
-    def compute_avg_stats(self):
+    def compute_avg_stats(self, scene=None):
         """ Computing overall average stats considering all sequences """
 
-        stats = self.all_stats
-        df = pd.DataFrame.from_dict(self.all_stats, orient='index')
-        df.reset_index(level=0, inplace=True)
-        print(df.head())
+        stats = self.all_stats if scene is None else {k: v for k, v in self.all_stats.items() if v["scene"] == scene}
+        df = pd.DataFrame.from_dict(stats, orient="index")
 
         avg_stats = {}
 
         # frequency of each activity
-        scene_counts = df['scene'].value_counts().to_dict()
-        norm_scene_counts = (df['scene'].value_counts() / df["scene"].count()).to_dict()
+        scene_counts = df["scene"].value_counts().to_dict()
+        norm_scene_counts = (df["scene"].value_counts() / df["scene"].count()).to_dict()
         avg_stats["scene_counts"] = scene_counts
         avg_stats["norm_scene_counts"] = norm_scene_counts
 
         # mean/min/max number of frames and instances
-        frames = [stats[str(n)]["gt_stats"]["num_frames"] for n in range(len(stats))]
-        instances = [stats[str(n)]["gt_stats"]["num_instances"] for n in range(len(stats))]
+        frames = [stats[n]["gt_stats"]["num_frames"] for n in stats.keys()]
+        instances = [stats[n]["gt_stats"]["num_instances"] for n in stats.keys()]
         avg_stats["frames"] = self._add_stats(frames)
         avg_stats["instances"] = self._add_stats(instances)
 
         # frequency of each object
-        freqs = [freqs for n in range(len(stats)) for freqs in stats[str(n)]["gt_stats"]["freq_objects"]]
+        freqs = [freqs for n in stats.keys() for freqs in stats[n]["gt_stats"]["freq_objects"]]
         df = pd.DataFrame(freqs)
         obj_freqs = df.sum(0).to_dict()
         norm_obj_freqs = (df.sum(0) / df.sum().sum()).to_dict()
@@ -162,10 +160,10 @@ class DatasetStats:
         avg_stats["norm_obj_freqs"] = norm_obj_freqs
 
         # mean/min/max of annotated pixels, bbox and corresponding visibilities
-        pix = [p for n in range(len(stats)) for p in stats[str(n)]["info_stats"]["num_pixels"]]
-        bbox = [b for n in range(len(stats)) for b in stats[str(n)]["info_stats"]["bbox_size"]]
-        pix_vis = [p for n in range(len(stats)) for p in stats[str(n)]["info_stats"]["pixel_visibility"]]
-        bbox_vis = [b for n in range(len(stats)) for b in stats[str(n)]["info_stats"]["bbox_visibility"]]
+        pix = [p for n in stats.keys() for p in stats[n]["info_stats"]["num_pixels"]]
+        bbox = [b for n in stats.keys() for b in stats[n]["info_stats"]["bbox_size"]]
+        pix_vis = [p for n in stats.keys() for p in stats[n]["info_stats"]["pixel_visibility"]]
+        bbox_vis = [b for n in stats.keys() for b in stats[n]["info_stats"]["bbox_visibility"]]
         avg_stats["pix"] = self._add_stats(pix)
         avg_stats["bbox"] = self._add_stats(bbox)
         avg_stats["pix_visibility"] = self._add_stats(pix_vis)
@@ -182,6 +180,15 @@ class DatasetStats:
         all_stats_file = os.path.join(path, "all_stats.json")
         with open(all_stats_file, "w") as f:
             json.dump(self.all_stats, f)
+
+        # stats for each activity independently
+        df = pd.DataFrame.from_dict(self.all_stats, orient="index")
+        activities = df["scene"].unique()
+        for activity in activities:
+            activity_stats_file = os.path.join(path, f"stats_{activity}.json")
+            activity_stats = self.compute_avg_stats(scene=activity)
+            with open(activity_stats_file, "w") as f:
+                json.dump(activity_stats, f)
 
         # overall average stats
         avg_stats_file = os.path.join(path, "avg_stats.json")
