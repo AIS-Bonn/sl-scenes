@@ -26,11 +26,14 @@ def setup_bowling_scene(cfg, scene):
     # scene.background_color = torch.tensor([0.1, 0.1, 0.1, 1.0])
 
     print("loading objects...")
-    table_mesh, bowling_mesh, wood_block_mesh = load_bowling()
+    loaded_meshes, loaded_weights = load_bowling()
+    table_mesh, bowling_mesh, wood_block_mesh = loaded_meshes
+    table_weight, bowling_weight, wood_block_weight = loaded_weights
 
     # place the static objects (table) into the scene
     table = sl.Object(table_mesh)
     table.set_pose(CONSTANTS.TABLE_POSE)
+    table.mass = table_weight
     table.static = True
     add_obj_to_scene(scene, table)
 
@@ -40,6 +43,7 @@ def setup_bowling_scene(cfg, scene):
     for wb_pose in CONSTANTS.WOOD_BLOCK_POSES:
         wood_block = sl.Object(wood_block_mesh)
         wood_block.set_pose(wb_pose)
+        wood_block.mass = wood_block_weight
         dynamic_objects.append(wood_block)
         add_obj_to_scene(scene, wood_block)
 
@@ -47,11 +51,12 @@ def setup_bowling_scene(cfg, scene):
     bp = bowling_ball.pose()
     bp[:3, 3] = torch.tensor([-0.9, 0, 1.25])
     bowling_ball.set_pose(bp)
-    bowling_ball.linear_velocity = torch.tensor([2.0, 0, 0])
+    bowling_ball.mass = bowling_weight
+    bowling_ball.linear_velocity = CONSTANTS.BOWLING_INITIAL_VELOCITY
     dynamic_objects.append(bowling_ball)
     add_obj_to_scene(scene, bowling_ball)
 
-    main_cam = Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False)
+    main_cam = Camera("main", CONSTANTS.BOWLING_CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False)
     bowling_scenario = Scenario(
         name="Bowling",
         scene=scene,
