@@ -1,3 +1,4 @@
-from .table import setup_table_scene
-from .bowling import setup_bowling_scene
-from .billiards import setup_billiards_scene
+from .stack import StackScenario
+from .bowling import BowlingScenario
+from .billiards import BillardsScenario
+from .throw import ThrowScenario

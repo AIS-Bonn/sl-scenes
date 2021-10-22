@@ -15,10 +15,16 @@ import torch
 # Paths and Directories
 MESH_BASE_DIR = Path(".") / "external_data" / "object_models"
 
+# Lighting
+IBL_BASE_PATH = Path(".") / "external_data" / "light_maps"
+ALL_LIGHTMAPS = {
+    "default": IBL_BASE_PATH / "Chiricahua_Plaza" / "Chiricahua_Plaza.ibl",
+}
+
 
 # Scene global configureations
 CAM_POS = torch.Tensor([0.5, 2.4, 1.5])
-CAM_LOOKAT = torch.Tensor([0, 0, 1.1])
+CAM_LOOKAT = torch.Tensor([0, 0, 1.2])
 
 # TABLE
 TABLE_POSE = torch.tensor([[0, 0, 1, 0], [1, 0, 0, 0], [0, 1, 0, 0.60], [0, 0, 0, 1]])
@@ -32,17 +38,19 @@ DROP_LIMITS = {
 }
 
 # BOWLING
+BOWLING_CAM_POS = torch.Tensor([-0.5, 2.4, 1.5])
 WOOD_BLOCK_POSES = [
-    torch.tensor([[1, 0, 0, 0], [0, 1, 0, -0.20], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0.20], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0], [0, 0, 1, -0.11], [0, -1, 0, 1.38], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0], [0, 0, 1, 0.11], [0, -1, 0, 1.38], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0], [0, 1, 0, -0.1], [0, 0, 1, 1.53], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0.1], [0, 0, 1, 1.53], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0], [0, 0, 1, 0], [0, -1, 0, 1.68], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.83], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.400], [0, 1, 0, -0.20], [0,  0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.400], [0, 1, 0,     0], [0,  0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.400], [0, 1, 0,  0.20], [0,  0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.398], [0, 0, 1, -0.11], [0, -1, 0, 1.38], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.398], [0, 0, 1,  0.11], [0, -1, 0, 1.38], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.396], [0, 1, 0,  -0.1], [0,  0, 1, 1.53], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.396], [0, 1, 0,   0.1], [0,  0, 1, 1.53], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.395], [0, 0, 1,     0], [0, -1, 0, 1.68], [0, 0, 0, 1]]),
+    #torch.tensor([[1, 0, 0, 0.395], [0, 1, 0,     0], [0,  0, 1, 1.83], [0, 0, 0, 1]]),
 ]
+BOWLING_INITIAL_VELOCITY = torch.tensor([2.5, 0, 0])
 
 # BILLIARDS
 BILLIARDS_TRIANLGE_POSES = [
@@ -57,6 +65,9 @@ BILLIARDS_TRIANLGE_POSES = [
     torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, -0.18], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, 0.18], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
 ]
+
+# THROW
+THROWING_INITIAL_VELOCITY = torch.tensor([0, 2, 1.5])
 
 
 # Object Information
@@ -259,11 +270,19 @@ OBJECT_INFO = [
         0.7,
         0.001,
     ),
-    ObjectInfo("table", "other_models/table/table.obj", 30.000, 0, 0.3, 0.5, 0.010),
+    ObjectInfo(
+        "table",
+        "other_models/table/table.obj",
+        30.000,
+        0,
+        0.3,
+        0.5,
+        0.010
+    ),
     ObjectInfo(
         "bowling_ball",
         "other_models/bowling_ball/ball_centered.obj",
-        10.000,
+        7.000,
         0,
         0.3,
         0.1,
@@ -291,6 +310,3 @@ WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
 BILLIARDS_OBJECTS = [
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in ["002", "003", "007", "008"]
 ]
-
-
-#
