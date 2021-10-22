@@ -1,10 +1,18 @@
+"""
+Abstract class for defining scenarios
+"""
+
+import torch
 import stillleben as sl
+from ycb_dynamic.lighting import get_lightmap
 
 
 class Scenario(object):
+    """ Abstract class for defining scenarios """
     def __init__(self, cfg, scene):
         self.scene = scene
         self.meshes_loaded = False
+        self.lightmap = cfg.lightmap
         self.reset_sim()
 
     def reset_sim(self):
@@ -20,7 +28,10 @@ class Scenario(object):
         raise NotImplementedError
 
     def setup_scene(self):
-        raise NotImplementedError
+        """ Default setup_scene lighting and camera. Can be overriden from specific scenes """
+        self.scene.ambient_light = torch.tensor([0.7, 0.7, 0.7])
+        self.scene.light_map = get_lightmap(self.lightmap)
+        self.scene.choose_random_light_position()
 
     def load_meshes(self):
         raise NotImplementedError

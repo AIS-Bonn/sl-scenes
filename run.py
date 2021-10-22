@@ -4,6 +4,8 @@ import tqdm
 import stillleben as sl
 
 import ycb_dynamic.utils.utils as utils
+import ycb_dynamic.CONSTANTS as CONSTANTS
+
 from ycb_dynamic.scenarios import (
     StackScenario,
     BowlingScenario,
@@ -146,6 +148,13 @@ if __name__ == "__main__":
         type=str,
         choices=list(SCENARIOS.keys()) + ["all"],
         help="specify which scenario to create and render",
+    )
+    parser.add_argument(
+        "--lightmap",
+        type=str,
+        default="random",
+        choices=list(CONSTANTS.ALL_LIGHTMAPS.keys()) + ["random", "default"],
+        help="specify the lightmap and background to apply in the scene",
     )
     parser.add_argument(
         "--assemble-rgb",

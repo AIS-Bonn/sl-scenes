@@ -18,7 +18,15 @@ MESH_BASE_DIR = Path(".") / "external_data" / "object_models"
 # Lighting
 IBL_BASE_PATH = Path(".") / "external_data" / "light_maps"
 ALL_LIGHTMAPS = {
-    "default": IBL_BASE_PATH / "Chiricahua_Plaza" / "Chiricahua_Plaza.ibl",
+    "default": IBL_BASE_PATH / "Chiricahua_Plaza" / "Chiricahua_Plaza.ibl",  # DEPRECATED
+    "Alexs_Apartment": IBL_BASE_PATH / "Alexs_Apartment" / "Alexs_Apartment.ibl",
+    "Barcelona_Rooftops": IBL_BASE_PATH / "Barcelona_Rooftops" / "Barcelona_Rooftops.ibl",
+    "Chiricahua_Plaza": IBL_BASE_PATH / "Chiricahua_Plaza" / "Chiricahua_Plaza.ibl",
+    "Circus_Backstage": IBL_BASE_PATH / "Circus_Backstage" / "Circus_Backstage.ibl",
+    "Helipad_GoldenHour": IBL_BASE_PATH / "Helipad_GoldenHour" / "Helipad_GoldenHour.ibl",
+    "Old_Industrial_Hall": IBL_BASE_PATH / "Old_Industrial_Hall" / "Old_Industrial_Hall.ibl",
+    "Popcorn_Lobby": IBL_BASE_PATH / "Popcorn_Lobby" / "Popcorn_Lobby.ibl",
+    "Wooden_Door": IBL_BASE_PATH / "Wooden_Door" / "Wooden_Door.ibl",
 }
 
 

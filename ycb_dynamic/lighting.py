@@ -1,10 +1,14 @@
+import random
 import stillleben as sl
-from pathlib import Path
 import ycb_dynamic.CONSTANTS as CONSTANTS
 
 
+def get_lightmap(map_name="random"):
+    """ Fetching lightmap given command line argument """
+    assert map_name in ["default", "random"] + list(CONSTANTS.ALL_LIGHTMAPS.keys()), f"Unknown lightmap {map_name}..."
 
+    if(map_name == "random"):
+        map_name = random.choice(list(CONSTANTS.ALL_LIGHTMAPS.keys()))
+    lightmap = sl.LightMap(CONSTANTS.ALL_LIGHTMAPS[map_name])
 
-
-def get_default_light_map():
-    return sl.LightMap(CONSTANTS.ALL_LIGHTMAPS["default"])
+    return lightmap
