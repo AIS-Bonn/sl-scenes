@@ -5,17 +5,17 @@ import stillleben as sl
 
 import ycb_dynamic.utils.utils as utils
 from ycb_dynamic.scenarios import (
-    setup_table_scene,
-    setup_bowling_scene,
-    setup_billiards_scene,
+    StackScenario,
+    BowlingScenario,
+    BillardsScenario,
 )
 from ycb_dynamic.output import Writer
 
 
 SCENARIOS = {
-    "table": setup_table_scene,
-    "bowling": setup_bowling_scene,
-    "billiards": setup_billiards_scene,
+    "stack": StackScenario,
+    "bowling": BowlingScenario,
+    "billards": BillardsScenario,
 }
 
 
@@ -65,37 +65,42 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
     TODO Doc
     """
 
-    frame_str = "" if cfg.no_gen else f" and generating {cfg.frames} frames"
-    print(
-        f"iteration {it}, scenario '{scenario.name}': executing {cfg.sim_steps_per_ep} sim steps{frame_str}"
-    )
-
-    scene = scenario.scene
     cameras = scenario.cameras
     writers = [
         Writer(Path(cfg.out_path) / f"{it:06}_{scenario.name}_{cam.name}")
         for cam in cameras
     ]
+    frame_str = "" if cfg.no_gen else f": generating {cfg.frames} frames for {len(cameras)} cameras"
+    print(
+        f"iteration {it}, scenario '{scenario.name}'{frame_str}"
+    )
 
     with ExitStack() as stack:
 
         for writer in writers:
             stack.enter_context(writer)
 
-        for t in tqdm.tqdm(range(cfg.sim_steps_per_ep)):
+        sim_steps, written_frames = 0, 0
+        pbar = tqdm.tqdm(total=cfg.frames)
 
-            # save visualizations every SIM_STEPS_PER_FRAME sim steps
-            if t % cfg.sim_steps_per_frame == 0:
+        while written_frames < cfg.frames:
+            # after sim's prep period, save visualizations every SIM_STEPS_PER_FRAME sim steps
+            if sim_steps % cfg.sim_steps_per_frame == 0 and scenario.can_render():
                 for writer, cam in zip(writers, cameras):
-                    scene.set_camera_look_at(position=cam.pos, look_at=cam.lookat)
-                    result = renderer.render(scene)
+                    scenario.set_camera_look_at(pos=cam.pos, lookat=cam.lookat)
+                    result = renderer.render(scenario.scene)
                     if not cfg.no_gen:
                         writer.write_frame(scenario, result)
                     cam.step()  # advance camera for next step if it's a moving one
+                    written_frames += 1
+                    pbar.update(1)
+                    pbar.set_postfix(sim_steps=sim_steps)
 
             # sim step
-            scene.simulate(1.0 / cfg.sim_steps_per_sec)
+            scenario.simulate(1.0 / cfg.sim_steps_per_sec)
+            sim_steps += 1
             # time.sleep(10)
+        pbar.close()
 
         if cfg.assemble_rgb and not cfg.no_gen:
             for writer in writers:
@@ -175,6 +180,5 @@ if __name__ == "__main__":
     cfg.sim_fps = (
         cfg.sim_steps_per_sec / cfg.sim_steps_per_frame
     )  # TODO 60 or even 120 for dynamic movement?
-    cfg.sim_steps_per_ep = cfg.sim_steps_per_frame * cfg.frames
 
     main(cfg)
