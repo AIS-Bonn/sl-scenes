@@ -70,6 +70,7 @@ BILLIARDS_TRIANLGE_POSES = [
 THROWING_INITIAL_VELOCITY = torch.tensor([0, 2, 1.5])
 
 
+
 # Object Information
 FLAG_CONCAVE = 1 << 0
 ObjectInfo = namedtuple(
