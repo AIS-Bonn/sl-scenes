@@ -24,7 +24,7 @@ ALL_LIGHTMAPS = {
     "Chiricahua_Plaza": IBL_BASE_PATH / "Chiricahua_Plaza" / "Chiricahua_Plaza.ibl",
     "Circus_Backstage": IBL_BASE_PATH / "Circus_Backstage" / "Circus_Backstage.ibl",
     "Helipad_GoldenHour": IBL_BASE_PATH / "Helipad_GoldenHour" / "Helipad_GoldenHour.ibl",
-    "Old_Industrial_Hall": IBL_BASE_PATH / "Old_Industrial_Hall" / "Old_Industrial_Hall.ibl",
+    # "Old_Industrial_Hall": IBL_BASE_PATH / "Old_Industrial_Hall" / "Old_Industrial_Hall.ibl",  # Path issue?
     "Popcorn_Lobby": IBL_BASE_PATH / "Popcorn_Lobby" / "Popcorn_Lobby.ibl",
     "Wooden_Door": IBL_BASE_PATH / "Wooden_Door" / "Wooden_Door.ibl",
 }
@@ -73,6 +73,21 @@ BILLIARDS_TRIANLGE_POSES = [
     torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, -0.18], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, 0.18], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
 ]
+
+
+# STACK PYRAMID (4-1-1)
+STACK_PYRAMID_POSES = [
+    torch.tensor([[1, 0, 0, -0.05], [0, 1, 0, -0.05], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, -0.05], [0, 1, 0, 0.05], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.05], [0, 1, 0, -0.05], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.05], [0, 1, 0, 0.05], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    #
+    # torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.4], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.4], [0, 0, 0, 1]]),
+    #
+    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.55], [0, 0, 0, 1]]),
+]
+
 
 # THROW
 THROWING_INITIAL_VELOCITY = torch.tensor([0, 2, 1.5])
@@ -310,12 +325,20 @@ OBJECT_INFO = [
 ]
 
 
-# pre-defined object sets (TODO use mapping/frozendict?)
+# pre-defined object sets
 YCBV_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
+FLAT_OBJS = [str(i).zfill(3) for i in range(0, 11)]
+FRUIT_OBJS = [str(i).zfill(3) for i in range(11, 19)]
+CLEANING_OBJS = [str(i).zfill(3) for i in range(19, 22)]
+KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
+
 TABLE = [obj for obj in OBJECT_INFO if obj.name == "table"]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 BEACH_BALL = [obj for obj in OBJECT_INFO if obj.name == "beach_ball"]
 WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
-BILLIARDS_OBJECTS = [
-    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in ["002", "003", "007", "008"]
+STACK_OBJECTS = [  # Only considering a subset of 'stackable' objects
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FLAT_OBJS
+]
+BILLIARDS_OBJECTS = [  # Considering objects that do not roll, e.g. only objects with flat surfaces
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FLAT_OBJS
 ]

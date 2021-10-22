@@ -98,4 +98,15 @@ def load_billiards():
     return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
 
 
+def load_stacked():
+    """
+    Loads the meshes required for the Stacked Scenario:
+        Objects with flat surfaces assemble a pyramid, which might fall due to lack of support
+    :return: The loaded meshes as a tuple: (table_mesh, ycb_video_meshes)
+    """
+    meshLoader = MeshLoader()
+    meshLoader.load_meshes(CONSTANTS.TABLE),
+    meshLoader.load_meshes(CONSTANTS.STACK_OBJECTS),
+    return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+
 #

@@ -9,6 +9,7 @@ from ycb_dynamic.lighting import get_lightmap
 
 class Scenario(object):
     """ Abstract class for defining scenarios """
+
     def __init__(self, cfg, scene):
         self.scene = scene
         self.meshes_loaded = False
