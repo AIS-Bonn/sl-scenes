@@ -4,6 +4,7 @@ import stillleben as sl
 class Scenario(object):
     def __init__(self, cfg, scene):
         self.scene = scene
+        self.meshes_loaded = False
         self.reset_sim()
 
     def reset_sim(self):
@@ -19,6 +20,9 @@ class Scenario(object):
         raise NotImplementedError
 
     def setup_scene(self):
+        raise NotImplementedError
+
+    def load_meshes(self):
         raise NotImplementedError
 
     def setup_objects(self):

@@ -66,6 +66,9 @@ BILLIARDS_TRIANLGE_POSES = [
     torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, 0.18], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
 ]
 
+# THROW
+THROWING_INITIAL_VELOCITY = torch.tensor([0, 2, 1.5])
+
 
 # Object Information
 FLAG_CONCAVE = 1 << 0

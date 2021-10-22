@@ -8,6 +8,7 @@ from ycb_dynamic.scenarios import (
     StackScenario,
     BowlingScenario,
     BillardsScenario,
+    ThrowScenario
 )
 from ycb_dynamic.output import Writer
 
@@ -16,6 +17,7 @@ SCENARIOS = {
     "stack": StackScenario,
     "bowling": BowlingScenario,
     "billards": BillardsScenario,
+    "throw": ThrowScenario
 }
 
 

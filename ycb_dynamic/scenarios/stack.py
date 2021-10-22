@@ -27,24 +27,28 @@ class StackScenario(Scenario):
         self.scene.light_map = get_default_light_map()
         self.scene.choose_random_light_position()
 
+    def load_meshes(self):
+        loaded_meshes, loaded_mesh_weights = load_table_and_ycbv()
+        self.table_mesh, self.obj_meshes = loaded_meshes
+        self.table_weight, self.obj_weights = loaded_mesh_weights
+        self.meshes_loaded = True
 
     def setup_objects(self):
         print("object setup...")
         self.static_objects, self.dynamic_objects = [], []
-        loaded_meshes, loaded_mesh_weights = load_table_and_ycbv()
-        table_mesh, obj_meshes = loaded_meshes
-        table_weight, obj_weights = loaded_mesh_weights
+        if not self.meshes_loaded:
+            self.load_meshes() # if objects have not been loaded yet, load them
 
         # place the static objects (table) into the scene
-        table = sl.Object(table_mesh)
+        table = sl.Object(self.table_mesh)
         table.set_pose(CONSTANTS.TABLE_POSE)
-        table.mass = table_weight
+        table.mass = self.table_weight
         table.static = True
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
 
         # drop 10 random YCB-Video objects onto the table
-        for (mesh, weight) in random.choices(list(zip(obj_meshes, obj_weights)), k=10):
+        for (mesh, weight) in random.choices(list(zip(self.obj_meshes, self.obj_weights)), k=10):
             obj = sl.Object(mesh)
             p = obj.pose()
             x = random.uniform(CONSTANTS.DROP_LIMITS["x_min"], CONSTANTS.DROP_LIMITS["x_max"])

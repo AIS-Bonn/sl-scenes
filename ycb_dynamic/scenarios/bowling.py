@@ -14,7 +14,6 @@ class BowlingScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Bowling"
         self.prep_time = 1.000  # during this time (in s), the scene will not be rendered
-        self.meshes_loaded = False
         self.bowling_ball_loaded = False
         super(BowlingScenario, self).__init__(cfg, scene)   # also calls reset_sim()
 

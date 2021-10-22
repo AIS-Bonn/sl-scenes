@@ -27,17 +27,21 @@ class BillardsScenario(Scenario):
         self.scene.light_map = get_default_light_map()
         self.scene.choose_random_light_position()
 
+    def load_meshes(self):
+        loaded_meshes, loaded_weights = load_billiards()
+        self.table_mesh, self.bowling_mesh, self.objects_triangle_mesh = loaded_meshes
+        self.table_weight, self.bowling_weight, self.objects_triangle_weights = loaded_weights
+
     def setup_objects(self):
         print("object setup...")
         self.static_objects, self.dynamic_objects = [], []
-        loaded_meshes, loaded_weights = load_billiards()
-        table_mesh, bowling_mesh, objects_triangle_mesh = loaded_meshes
-        table_weight, bowling_weight, objects_triangle_weights = loaded_weights
+        if not self.meshes_loaded:
+            self.load_meshes() # if objects have not been loaded yet, load them
 
         # place the static objects (table) into the scene
-        table = sl.Object(table_mesh)
+        table = sl.Object(self.table_mesh)
         table.set_pose(CONSTANTS.TABLE_POSE)
-        table.mass = table_weight
+        table.mass = self.table_weight
         table.static = True
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
@@ -45,18 +49,18 @@ class BillardsScenario(Scenario):
         # assemble several objects in a triangle-like shape
         N = len(CONSTANTS.BILLIARDS_TRIANLGE_POSES)
         for i, (mesh, weight) in enumerate(
-                random.choices(list(zip(objects_triangle_mesh, objects_triangle_weights)), k=N)):
+                random.choices(list(zip(self.objects_triangle_mesh, self.objects_triangle_weights)), k=N)):
             object = sl.Object(mesh)
             object.set_pose(CONSTANTS.BILLIARDS_TRIANLGE_POSES[i])
             object.mass = weight
             add_obj_to_scene(self.scene, object)
             self.dynamic_objects.append(object)
 
-        bowling_ball = sl.Object(bowling_mesh)
+        bowling_ball = sl.Object(self.bowling_mesh)
         bp = bowling_ball.pose()
         bp[:3, 3] = torch.tensor([-0.9, 0, 1.25])
         bowling_ball.set_pose(bp)
-        bowling_ball.mass = bowling_weight
+        bowling_ball.mass = self.bowling_weight
         bowling_ball.linear_velocity = torch.tensor([2.0, 0, 0])
         add_obj_to_scene(self.scene, bowling_ball)
         self.dynamic_objects.append(bowling_ball)
