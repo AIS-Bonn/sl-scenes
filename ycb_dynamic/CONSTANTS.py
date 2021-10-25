@@ -90,6 +90,11 @@ STACK_PYRAMID_POSES = [
     torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.55], [0, 0, 0, 1]]),
 ]
 
+# BOWL
+WOODEN_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.1], [0, 0, 0, 1]])
+BOWL_CAM_POS = torch.Tensor([-0.5, 2.4, 2.7])
+BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 1.3])
+BOWL_BOWLING_BALL_INIT_POS = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.55], [0, 0, 0, 1]])
 
 
 # Object Information
@@ -328,7 +333,15 @@ OBJECT_INFO = [
         0.1,
         0.010,
     ),  # https://free3d.com/3d-model/beach-ball-v2--259926.html
-    # ObjectInfo('062_dice',              'other_models/bowling_ball/ball.obj',            10.000, 0,             0.3, 0.1, 1.000)
+    ObjectInfo(
+        "wooden_bowl",
+        "other_models/wooden_bowl/wooden_bowl.blend",
+        10.000,
+        FLAG_CONCAVE,
+        0.3,
+        0.1,
+        0.300,
+    ),  # "Wooden Bowl" (https://skfb.ly/6XMIP) by MIKErowaveoven is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 ]
 
 
@@ -354,3 +367,4 @@ BILLIARDS_OBJECTS = [  # Considering objects that do not roll, e.g. only objects
 DICE_OBJECTS = [  # Considering objects that do roll, e.g. small and regular shapes
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in DICE_OBJS
 ]
+WOODEN_BOWL = [obj for obj in OBJECT_INFO if obj.name == "wooden_bowl"]

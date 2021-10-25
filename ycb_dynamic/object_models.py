@@ -135,4 +135,14 @@ def load_dice_roll():
     return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
 
 
-#
+def load_bowl():
+    """
+    Load meshes required for the Collision Scenario:
+        Several balls are placed inside a bowl, approaching and colliding with each other.
+    :return:
+    """
+    meshLoader = MeshLoader()
+    meshLoader.load_meshes(CONSTANTS.TABLE),
+    meshLoader.load_meshes(CONSTANTS.WOODEN_BOWL)
+    meshLoader.load_meshes(CONSTANTS.BOWLING_BALL)
+    return meshLoader.get_meshes(), meshLoader.get_mesh_weights()

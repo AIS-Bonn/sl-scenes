@@ -5,10 +5,11 @@
 
 import os
 import sys
+import shutil
 import json
 import urllib.request
 
-output_directory = "./external_data/object_models/ycb_models"
+output_directory = "./external_data/object_models/ycb_models_512k"
 
 # You can either set this to "all" or a list of the objects that you'd like to
 # download.
@@ -22,7 +23,7 @@ objects_to_download = "all"
 # 'google_64k' contains google meshes with 64k vertices.
 # 'google_512k' contains google meshes with 512k vertices.
 # See the website for more details.
-files_to_download = ["berkeley_processed"]
+files_to_download = ["google_16k"]
 
 # Extract all files from the downloaded .tgz, and remove .tgz files.
 # If false, will just download all .tgz files to output_directory
@@ -59,7 +60,7 @@ def download_file(url, filename):
         f.write(buffer)
         status = r"%10d  [%3.2f%%]" % (file_size_dl/1000000.0, file_size_dl * 100. / file_size)
         status = status + chr(8)*(len(status)+1)
-        print(status)
+        #print(status)
     f.close()
 
 def tgz_url(object, type):
@@ -93,9 +94,7 @@ if __name__ == "__main__":
 
     for object in objects:
         if objects_to_download == "all" or object in objects_to_download:
-            print(object)
             for file_type in files_to_download:
-                print(file_type)
                 url = tgz_url(object, file_type)
                 if not check_url(url):
                     continue
@@ -105,3 +104,12 @@ if __name__ == "__main__":
                 download_file(url, filename)
                 if extract:
                     extract_tgz(filename, output_directory)
+                    extracted_dir = f"{output_directory}/{object}/{file_type}"
+                    try:
+                        object_files = os.listdir(extracted_dir)
+                        keepfiles = ["textured.obj", "textured.mtl", "texture_map.png"]
+                        for file in object_files:
+                            if file not in keepfiles:
+                                os.remove(os.path.join(extracted_dir, file))
+                    except FileNotFoundError:
+                        pass
