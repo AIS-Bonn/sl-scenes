@@ -7,7 +7,7 @@ import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.CONFIG import CONFIG
 from ycb_dynamic.object_models import load_stacked
 from ycb_dynamic.camera import Camera
-from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene
+from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene, remove_obj_from_scene
 
 
 class StackScenario(Scenario):
@@ -65,9 +65,13 @@ class StackScenario(Scenario):
                 pose = self._add_pose_noise(pose)
                 object.set_pose(pose)
                 object.mass = weight
-
                 add_obj_to_scene(self.scene, object)
-                self.dynamic_objects.append(object)
+
+                # removing last object if colliding with anything else
+                if(self.is_there_collision()):
+                    remove_obj_from_scene(self.scene, object)
+                else:
+                    self.dynamic_objects.append(object)
 
         return
 

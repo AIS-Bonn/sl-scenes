@@ -136,6 +136,7 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
 
 
 if __name__ == "__main__":
+    utils.clear_cmd()
     import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)
