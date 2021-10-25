@@ -76,7 +76,6 @@ BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 1.3])
 BOWL_BOWLING_BALL_INIT_POS = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.55], [0, 0, 0, 1]])
 
 
-
 # Object Information
 FLAG_CONCAVE = 1 << 0
 ObjectInfo = namedtuple(
