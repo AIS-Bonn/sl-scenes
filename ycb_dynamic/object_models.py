@@ -144,5 +144,5 @@ def load_bowl():
     meshLoader = MeshLoader()
     meshLoader.load_meshes(CONSTANTS.TABLE),
     meshLoader.load_meshes(CONSTANTS.WOODEN_BOWL)
-    meshLoader.load_meshes(CONSTANTS.BOWLING_BALL)
+    meshLoader.load_meshes(CONSTANTS.FRUIT_OBJECTS)
     return meshLoader.get_meshes(), meshLoader.get_mesh_weights()

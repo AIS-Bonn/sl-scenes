@@ -92,9 +92,9 @@ STACK_PYRAMID_POSES = [
 
 # BOWL
 WOODEN_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.1], [0, 0, 0, 1]])
-BOWL_CAM_POS = torch.Tensor([-0.5, 2.4, 2.7])
-BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 1.3])
-BOWL_BOWLING_BALL_INIT_POS = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.55], [0, 0, 0, 1]])
+BOWL_CAM_POS = torch.Tensor([-0.3, 1.2, 2.1])
+BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 1.25])
+BOWL_FRUIT_INIT_POS = torch.tensor([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 1.4], [0, 0, 0, 1]])
 
 
 # Object Information
@@ -199,7 +199,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "013_apple",
-        "ycb_models_512k/013_apple/google_512k/textured.obj",
+        "ycb_models/013_apple/google_512k/textured.obj",
         0.180,
         0,
         0.3,
@@ -208,7 +208,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "017_orange",
-        "ycb_models_512k/018_orange/google_512k/textured.obj",
+        "ycb_models/017_orange/google_512k/textured.obj",
         0.150,
         0,
         0.3,
@@ -363,23 +363,23 @@ OBJECT_INFO = [
     ObjectInfo(
         "wooden_bowl",
         "other_models/wooden_bowl/wooden_bowl.blend",
-        10.000,
+        5.000,
         FLAG_CONCAVE,
         0.3,
-        0.1,
-        0.300,
+        0.3,
+        0.180,
     ),  # "Wooden Bowl" (https://skfb.ly/6XMIP) by MIKErowaveoven is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 ]
 
 
 # pre-defined object sets
-YCBV_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
 FLAT_OBJS = [str(i).zfill(3) for i in range(0, 11)]
 FRUIT_OBJS = [str(i).zfill(3) for i in range(11, 19)]
 CLEANING_OBJS = [str(i).zfill(3) for i in range(19, 22)]
 KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
 DICE_OBJS = [str(i).zfill(3) for i in [5, 7, 8, 9]]
 
+YCBV_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
 BOWL = [obj for obj in OBJECT_INFO if obj.name == "bowl"]
 TABLE = [obj for obj in OBJECT_INFO if obj.name == "table"]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
@@ -393,5 +393,8 @@ BILLIARDS_OBJECTS = [  # Considering objects that do not roll, e.g. only objects
 ]
 DICE_OBJECTS = [  # Considering objects that do roll, e.g. small and regular shapes
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in DICE_OBJS
+]
+FRUIT_OBJECTS = [  # Considering fruits
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FRUIT_OBJS
 ]
 WOODEN_BOWL = [obj for obj in OBJECT_INFO if obj.name == "wooden_bowl"]

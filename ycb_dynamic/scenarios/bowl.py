@@ -30,8 +30,8 @@ class BowlScenario(Scenario):
 
     def load_meshes(self):
         loaded_meshes, loaded_weights = load_bowl()
-        self.table_mesh, self.wooden_bowl_mesh, self.bowling_mesh = loaded_meshes
-        self.table_weight, self.wooden_bowl_weight, self.bowling_weight = loaded_weights
+        self.table_mesh, self.wooden_bowl_mesh, self.fruit_meshes = loaded_meshes
+        self.table_weight, self.wooden_bowl_weight, self.fruit_weights = loaded_weights
 
     def setup_objects(self):
         print("object setup...")
@@ -55,17 +55,18 @@ class BowlScenario(Scenario):
         self.static_objects.append(wooden_bowl)
 
         # spawn several balls at random positions in the bowl
-        k = random.randint(1, 5)  # 1 to 5 balls in bowl
-        ball_placement_angles = np.linspace(0, 2*np.pi, num=10).tolist()
-        ball_placement_angles = random.sample(ball_placement_angles[:-1], k=k)
-        for angle in ball_placement_angles:
-            ball = sl.Object(self.bowling_mesh)
-            p = CONSTANTS.BOWL_BOWLING_BALL_INIT_POS
-            p[:2, 3] = 0.5 * torch.tensor([np.sin(angle), np.cos(angle)])  # assign x and y coordiantes
-            ball.set_pose(p)
-            ball.mass = self.bowling_weight
-            add_obj_to_scene(self.scene, ball)
-            self.dynamic_objects.append(ball)
+        k = random.randint(1, 7)  # 1 to 5 balls in bowl
+        obj_placement_angles = np.linspace(0, 2*np.pi, num=10).tolist()
+        obj_placement_angles = random.sample(obj_placement_angles[:-1], k=k)
+        meshes_and_weights = random.choices(list(zip(self.fruit_meshes, self.fruit_weights)), k=k)
+        for angle, (mesh, weight) in zip(obj_placement_angles, meshes_and_weights):
+            obj = sl.Object(mesh)
+            p = CONSTANTS.BOWL_FRUIT_INIT_POS
+            p[:2, 3] = 0.33 * torch.tensor([np.sin(angle), np.cos(angle)])  # assign x and y coordiantes
+            obj.set_pose(p)
+            obj.mass = weight
+            add_obj_to_scene(self.scene, obj)
+            self.dynamic_objects.append(obj)
 
     def setup_cameras(self):
         print("camera setup...")
