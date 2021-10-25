@@ -66,7 +66,6 @@ class ThrowScenario(Scenario):
             else:
                 self.dynamic_objects.append(obj)
 
-
     def setup_cameras(self):
         print("camera setup...")
         self.cameras = []

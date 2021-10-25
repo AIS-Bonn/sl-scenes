@@ -109,4 +109,17 @@ def load_stacked():
     meshLoader.load_meshes(CONSTANTS.STACK_OBJECTS),
     return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
 
+
+def load_collision():
+    """
+    Loads the meshes required for the Collision Scenario:
+        A bunch of objects are placed on a bowl and slide down through it
+    :return: The loaded meshes as a tuple: (bowl_mesh, ycb_video_meshes)
+    """
+    meshLoader = MeshLoader()
+    meshLoader.load_meshes(CONSTANTS.BOWL),
+    # meshLoader.load_meshes(CONSTANTS.FRUIT_OBJS),  # NOTE: Currently only using fruits
+    meshLoader.load_meshes(CONSTANTS.YCBV_OBJECTS),
+    return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+
 #

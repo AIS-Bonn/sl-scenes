@@ -45,6 +45,9 @@ DROP_LIMITS = {
     "z_max": 1.5,
 }
 
+# BOWL
+BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+
 # BOWLING
 BOWLING_CAM_POS = torch.Tensor([-0.5, 2.4, 1.5])
 BOWLING_INITIAL_VELOCITY = torch.tensor([2.5, 0, 0])
@@ -299,6 +302,15 @@ OBJECT_INFO = [
         0.010
     ),
     ObjectInfo(
+        "bowl",
+        "other_models/bowl/bowl.blend",
+        7.000,
+        0,
+        0.3,
+        0.1,
+        0.2,
+    ),  # https://free3d.com/3d-model/-bowling-ball-v1--953922.html
+    ObjectInfo(
         "bowling_ball",
         "other_models/bowling_ball/ball_centered.obj",
         7.000,
@@ -327,6 +339,7 @@ FRUIT_OBJS = [str(i).zfill(3) for i in range(11, 19)]
 CLEANING_OBJS = [str(i).zfill(3) for i in range(19, 22)]
 KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
 
+BOWL = [obj for obj in OBJECT_INFO if obj.name == "bowl"]
 TABLE = [obj for obj in OBJECT_INFO if obj.name == "table"]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 BEACH_BALL = [obj for obj in OBJECT_INFO if obj.name == "beach_ball"]

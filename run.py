@@ -7,18 +7,20 @@ import ycb_dynamic.utils.utils as utils
 import ycb_dynamic.CONSTANTS as CONSTANTS
 
 from ycb_dynamic.scenarios import (
-    StackScenario,
-    BowlingScenario,
     BillardsScenario,
-    ThrowScenario
+    BowlingScenario,
+    CollisionScenario,
+    StackScenario,
+    ThrowScenario,
 )
 from ycb_dynamic.output import Writer
 
 
 SCENARIOS = {
-    "stack": StackScenario,
-    "bowling": BowlingScenario,
     "billards": BillardsScenario,
+    "bowling": BowlingScenario,
+    "collision": CollisionScenario,
+    "stack": StackScenario,
     "throw": ThrowScenario
 }
 
