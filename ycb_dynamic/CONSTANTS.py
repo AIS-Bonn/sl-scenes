@@ -70,7 +70,7 @@ BILLIARDS_TRIANLGE_POSES = [
 THROWING_INITIAL_VELOCITY = torch.tensor([0, 2, 1.5])
 
 # BOWL
-WOODEN_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 1.1], [0, 0, 0, 1]])
+WOODEN_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.1], [0, 0, 0, 1]])
 BOWL_CAM_POS = torch.Tensor([-0.5, 2.4, 2.7])
 BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 1.3])
 BOWL_BOWLING_BALL_INIT_POS = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.55], [0, 0, 0, 1]])
@@ -305,7 +305,7 @@ OBJECT_INFO = [
     ),  # https://free3d.com/3d-model/beach-ball-v2--259926.html
     ObjectInfo(
         "wooden_bowl",
-        "other_models/wooden_bowl/source/wooden_bowl2.obj",
+        "other_models/wooden_bowl/wooden_bowl.blend",
         10.000,
         FLAG_CONCAVE,
         0.3,
