@@ -122,4 +122,17 @@ def load_collision():
     meshLoader.load_meshes(CONSTANTS.YCBV_OBJECTS),
     return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
 
+
+def load_dice_roll():
+    """
+    Loads the meshes required for the Dice Roll Scenario:
+        A bunch of small and (almost) square objects are rolled on a surface
+    :return: The loaded meshes as a tuple: (table_mesh, ycb_video_meshes)
+    """
+    meshLoader = MeshLoader()
+    meshLoader.load_meshes(CONSTANTS.TABLE),
+    meshLoader.load_meshes(CONSTANTS.DICE_OBJECTS),
+    return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+
+
 #

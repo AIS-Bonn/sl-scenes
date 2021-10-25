@@ -24,6 +24,14 @@ CONFIG = {
             "angular_velocity": torch.Tensor([0, 0, 0]),
             "angular_noise_mean": 0,
             "angular_noise_std": 0.1,
+        },
+        "dice_roll": {
+            "linear_velocity": torch.Tensor([2, 0, 0]),
+            "linear_noise_mean": 0,
+            "linear_noise_std": 0.3,
+            "angular_velocity": torch.Tensor([0, 30, 0]),
+            "angular_noise_mean": 0,
+            "angular_noise_std": 1,
         }
     }
 }

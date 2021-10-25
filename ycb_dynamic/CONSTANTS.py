@@ -41,8 +41,8 @@ DROP_LIMITS = {
     "x_max": 0.6,
     "y_min": -0.4,
     "y_max": 0.4,
-    "z_min": 1.2,
-    "z_max": 1.5,
+    "z_min": 1.5,
+    "z_max": 1.8,
 }
 
 # BOWL
@@ -338,6 +338,7 @@ FLAT_OBJS = [str(i).zfill(3) for i in range(0, 11)]
 FRUIT_OBJS = [str(i).zfill(3) for i in range(11, 19)]
 CLEANING_OBJS = [str(i).zfill(3) for i in range(19, 22)]
 KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
+DICE_OBJS = [str(i).zfill(3) for i in [5, 7, 8, 9]]
 
 BOWL = [obj for obj in OBJECT_INFO if obj.name == "bowl"]
 TABLE = [obj for obj in OBJECT_INFO if obj.name == "table"]
@@ -349,4 +350,7 @@ STACK_OBJECTS = [  # Only considering a subset of 'stackable' objects
 ]
 BILLIARDS_OBJECTS = [  # Considering objects that do not roll, e.g. only objects with flat surfaces
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FLAT_OBJS
+]
+DICE_OBJECTS = [  # Considering objects that do roll, e.g. small and regular shapes
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in DICE_OBJS
 ]

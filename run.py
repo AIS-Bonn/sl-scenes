@@ -10,6 +10,7 @@ from ycb_dynamic.scenarios import (
     BillardsScenario,
     BowlingScenario,
     CollisionScenario,
+    DiceRollScenario,
     StackScenario,
     ThrowScenario,
 )
@@ -20,6 +21,7 @@ SCENARIOS = {
     "billards": BillardsScenario,
     "bowling": BowlingScenario,
     "collision": CollisionScenario,
+    "diceRoll": DiceRollScenario,
     "stack": StackScenario,
     "throw": ThrowScenario
 }

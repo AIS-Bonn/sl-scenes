@@ -12,9 +12,9 @@ from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene, remove_ob
 
 class CollisionScenario(Scenario):
     def __init__(self, cfg, scene):
-        self.name = "Stack"
+        self.name = "Collision"
+        self.config = CONFIG["scenes"].get("collision", {})
         self.prep_time = 0.002  # during this time (in s), the scene will not be rendered
-        self.config = CONFIG["scenes"]["stack"]
         super(CollisionScenario, self).__init__(cfg, scene)
 
     def can_render(self):
