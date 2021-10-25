@@ -2,6 +2,7 @@
 Abstract class for defining scenarios
 """
 
+import numpy as np
 import torch
 import stillleben as sl
 from ycb_dynamic.lighting import get_lightmap
@@ -33,6 +34,17 @@ class Scenario(object):
         self.scene.ambient_light = torch.tensor([0.7, 0.7, 0.7])
         self.scene.light_map = get_lightmap(self.lightmap)
         self.scene.choose_random_light_position()
+
+    def get_separations(self):
+        assert self.dynamic_objects is not None, "Objects must be added to dynamic_objects before computing collisions"
+        self.scene.check_collisions()
+        separations = [object.separation for object in self.dynamic_objects]
+        return separations
+
+    def is_there_collision(self):
+        separations = self.get_separations()
+        collision = True if np.sum(separations) < 0 else False
+        return collision
 
     def load_meshes(self):
         raise NotImplementedError

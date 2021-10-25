@@ -65,6 +65,7 @@ class StackScenario(Scenario):
                 pose = self._add_pose_noise(pose)
                 object.set_pose(pose)
                 object.mass = weight
+
                 add_obj_to_scene(self.scene, object)
                 self.dynamic_objects.append(object)
 
