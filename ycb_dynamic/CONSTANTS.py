@@ -198,6 +198,24 @@ OBJECT_INFO = [
         0.001,
     ),
     ObjectInfo(
+        "013_apple",
+        "ycb_models_512k/013_apple/google_512k/textured.obj",
+        0.180,
+        0,
+        0.3,
+        0.3,
+        1.000
+    ),
+    ObjectInfo(
+        "017_orange",
+        "ycb_models_512k/018_orange/google_512k/textured.obj",
+        0.150,
+        0,
+        0.3,
+        0.3,
+        1.000
+    ),
+    ObjectInfo(
         "019_pitcher_base",
         "ycbv_models/models_fine/obj_000011.ply",
         0.178 + 0.066,
@@ -296,6 +314,15 @@ OBJECT_INFO = [
         0.1,
         0.7,
         0.001,
+    ),
+    ObjectInfo(
+        "062_dice"
+        "ycb_models/062_dice/google_64k/textured.obj",
+        0.006,
+        0,
+        0.3,
+        0.5,
+        1.0
     ),
     ObjectInfo(
         "table",
