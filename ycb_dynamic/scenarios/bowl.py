@@ -1,12 +1,10 @@
-import math
-
 import numpy as np
 import stillleben as sl
 import torch
 import random
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.lighting import get_default_light_map
+from ycb_dynamic.lighting import get_lightmap
 from ycb_dynamic.object_models import load_bowl
 from ycb_dynamic.camera import Camera
 from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene
@@ -27,7 +25,7 @@ class BowlScenario(Scenario):
     def setup_scene(self):
         print("scene setup...")
         self.scene.ambient_light = torch.tensor([0.7, 0.7, 0.7])
-        self.scene.light_map = get_default_light_map()
+        self.scene.light_map = get_lightmap("default")
         self.scene.choose_random_light_position()
 
     def load_meshes(self):
