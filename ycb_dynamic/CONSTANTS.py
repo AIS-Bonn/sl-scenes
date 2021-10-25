@@ -316,7 +316,7 @@ OBJECT_INFO = [
         0.001,
     ),
     ObjectInfo(
-        "062_dice"
+        "062_dice",
         "ycb_models/062_dice/google_64k/textured.obj",
         0.006,
         0,
