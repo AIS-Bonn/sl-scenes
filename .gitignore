@@ -1,7 +1,7 @@
 # OUR PROJECT
 .idea
 *.ini
-
+dna.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

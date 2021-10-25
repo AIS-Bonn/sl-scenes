@@ -4,7 +4,6 @@ import torch
 import numpy as np
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.lighting import get_default_light_map
 from ycb_dynamic.object_models import load_bowling
 from ycb_dynamic.camera import Camera
 from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene
@@ -22,12 +21,6 @@ class BowlingScenario(Scenario):
         :return: True if scene has been prepared and can be rendered, False otherwise.
         """
         return self.sim_t > self.prep_time
-
-    def setup_scene(self):
-        print("scene setup...")
-        self.scene.ambient_light = torch.tensor([0.7, 0.7, 0.7])
-        self.scene.light_map = get_default_light_map()
-        self.scene.choose_random_light_position()
 
     def load_meshes(self):
         loaded_meshes, loaded_weights = load_bowling()

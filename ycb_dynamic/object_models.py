@@ -98,4 +98,41 @@ def load_billiards():
     return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
 
 
+def load_stacked():
+    """
+    Loads the meshes required for the Stacked Scenario:
+        Objects with flat surfaces assemble a pyramid, which might fall due to lack of support
+    :return: The loaded meshes as a tuple: (table_mesh, ycb_video_meshes)
+    """
+    meshLoader = MeshLoader()
+    meshLoader.load_meshes(CONSTANTS.TABLE),
+    meshLoader.load_meshes(CONSTANTS.STACK_OBJECTS),
+    return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+
+
+def load_collision():
+    """
+    Loads the meshes required for the Collision Scenario:
+        A bunch of objects are placed on a bowl and slide down through it
+    :return: The loaded meshes as a tuple: (bowl_mesh, ycb_video_meshes)
+    """
+    meshLoader = MeshLoader()
+    meshLoader.load_meshes(CONSTANTS.BOWL),
+    # meshLoader.load_meshes(CONSTANTS.FRUIT_OBJS),  # NOTE: Currently only using fruits
+    meshLoader.load_meshes(CONSTANTS.YCBV_OBJECTS),
+    return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+
+
+def load_dice_roll():
+    """
+    Loads the meshes required for the Dice Roll Scenario:
+        A bunch of small and (almost) square objects are rolled on a surface
+    :return: The loaded meshes as a tuple: (table_mesh, ycb_video_meshes)
+    """
+    meshLoader = MeshLoader()
+    meshLoader.load_meshes(CONSTANTS.TABLE),
+    meshLoader.load_meshes(CONSTANTS.DICE_OBJECTS),
+    return meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+
+
 #

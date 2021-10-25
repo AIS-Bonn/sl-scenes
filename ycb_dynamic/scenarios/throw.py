@@ -4,15 +4,16 @@ import torch
 import numpy as np
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.lighting import get_default_light_map
+from ycb_dynamic.CONFIG import CONFIG
 from ycb_dynamic.object_models import load_table_and_ycbv
 from ycb_dynamic.camera import Camera
-from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene
+from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene, remove_obj_from_scene
 
 
 class ThrowScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Throw"
+        self.config = CONFIG["scenes"]["throw"]
         self.prep_time = 0  # during this time (in s), the scene will not be rendered
         self.meshes_loaded = False
         self.bowling_ball_loaded = False
@@ -24,12 +25,6 @@ class ThrowScenario(Scenario):
         """
         return self.sim_t > self.prep_time
 
-    def setup_scene(self):
-        print("scene setup...")
-        self.scene.ambient_light = torch.tensor([0.7, 0.7, 0.7])
-        self.scene.light_map = get_default_light_map()
-        self.scene.choose_random_light_position()
-
     def load_meshes(self):
         loaded_meshes, loaded_mesh_weights = load_table_and_ycbv()
         self.table_mesh, self.obj_meshes = loaded_meshes
@@ -40,7 +35,7 @@ class ThrowScenario(Scenario):
         print("object setup...")
         self.static_objects, self.dynamic_objects = [], []
         if not self.meshes_loaded:
-            self.load_meshes() # if objects have not been loaded yet, load them
+            self.load_meshes()  # if objects have not been loaded yet, load them
 
         # place the static objects (table) into the scene
         table = sl.Object(self.table_mesh)
@@ -60,11 +55,16 @@ class ThrowScenario(Scenario):
             p[:3, 3] = torch.tensor([x, y, z])
             obj.set_pose(p)
             obj.mass = weight
-            obj.linear_velocity = CONSTANTS.THROWING_INITIAL_VELOCITY + 0.3 * torch.randn(3,)
-            obj.angular_velocity = 0.1 * torch.randn(3,)
-            print(obj.linear_velocity, obj.angular_velocity)
+            linear_noise = self.config["linear_noise_std"] * torch.randn(3,) + self.config["linear_noise_mean"]
+            angular_noise = self.config["angular_noise_std"] * torch.randn(3,) + self.config["angular_noise_mean"]
+            obj.linear_velocity = self.config["linear_velocity"] + linear_noise
+            obj.angular_velocity = self.config["angular_velocity"] + angular_noise
+            # print(obj.linear_velocity, obj.angular_velocity)
             add_obj_to_scene(self.scene, obj)
-            self.dynamic_objects.append(obj)
+            if(self.is_there_collision()):  # removing last object if colliding with anything else
+                remove_obj_from_scene(self.scene, obj)
+            else:
+                self.dynamic_objects.append(obj)
 
     def setup_cameras(self):
         print("camera setup...")

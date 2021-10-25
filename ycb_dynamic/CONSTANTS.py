@@ -18,7 +18,15 @@ MESH_BASE_DIR = Path(".") / "external_data" / "object_models"
 # Lighting
 IBL_BASE_PATH = Path(".") / "external_data" / "light_maps"
 ALL_LIGHTMAPS = {
-    "default": IBL_BASE_PATH / "Chiricahua_Plaza" / "Chiricahua_Plaza.ibl",
+    "default": IBL_BASE_PATH / "Chiricahua_Plaza" / "Chiricahua_Plaza.ibl",  # DEPRECATED
+    "Alexs_Apartment": IBL_BASE_PATH / "Alexs_Apartment" / "Alexs_Apartment.ibl",
+    "Barcelona_Rooftops": IBL_BASE_PATH / "Barcelona_Rooftops" / "Barcelona_Rooftops.ibl",
+    "Chiricahua_Plaza": IBL_BASE_PATH / "Chiricahua_Plaza" / "Chiricahua_Plaza.ibl",
+    "Circus_Backstage": IBL_BASE_PATH / "Circus_Backstage" / "Circus_Backstage.ibl",
+    "Helipad_GoldenHour": IBL_BASE_PATH / "Helipad_GoldenHour" / "Helipad_GoldenHour.ibl",
+    # "Old_Industrial_Hall": IBL_BASE_PATH / "Old_Industrial_Hall" / "Old_Industrial_Hall.ibl",  # Path issue?
+    "Popcorn_Lobby": IBL_BASE_PATH / "Popcorn_Lobby" / "Popcorn_Lobby.ibl",
+    "Wooden_Door": IBL_BASE_PATH / "Wooden_Door" / "Wooden_Door.ibl",
 }
 
 
@@ -33,12 +41,16 @@ DROP_LIMITS = {
     "x_max": 0.6,
     "y_min": -0.4,
     "y_max": 0.4,
-    "z_min": 1.2,
-    "z_max": 1.5,
+    "z_min": 1.5,
+    "z_max": 1.8,
 }
+
+# BOWL
+BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
 
 # BOWLING
 BOWLING_CAM_POS = torch.Tensor([-0.5, 2.4, 1.5])
+BOWLING_INITIAL_VELOCITY = torch.tensor([2.5, 0, 0])
 WOOD_BLOCK_POSES = [
     torch.tensor([[1, 0, 0, 0.400], [0, 1, 0, -0.20], [0,  0, 1, 1.23], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0.400], [0, 1, 0,     0], [0,  0, 1, 1.23], [0, 0, 0, 1]]),
@@ -50,7 +62,6 @@ WOOD_BLOCK_POSES = [
     torch.tensor([[1, 0, 0, 0.395], [0, 0, 1,     0], [0, -1, 0, 1.68], [0, 0, 0, 1]]),
     #torch.tensor([[1, 0, 0, 0.395], [0, 1, 0,     0], [0,  0, 1, 1.83], [0, 0, 0, 1]]),
 ]
-BOWLING_INITIAL_VELOCITY = torch.tensor([2.5, 0, 0])
 
 # BILLIARDS
 BILLIARDS_TRIANLGE_POSES = [
@@ -66,8 +77,18 @@ BILLIARDS_TRIANLGE_POSES = [
     torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, 0.18], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
 ]
 
-# THROW
-THROWING_INITIAL_VELOCITY = torch.tensor([0, 2, 1.5])
+
+# STACK PYRAMID (4-1-1)
+STACK_PYRAMID_POSES = [
+    torch.tensor([[1, 0, 0, -0.05], [0, 1, 0, -0.05], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, -0.05], [0, 1, 0, 0.05], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.05], [0, 1, 0, -0.05], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.05], [0, 1, 0, 0.05], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    #
+    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.4], [0, 0, 0, 1]]),
+    #
+    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.55], [0, 0, 0, 1]]),
+]
 
 
 
@@ -281,6 +302,15 @@ OBJECT_INFO = [
         0.010
     ),
     ObjectInfo(
+        "bowl",
+        "other_models/bowl/bowl.blend",
+        7.000,
+        0,
+        0.3,
+        0.1,
+        0.2,
+    ),  # https://free3d.com/3d-model/-bowling-ball-v1--953922.html
+    ObjectInfo(
         "bowling_ball",
         "other_models/bowling_ball/ball_centered.obj",
         7.000,
@@ -302,12 +332,25 @@ OBJECT_INFO = [
 ]
 
 
-# pre-defined object sets (TODO use mapping/frozendict?)
+# pre-defined object sets
 YCBV_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
+FLAT_OBJS = [str(i).zfill(3) for i in range(0, 11)]
+FRUIT_OBJS = [str(i).zfill(3) for i in range(11, 19)]
+CLEANING_OBJS = [str(i).zfill(3) for i in range(19, 22)]
+KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
+DICE_OBJS = [str(i).zfill(3) for i in [5, 7, 8, 9]]
+
+BOWL = [obj for obj in OBJECT_INFO if obj.name == "bowl"]
 TABLE = [obj for obj in OBJECT_INFO if obj.name == "table"]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 BEACH_BALL = [obj for obj in OBJECT_INFO if obj.name == "beach_ball"]
 WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
-BILLIARDS_OBJECTS = [
-    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in ["002", "003", "007", "008"]
+STACK_OBJECTS = [  # Only considering a subset of 'stackable' objects
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FLAT_OBJS
+]
+BILLIARDS_OBJECTS = [  # Considering objects that do not roll, e.g. only objects with flat surfaces
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FLAT_OBJS
+]
+DICE_OBJECTS = [  # Considering objects that do roll, e.g. small and regular shapes
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in DICE_OBJS
 ]

@@ -4,19 +4,25 @@ import tqdm
 import stillleben as sl
 
 import ycb_dynamic.utils.utils as utils
+import ycb_dynamic.CONSTANTS as CONSTANTS
+
 from ycb_dynamic.scenarios import (
-    StackScenario,
-    BowlingScenario,
     BillardsScenario,
-    ThrowScenario
+    BowlingScenario,
+    CollisionScenario,
+    DiceRollScenario,
+    StackScenario,
+    ThrowScenario,
 )
 from ycb_dynamic.output import Writer
 
 
 SCENARIOS = {
-    "stack": StackScenario,
-    "bowling": BowlingScenario,
     "billards": BillardsScenario,
+    "bowling": BowlingScenario,
+    "collision": CollisionScenario,
+    "diceRoll": DiceRollScenario,
+    "stack": StackScenario,
     "throw": ThrowScenario
 }
 
@@ -35,23 +41,44 @@ def main(cfg):
     renderer = sl.RenderPass()
 
     if cfg.viewer:  # load scenario and view
-        scene = sl.Scene(cfg.resolution)
-        scenario = SCENARIOS[cfg.scenario](cfg, scene)
-        view_scenario(cfg, renderer, scenario)
-
+        res = init_populate_scene(cfg)
+        if(res["render"]):
+            print(f"Scene successfully populated on iteration #{res['n_errors']}....")
+            view_scenario(cfg, renderer, res["scenario"])
+        else:
+            print("Number of trials exceeded. Scene could not be rendered....")
     else:  # set up scenarios and generate data
         Path(cfg.out_path).mkdir(exist_ok=True, parents=True)
         print(f"will generate {cfg.iterations} episodes per scenario")
         scenario_ids = SCENARIOS.keys() if cfg.scenario == "all" else [cfg.scenario]
         for it in range(cfg.iterations):
             for scenario_id in scenario_ids:
-                scene = sl.Scene(cfg.resolution)  # (re-)initialize scene
-                scenario = SCENARIOS[scenario_id](
-                    cfg, scene
-                )  # populate scene according to scenario
-                run_and_render_scenario(cfg, renderer, scenario, it)
-
+                res = init_populate_scene(cfg)
+                if(res["render"]):
+                    print(f"Scene successfully populated on iteration #{res['n_errors']}....")
+                    run_and_render_scenario(cfg, renderer, res["scenario"], it)
+                else:
+                    print(f"""Iteration {it}, Scene ID {scenario_id} :Number of trials exceeded.
+                              Scene could not be rendered....""")
     return
+
+
+def init_populate_scene(cfg, N_TRIALS=3):
+    """
+    Initializing a scene, populating it with objects, and making sure there are
+    no object collisions
+    """
+    is_there_collision = True
+    n_errors = 0
+    while is_there_collision and n_errors < N_TRIALS:
+        n_errors += 1
+        scene = sl.Scene(cfg.resolution)
+        scenario = SCENARIOS[cfg.scenario](cfg, scene)
+        is_there_collision = scenario.is_there_collision()
+    else:
+        render = True if(n_errors < N_TRIALS) else False
+
+    return {"render":render, "scene":scene, "scenario":scenario, "n_errors":n_errors}
 
 
 def view_scenario(cfg, renderer, scenario):
@@ -113,6 +140,7 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
 
 
 if __name__ == "__main__":
+    utils.clear_cmd()
     import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)
@@ -146,6 +174,13 @@ if __name__ == "__main__":
         type=str,
         choices=list(SCENARIOS.keys()) + ["all"],
         help="specify which scenario to create and render",
+    )
+    parser.add_argument(
+        "--lightmap",
+        type=str,
+        default="random",
+        choices=list(CONSTANTS.ALL_LIGHTMAPS.keys()) + ["random", "default"],
+        help="specify the lightmap and background to apply in the scene",
     )
     parser.add_argument(
         "--assemble-rgb",
