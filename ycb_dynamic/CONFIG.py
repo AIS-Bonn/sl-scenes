@@ -1,6 +1,7 @@
 """
 Configurations and variables
 """
+import torch
 
 CONFIG = {
     "scenes": {
@@ -15,6 +16,14 @@ CONFIG = {
             "y_disp_step": 0.2,
             "pos_noise_mean": 0,
             "pos_noise_std": 0.1,
+        },
+        "throw": {
+            "linear_velocity": torch.Tensor([0, 2, 1.5]),
+            "linear_noise_mean": 0,
+            "linear_noise_std": 0.3,
+            "angular_velocity": torch.Tensor([0, 0, 0]),
+            "angular_noise_mean": 0,
+            "angular_noise_std": 0.1,
         }
     }
 }

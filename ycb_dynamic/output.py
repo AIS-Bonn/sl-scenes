@@ -155,6 +155,8 @@ class Writer(object):
         class_index_masks, instance_index_masks = [], []
 
         for i, obj in enumerate(active_objects):
+            if(not hasattr(obj, "instance_index")):
+                continue
             mask = (instance_segmentation == obj.instance_index).byte()
             self.saver.save(mask * 255, str(self.path / 'mask_visib' / f'{self.idx:06}_{i:06}.png'))
             class_index_masks.append(mask * obj.mesh.class_index)

@@ -47,6 +47,7 @@ DROP_LIMITS = {
 
 # BOWLING
 BOWLING_CAM_POS = torch.Tensor([-0.5, 2.4, 1.5])
+BOWLING_INITIAL_VELOCITY = torch.tensor([2.5, 0, 0])
 WOOD_BLOCK_POSES = [
     torch.tensor([[1, 0, 0, 0.400], [0, 1, 0, -0.20], [0,  0, 1, 1.23], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0.400], [0, 1, 0,     0], [0,  0, 1, 1.23], [0, 0, 0, 1]]),
@@ -58,7 +59,6 @@ WOOD_BLOCK_POSES = [
     torch.tensor([[1, 0, 0, 0.395], [0, 0, 1,     0], [0, -1, 0, 1.68], [0, 0, 0, 1]]),
     #torch.tensor([[1, 0, 0, 0.395], [0, 1, 0,     0], [0,  0, 1, 1.83], [0, 0, 0, 1]]),
 ]
-BOWLING_INITIAL_VELOCITY = torch.tensor([2.5, 0, 0])
 
 # BILLIARDS
 BILLIARDS_TRIANLGE_POSES = [
@@ -86,10 +86,6 @@ STACK_PYRAMID_POSES = [
     #
     torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.55], [0, 0, 0, 1]]),
 ]
-
-
-# THROW
-THROWING_INITIAL_VELOCITY = torch.tensor([0, 2, 1.5])
 
 
 

@@ -38,7 +38,7 @@ class Scenario(object):
     def get_separations(self):
         assert self.dynamic_objects is not None, "Objects must be added to dynamic_objects before computing collisions"
         self.scene.check_collisions()
-        separations = [object.separation for object in self.dynamic_objects]
+        separations = [obj.separation for obj in self.dynamic_objects if hasattr(obj, "separation")]
         return separations
 
     def is_there_collision(self):
