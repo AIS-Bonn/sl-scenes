@@ -22,12 +22,6 @@ class BowlScenario(Scenario):
         """
         return self.sim_t > self.prep_time
 
-    def setup_scene(self):
-        print("scene setup...")
-        self.scene.ambient_light = torch.tensor([0.7, 0.7, 0.7])
-        self.scene.light_map = get_lightmap("default")
-        self.scene.choose_random_light_position()
-
     def load_meshes(self):
         loaded_meshes, loaded_weights = load_bowl()
         self.table_mesh, self.wooden_bowl_mesh, self.fruit_meshes = loaded_meshes
