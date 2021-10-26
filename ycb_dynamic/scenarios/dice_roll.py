@@ -31,8 +31,7 @@ class DiceRollScenario(Scenario):
         """ """
         meshLoader = MeshLoader()
         meshLoader.load_meshes(CONSTANTS.TABLE),
-        # meshLoader.load_meshes(CONSTANTS.DICE_OBJECTS),
-        meshLoader.load_meshes(CONSTANTS.YCBV_OBJECTS),
+        meshLoader.load_meshes(CONSTANTS.DICE_OBJECTS),
         loaded_meshes, loaded_mesh_weights = meshLoader.get_meshes(), meshLoader.get_mesh_weights()
 
         self.table_mesh, self.obj_meshes = loaded_meshes
@@ -41,6 +40,7 @@ class DiceRollScenario(Scenario):
         return
 
     def setup_objects(self):
+        """ """
         print("object setup...")
         self.static_objects, self.dynamic_objects = [], []
         if not self.meshes_loaded:
