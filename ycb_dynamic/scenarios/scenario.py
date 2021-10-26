@@ -64,6 +64,7 @@ def add_obj_to_scene(scene: sl.Scene, obj: sl.Object):
     obj.instance_index = len(scene.objects) + 1
     scene.add_object(obj)
 
+
 def remove_obj_from_scene(scene: sl.Scene, obj: sl.Object):
     obj.instance_index = len(scene.objects) - 1
     scene.remove_object(obj)
