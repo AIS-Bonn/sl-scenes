@@ -105,7 +105,14 @@ ObjectInfo = namedtuple(
     ["name", "mesh_fp", "weight", "flags", "metallic", "roughness", "scale"],
 )
 
-# source: http://www.ycbbenchmarks.com/wp-content/uploads/2015/09/object-list-Sheet1.pdf
+"""
+YCB object weight sources: http://www.ycbbenchmarks.com/wp-content/uploads/2015/09/object-list-Sheet1.pdf
+A few notes on the 'scale' parameter: stillleben is completely metric, so non-metric meshes need to be scaled:
+ - YCB-Video (BOP version) in millimeters -> scale = 0.001
+ - YCB Objects (the originals) in meters -> scale = 1.0
+ - Other objects: many are in cm, some are whatever, some we'd like to be bigger/smaller... -> varying scales
+"""
+# source:
 # BOP-Compatible YCB-Video models use millimeter units for some strange reason.
 # -> sl is completely metric, so scale accordingly.
 OBJECT_INFO = [
