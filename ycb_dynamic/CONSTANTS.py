@@ -91,6 +91,7 @@ STACK_PYRAMID_POSES = [
 ]
 
 # BOWL
+RED_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.28], [0, 0, 0, 1]])
 WOODEN_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.1], [0, 0, 0, 1]])
 BOWL_CAM_POS = torch.Tensor([-0.3, 1.2, 2.1])
 BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 1.25])
@@ -469,14 +470,14 @@ OBJECT_INFO = [
         0.010
     ),
     ObjectInfo(
-        "bowl",
-        "other_models/bowl/bowl.blend",
+        "red_bowl",
+        "other_models/red_bowl/red_bowl.obj",
         7.000,
-        0,
+        FLAG_CONCAVE,
         0.3,
         0.1,
-        0.2,
-    ),  # https://free3d.com/3d-model/-bowling-ball-v1--953922.html
+        0.1,
+    ),  # https://sketchfab.com/3d-models/bowl-13339ceb5ddc44aaa8b69b7cee51d9c3
     ObjectInfo(
         "bowling_ball",
         "other_models/bowling_ball/ball_centered.obj",
@@ -515,7 +516,7 @@ KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
 DICE_OBJS = [str(i).zfill(3) for i in [5, 7, 8, 9]]
 
 YCBV_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
-BOWL = [obj for obj in OBJECT_INFO if obj.name == "bowl"]
+BOWL = [obj for obj in OBJECT_INFO if obj.name == "red_bowl"]
 TABLE = [obj for obj in OBJECT_INFO if obj.name == "table"]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 BEACH_BALL = [obj for obj in OBJECT_INFO if obj.name == "beach_ball"]
