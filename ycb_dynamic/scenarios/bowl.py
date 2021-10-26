@@ -6,6 +6,7 @@ import stillleben as sl
 import torch
 import random
 
+from ycb_dynamic.CONFIG import CONFIG
 import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.object_models import MeshLoader
 from ycb_dynamic.camera import Camera
@@ -15,6 +16,7 @@ from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene, remove_ob
 class BowlScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Bowl"
+        self.config = CONFIG["scenes"]["bowl"]
         self.prep_time = 0.0  # during this time (in s), the scene will not be rendered
         super(BowlScenario, self).__init__(cfg, scene)   # also calls reset_sim()
 
@@ -38,6 +40,7 @@ class BowlScenario(Scenario):
         return
 
     def setup_objects(self):
+        """ """
         print("object setup...")
         self.static_objects, self.dynamic_objects = [], []
         if not self.meshes_loaded:
@@ -59,9 +62,8 @@ class BowlScenario(Scenario):
         self.static_objects.append(wooden_bowl)
 
         # spawn several balls at random positions in the bowl
-        k = random.randint(1, 7)  # 1 to 5 balls in bowl
-        obj_placement_angles = np.linspace(0, 2*np.pi, num=10).tolist()
-        obj_placement_angles = random.sample(obj_placement_angles[:-1], k=k)
+        k = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"] + 1)
+        obj_placement_angles = np.linspace(0, 2*np.pi, num=k).tolist()
         meshes_and_weights = random.choices(list(zip(self.fruit_meshes, self.fruit_weights)), k=k)
         for angle, (mesh, weight) in zip(obj_placement_angles, meshes_and_weights):
             obj = sl.Object(mesh)
@@ -76,11 +78,13 @@ class BowlScenario(Scenario):
                 self.dynamic_objects.append(obj)
 
     def setup_cameras(self):
+        """ """
         print("camera setup...")
         self.cameras = []
         self.cameras.append(Camera("main", CONSTANTS.BOWL_CAM_POS,
                                    CONSTANTS.BOWL_CAM_LOOKAT, moving=False))
 
     def simulate(self, dt):
+        """ """
         self.scene.simulate(dt)
         self.sim_t += dt

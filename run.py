@@ -1,3 +1,7 @@
+"""
+Main logic for running the simulator and generating data
+"""
+import argparse
 from pathlib import Path
 from contextlib import ExitStack
 import tqdm
@@ -8,24 +12,22 @@ import ycb_dynamic.CONSTANTS as CONSTANTS
 
 from ycb_dynamic.scenarios import (
     BillardsScenario,
+    BowlScenario,
     BowlingScenario,
-    # CollisionScenario,
     DiceRollScenario,
     StackScenario,
     ThrowScenario,
-    BowlScenario
 )
 from ycb_dynamic.output import Writer
 
 
 SCENARIOS = {
     "billards": BillardsScenario,
+    "bowl": BowlScenario,
     "bowling": BowlingScenario,
-    # "collision": CollisionScenario,
     "diceRoll": DiceRollScenario,
     "stack": StackScenario,
     "throw": ThrowScenario,
-    "bowl": BowlScenario
 }
 
 
@@ -80,7 +82,7 @@ def init_populate_scene(cfg, scenario_id, N_TRIALS=3):
     else:
         render = True if(n_errors < N_TRIALS) else False
 
-    return {"render":render, "scene":scene, "scenario":scenario, "n_errors":n_errors}
+    return {"render": render, "scene": scene, "scenario": scenario, "n_errors": n_errors}
 
 
 def view_scenario(cfg, renderer, scenario):
@@ -138,12 +140,8 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
                 writer.assemble_rgb_video(in_fps=cfg.sim_fps, out_fps=cfg.sim_fps)
 
 
-# ==============================================================================
-
-
 if __name__ == "__main__":
     utils.clear_cmd()
-    import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -189,7 +187,8 @@ if __name__ == "__main__":
         action="store_true",
         help="if specified, creates mp4 video files from the RGB frames of an episode",
     )
-    parser.add_argument("--resolution", nargs='+', type=int, default=(1920, 1080))
+    # parser.add_argument("--resolution", nargs='+', type=int, default=(1920, 1080))
+    parser.add_argument("--resolution", nargs='+', type=int, default=(1280, 800))
     parser.add_argument(
         "--frames", type=int, default=180, help="number of frames generated per episode"
     )

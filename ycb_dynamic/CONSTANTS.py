@@ -7,7 +7,6 @@ Constant values such as:
 Everything non-code that can eventually be changed.
 """
 
-import random
 from pathlib import Path
 from collections import namedtuple
 import torch
@@ -30,28 +29,19 @@ ALL_LIGHTMAPS = {
     "Wooden_Door": IBL_BASE_PATH / "Wooden_Door" / "Wooden_Door.ibl",
 }
 
-
-# Scene global configureations
+#########################
+# Scene global configurations
+#########################
 CAM_POS = torch.Tensor([0.5, 2.4, 1.5])
 CAM_LOOKAT = torch.Tensor([0, 0, 1.2])
 
 # TABLE
 TABLE_POSE = torch.tensor([[0, 0, 1, 0], [1, 0, 0, 0], [0, 1, 0, 0.60], [0, 0, 0, 1]])
-DROP_LIMITS = {
-    "x_min": -0.6,
-    "x_max": 0.6,
-    "y_min": -0.4,
-    "y_max": 0.4,
-    "z_min": 1.5,
-    "z_max": 1.8,
-}
-
 # BOWL
 BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
 
 # BOWLING
 BOWLING_CAM_POS = torch.Tensor([-0.5, 2.4, 1.5])
-BOWLING_INITIAL_VELOCITY = torch.tensor([2.5, 0, 0])
 WOOD_BLOCK_POSES = [
     torch.tensor([[1, 0, 0, 0.400], [0, 1, 0, -0.20], [0,  0, 1, 1.23], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0.400], [0, 1, 0,     0], [0,  0, 1, 1.23], [0, 0, 0, 1]]),
@@ -63,7 +53,6 @@ WOOD_BLOCK_POSES = [
     torch.tensor([[1, 0, 0, 0.395], [0, 0, 1,     0], [0, -1, 0, 1.68], [0, 0, 0, 1]]),
     #torch.tensor([[1, 0, 0, 0.395], [0, 1, 0,     0], [0,  0, 1, 1.83], [0, 0, 0, 1]]),
 ]
-
 # BILLIARDS
 BILLIARDS_TRIANLGE_POSES = [
     torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
@@ -77,7 +66,6 @@ BILLIARDS_TRIANLGE_POSES = [
     torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, -0.18], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, 0.18], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
 ]
-
 
 # STACK PYRAMID (4-1-1)
 STACK_PYRAMID_POSES = [
@@ -98,7 +86,9 @@ BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 1.25])
 BOWL_FRUIT_INIT_POS = torch.tensor([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 1.4], [0, 0, 0, 1]])
 
 
+#########################
 # Object Information
+#########################
 FLAG_CONCAVE = 1 << 0
 ObjectInfo = namedtuple(
     "ObjectInfo",
@@ -508,7 +498,9 @@ OBJECT_INFO = [
 ]
 
 
-# pre-defined object sets
+#########################
+# Pre-defined object sets
+#########################
 FLAT_OBJS = [str(i).zfill(3) for i in range(0, 11)]
 FRUIT_OBJS = [str(i).zfill(3) for i in range(11, 19)]
 CLEANING_OBJS = [str(i).zfill(3) for i in range(19, 22)]

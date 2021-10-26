@@ -3,7 +3,10 @@ Bowling Scenario: A ball smashes through a tower of wooden blocks
 """
 import stillleben as sl
 import torch
+import random
 
+import ycb_dynamic.utils.utils as utils
+from ycb_dynamic.CONFIG import CONFIG
 import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.object_models import MeshLoader
 from ycb_dynamic.camera import Camera
@@ -13,6 +16,7 @@ from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene, remove_ob
 class BowlingScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Bowling"
+        self.config = CONFIG["scenes"]["bowling"]
         self.prep_time = 1.000  # during this time (in s), the scene will not be rendered
         self.bowling_ball_loaded = False
         super(BowlingScenario, self).__init__(cfg, scene)   # also calls reset_sim()
@@ -37,6 +41,7 @@ class BowlingScenario(Scenario):
         return
 
     def setup_objects(self):
+        """ """
         print("object setup...")
         self.static_objects, self.dynamic_objects = [], []
         if not self.meshes_loaded:
@@ -56,23 +61,34 @@ class BowlingScenario(Scenario):
             wood_block.set_pose(wb_pose)
             wood_block.mass = self.wood_block_weight
             add_obj_to_scene(self.scene, wood_block)
+
             if(self.is_there_collision()):  # removing last object if colliding with anything else
                 remove_obj_from_scene(self.scene, wood_block)
             else:
                 self.dynamic_objects.append(wood_block)
+        return
 
     def add_bowling_ball(self):
+        """ """
         if not self.meshes_loaded:
             self.load_meshes()
         bowling_ball = sl.Object(self.bowling_mesh)
         bp = bowling_ball.pose()
-        bp[:3, 3] = torch.tensor([-0.9, 0, 1.25])
+        x = random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"])
+        y = random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"])
+        z = random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
+        bp[:3, 3] = torch.tensor([x, y, z])
         bowling_ball.set_pose(bp)
         bowling_ball.mass = self.bowling_weight
-        bowling_ball.linear_velocity = CONSTANTS.BOWLING_INITIAL_VELOCITY
+        bowling_ball.linear_velocity = utils.get_noisy_vect(
+                v=self.config["velocity"]["lin_velocity"],
+                mean=self.config["velocity"]["lin_noise_mean"],
+                std=self.config["velocity"]["lin_noise_std"]
+            )
         add_obj_to_scene(self.scene, bowling_ball)
         self.dynamic_objects.append(bowling_ball)
         self.bowling_ball_loaded = True
+        return
 
     def setup_cameras(self):
         print("camera setup...")

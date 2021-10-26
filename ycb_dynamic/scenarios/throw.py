@@ -6,8 +6,8 @@ Same as tabletop, but with intial linear velocity
 import stillleben as sl
 import random
 import torch
-import numpy as np
 
+import ycb_dynamic.utils.utils as utils
 import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.CONFIG import CONFIG
 from ycb_dynamic.object_models import MeshLoader
@@ -43,6 +43,7 @@ class ThrowScenario(Scenario):
         return
 
     def setup_objects(self):
+        """ """
         print("object setup...")
         self.static_objects, self.dynamic_objects = [], []
         if not self.meshes_loaded:
@@ -56,21 +57,27 @@ class ThrowScenario(Scenario):
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
 
-        # throw 10 random YCB-Video objects onto the table, from the side
-        for (mesh, weight) in random.choices(list(zip(self.obj_meshes, self.obj_weights)), k=10):
+        # throw some random YCB-Video objects onto the table, from the side
+        N_objs = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"] + 1)
+        for (mesh, weight) in random.choices(list(zip(self.obj_meshes, self.obj_weights)), k=N_objs):
             obj = sl.Object(mesh)
             p = obj.pose()
-            x = random.uniform(CONSTANTS.DROP_LIMITS["x_min"], CONSTANTS.DROP_LIMITS["x_max"])
-            y = -1.0
-            z = random.uniform(CONSTANTS.DROP_LIMITS["z_min"], CONSTANTS.DROP_LIMITS["z_max"])
+            x = random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"])
+            y = random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"])
+            z = random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
             p[:3, 3] = torch.tensor([x, y, z])
             obj.set_pose(p)
             obj.mass = weight
-            linear_noise = self.config["linear_noise_std"] * torch.randn(3,) + self.config["linear_noise_mean"]
-            angular_noise = self.config["angular_noise_std"] * torch.randn(3,) + self.config["angular_noise_mean"]
-            obj.linear_velocity = self.config["linear_velocity"] + linear_noise
-            obj.angular_velocity = self.config["angular_velocity"] + angular_noise
-            # print(obj.linear_velocity, obj.angular_velocity)
+            obj.linear_velocity = utils.get_noisy_vect(
+                    v=self.config["velocity"]["lin_velocity"],
+                    mean=self.config["velocity"]["lin_noise_mean"],
+                    std=self.config["velocity"]["lin_noise_std"]
+            )
+            obj.angular_velocity = utils.get_noisy_vect(
+                    v=self.config["velocity"]["ang_velocity"],
+                    mean=self.config["velocity"]["ang_noise_mean"],
+                    std=self.config["velocity"]["ang_noise_std"]
+            )
             add_obj_to_scene(self.scene, obj)
             if(self.is_there_collision()):  # removing last object if colliding with anything else
                 remove_obj_from_scene(self.scene, obj)

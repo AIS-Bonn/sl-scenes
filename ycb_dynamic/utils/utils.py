@@ -24,7 +24,7 @@ def timestamp():
 
 
 def _rot_matrix(self, angles):
-    """ """
+    """ Generating a rotation matrix given the rotation angles """
     yaw = torch.tensor([
         [torch.cos(angles[0]), -torch.sin(angles[0]), 0],
         [torch.sin(angles[0]), torch.cos(angles[0]), 0],
@@ -42,3 +42,16 @@ def _rot_matrix(self, angles):
     ])
     rot_matrix = yaw @ pitch @ roll
     return rot_matrix
+
+
+def get_rand_num(N=1, low=0, high=1):
+    """ Get N random uniformly distributed numbers on the specified range"""
+    nums = torch.rand(N,) * (high - low) + low
+    return nums
+
+
+def get_noisy_vect(v, mean, std):
+    """ Adding AWGN to the vector v"""
+    noise = torch.randn(v.shape) * std + mean
+    noisy_v = v + noise
+    return noisy_v
