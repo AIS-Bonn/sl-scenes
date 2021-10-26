@@ -1,11 +1,14 @@
+"""
+Dice Roll Scenario: A bunch of small and (almost) square objects are rolled on a surface
+Same as tabletop, but with some linear velocity and high angular velocity
+"""
 import stillleben as sl
 import random
-import numpy as np
 import torch
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.CONFIG import CONFIG
-from ycb_dynamic.object_models import load_dice_roll
+from ycb_dynamic.object_models import MeshLoader
 from ycb_dynamic.camera import Camera
 from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene, remove_obj_from_scene
 
@@ -24,10 +27,16 @@ class DiceRollScenario(Scenario):
         return self.sim_t > self.prep_time
 
     def load_meshes(self):
-        loaded_meshes, loaded_mesh_weights = load_dice_roll()
+        """ """
+        meshLoader = MeshLoader()
+        meshLoader.load_meshes(CONSTANTS.TABLE),
+        meshLoader.load_meshes(CONSTANTS.DICE_OBJECTS),
+        loaded_meshes, loaded_mesh_weights = meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+
         self.table_mesh, self.obj_meshes = loaded_meshes
         self.table_weight, self.obj_weights = loaded_mesh_weights
         self.meshes_loaded = True
+        return
 
     def setup_objects(self):
         print("object setup...")

@@ -1,13 +1,15 @@
+"""
+Bowl Scenario: Several balls/fruits are placed inside a bowl, approaching and colliding with each other.
+"""
 import numpy as np
 import stillleben as sl
 import torch
 import random
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.lighting import get_lightmap
-from ycb_dynamic.object_models import load_bowl
+from ycb_dynamic.object_models import MeshLoader
 from ycb_dynamic.camera import Camera
-from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene
+from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene, remove_obj_from_scene
 
 
 class BowlScenario(Scenario):
@@ -23,15 +25,23 @@ class BowlScenario(Scenario):
         return self.sim_t > self.prep_time
 
     def load_meshes(self):
-        loaded_meshes, loaded_weights = load_bowl()
+        """ """
+        meshLoader = MeshLoader()
+        meshLoader.load_meshes(CONSTANTS.TABLE),
+        meshLoader.load_meshes(CONSTANTS.WOODEN_BOWL)
+        meshLoader.load_meshes(CONSTANTS.FRUIT_OBJECTS)
+        loaded_meshes, loaded_weights = meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+
         self.table_mesh, self.wooden_bowl_mesh, self.fruit_meshes = loaded_meshes
         self.table_weight, self.wooden_bowl_weight, self.fruit_weights = loaded_weights
+        self.meshes_loaded = True
+        return
 
     def setup_objects(self):
         print("object setup...")
         self.static_objects, self.dynamic_objects = [], []
         if not self.meshes_loaded:
-            self.load_meshes() # if objects have not been loaded yet, load them
+            self.load_meshes()  # if objects have not been loaded yet, load them
 
         # place the static objects (table, bowl) into the scene
         table = sl.Object(self.table_mesh)
@@ -60,7 +70,10 @@ class BowlScenario(Scenario):
             obj.set_pose(p)
             obj.mass = weight
             add_obj_to_scene(self.scene, obj)
-            self.dynamic_objects.append(obj)
+            if(self.is_there_collision()):  # removing last object if colliding with anything else
+                remove_obj_from_scene(self.scene, obj)
+            else:
+                self.dynamic_objects.append(obj)
 
     def setup_cameras(self):
         print("camera setup...")

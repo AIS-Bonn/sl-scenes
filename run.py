@@ -9,7 +9,7 @@ import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.scenarios import (
     BillardsScenario,
     BowlingScenario,
-    CollisionScenario,
+    # CollisionScenario,
     DiceRollScenario,
     StackScenario,
     ThrowScenario,
@@ -21,7 +21,7 @@ from ycb_dynamic.output import Writer
 SCENARIOS = {
     "billards": BillardsScenario,
     "bowling": BowlingScenario,
-    "collision": CollisionScenario,
+    # "collision": CollisionScenario,
     "diceRoll": DiceRollScenario,
     "stack": StackScenario,
     "throw": ThrowScenario,
@@ -43,7 +43,7 @@ def main(cfg):
     renderer = sl.RenderPass()
 
     if cfg.viewer:  # load scenario and view
-        res = init_populate_scene(cfg)
+        res = init_populate_scene(cfg, scenario_id=cfg.scenario)
         if(res["render"]):
             print(f"Scene successfully populated on iteration #{res['n_errors']}....")
             view_scenario(cfg, renderer, res["scenario"])
@@ -55,7 +55,7 @@ def main(cfg):
         scenario_ids = SCENARIOS.keys() if cfg.scenario == "all" else [cfg.scenario]
         for it in range(cfg.iterations):
             for scenario_id in scenario_ids:
-                res = init_populate_scene(cfg)
+                res = init_populate_scene(cfg, scenario_id=scenario_id)
                 if(res["render"]):
                     print(f"Scene successfully populated on iteration #{res['n_errors']}....")
                     run_and_render_scenario(cfg, renderer, res["scenario"], it)
@@ -65,7 +65,7 @@ def main(cfg):
     return
 
 
-def init_populate_scene(cfg, N_TRIALS=3):
+def init_populate_scene(cfg, scenario_id, N_TRIALS=3):
     """
     Initializing a scene, populating it with objects, and making sure there are
     no object collisions
@@ -75,7 +75,7 @@ def init_populate_scene(cfg, N_TRIALS=3):
     while is_there_collision and n_errors < N_TRIALS:
         n_errors += 1
         scene = sl.Scene(cfg.resolution)
-        scenario = SCENARIOS[cfg.scenario](cfg, scene)
+        scenario = SCENARIOS[scenario_id](cfg, scene)
         is_there_collision = scenario.is_there_collision()
     else:
         render = True if(n_errors < N_TRIALS) else False

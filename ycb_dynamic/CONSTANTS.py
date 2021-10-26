@@ -7,6 +7,7 @@ Constant values such as:
 Everything non-code that can eventually be changed.
 """
 
+import random
 from pathlib import Path
 from collections import namedtuple
 import torch
@@ -469,8 +470,8 @@ OBJECT_INFO = [
         0.010
     ),
     ObjectInfo(
-        "bowl",
-        "other_models/bowl/bowl.blend",
+        "red_bowl",
+        "other_models/red_bowl/red_bowl.blend",
         7.000,
         0,
         0.3,
@@ -515,7 +516,6 @@ KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
 DICE_OBJS = [str(i).zfill(3) for i in [5, 7, 8, 9]]
 
 YCBV_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
-BOWL = [obj for obj in OBJECT_INFO if obj.name == "bowl"]
 TABLE = [obj for obj in OBJECT_INFO if obj.name == "table"]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 BEACH_BALL = [obj for obj in OBJECT_INFO if obj.name == "beach_ball"]
@@ -532,4 +532,8 @@ DICE_OBJECTS = [  # Considering objects that do roll, e.g. small and regular sha
 FRUIT_OBJECTS = [  # Considering fruits
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FRUIT_OBJS
 ]
+# BOWL = [obj for obj in OBJECT_INFO if obj.name in ["red_bowl", "wooden_bowl"]]
+BOWL = [obj for obj in OBJECT_INFO if obj.name == "red_bowl"]
 WOODEN_BOWL = [obj for obj in OBJECT_INFO if obj.name == "wooden_bowl"]
+
+#

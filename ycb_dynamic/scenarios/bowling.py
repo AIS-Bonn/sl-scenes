@@ -1,12 +1,13 @@
+"""
+Bowling Scenario: A ball smashes through a tower of wooden blocks
+"""
 import stillleben as sl
-import random
 import torch
-import numpy as np
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.object_models import load_bowling
+from ycb_dynamic.object_models import MeshLoader
 from ycb_dynamic.camera import Camera
-from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene
+from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene, remove_obj_from_scene
 
 
 class BowlingScenario(Scenario):
@@ -23,16 +24,23 @@ class BowlingScenario(Scenario):
         return self.sim_t > self.prep_time
 
     def load_meshes(self):
-        loaded_meshes, loaded_weights = load_bowling()
+        """ """
+        meshLoader = MeshLoader()
+        meshLoader.load_meshes(CONSTANTS.TABLE),
+        meshLoader.load_meshes(CONSTANTS.BOWLING_BALL),
+        meshLoader.load_meshes(CONSTANTS.WOOD_BLOCK),
+        loaded_meshes, loaded_weights = meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+
         self.table_mesh, self.bowling_mesh, self.wood_block_mesh = loaded_meshes
         self.table_weight, self.bowling_weight, self.wood_block_weight = loaded_weights
         self.meshes_loaded = True
+        return
 
     def setup_objects(self):
         print("object setup...")
         self.static_objects, self.dynamic_objects = [], []
         if not self.meshes_loaded:
-            self.load_meshes() # if objects have not been loaded yet, load them
+            self.load_meshes()  # if objects have not been loaded yet, load them
 
         # place the static objects (table) into the scene
         table = sl.Object(self.table_mesh)
@@ -48,7 +56,10 @@ class BowlingScenario(Scenario):
             wood_block.set_pose(wb_pose)
             wood_block.mass = self.wood_block_weight
             add_obj_to_scene(self.scene, wood_block)
-            self.dynamic_objects.append(wood_block)
+            if(self.is_there_collision()):  # removing last object if colliding with anything else
+                remove_obj_from_scene(self.scene, wood_block)
+            else:
+                self.dynamic_objects.append(wood_block)
 
     def add_bowling_ball(self):
         if not self.meshes_loaded:
