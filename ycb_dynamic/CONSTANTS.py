@@ -32,58 +32,59 @@ ALL_LIGHTMAPS = {
 #########################
 # Scene global configurations
 #########################
+# TODO: Cameras are scene-dependent and variable --> move to CONFIG
 CAM_POS = torch.Tensor([0.5, 2.4, 1.5])
 CAM_LOOKAT = torch.Tensor([0, 0, 1.2])
+BOWL_CAM_POS = torch.Tensor([-0.3, 1.2, 2.1])
+BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 1.25])
+BOWLING_CAM_POS = torch.Tensor([-0.5, 2.4, 1.5])
 
 # TABLE
-TABLE_POSE = torch.tensor([[0, 0, 1, 0], [1, 0, 0, 0], [0, 1, 0, 0.60], [0, 0, 0, 1]])
+TABLE_POSE = torch.tensor([[0, 0, 1, 0], [1, 0, 0, 0], [0, 1, 0, 0.6], [0, 0, 0, 1]])
+
 # BOWL
-BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+# BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, ], [0, 0, 0, 1]])
+WOODEN_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.5], [0, 0, 0, 1]])
+BOWL_FRUIT_INIT_POS = torch.tensor([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0.8], [0, 0, 0, 1]])
 
 # BOWLING
-BOWLING_CAM_POS = torch.Tensor([-0.5, 2.4, 1.5])
 WOOD_BLOCK_POSES = [
-    torch.tensor([[1, 0, 0, 0.400], [0, 1, 0, -0.20], [0,  0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.400], [0, 1, 0,     0], [0,  0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.400], [0, 1, 0,  0.20], [0,  0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.398], [0, 0, 1, -0.11], [0, -1, 0, 1.38], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.398], [0, 0, 1,  0.11], [0, -1, 0, 1.38], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.396], [0, 1, 0,  -0.1], [0,  0, 1, 1.53], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.396], [0, 1, 0,   0.1], [0,  0, 1, 1.53], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.395], [0, 0, 1,     0], [0, -1, 0, 1.68], [0, 0, 0, 1]]),
-    #torch.tensor([[1, 0, 0, 0.395], [0, 1, 0,     0], [0,  0, 1, 1.83], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.400], [0, 1, 0, -0.20], [0,  0, 1, 0.64], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.400], [0, 1, 0,     0], [0,  0, 1, 0.64], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.400], [0, 1, 0,  0.20], [0,  0, 1, 0.64], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.398], [0, 0, 1, -0.11], [0, -1, 0, 0.79], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.398], [0, 0, 1,  0.11], [0, -1, 0, 0.79], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.396], [0, 1, 0,  -0.1], [0,  0, 1, 0.94], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.396], [0, 1, 0,   0.1], [0,  0, 1, 0.94], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.395], [0, 0, 1,     0], [0, -1, 0, 1.09], [0, 0, 0, 1]]),
+    #torch.tensor([[1, 0, 0, 0.395], [0, 1, 0,     0], [0,  0, 1, 1.84], [0, 0, 0, 1]]),
 ]
 # BILLIARDS
 BILLIARDS_TRIANLGE_POSES = [
-    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.10], [0, 1, 0, -0.06], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.10], [0, 1, 0, 0.06], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.20], [0, 1, 0, 0], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.20], [0, 1, 0, 0.12], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.20], [0, 1, 0, -0.12], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, -0.06], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, 0.06], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, -0.18], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, 0.18], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.64], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.10], [0, 1, 0, -0.06], [0, 0, 1, 0.64], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.10], [0, 1, 0, 0.06], [0, 0, 1, 0.64], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.20], [0, 1, 0, 0], [0, 0, 1, 0.64], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.20], [0, 1, 0, 0.12], [0, 0, 1, 0.64], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.20], [0, 1, 0, -0.12], [0, 0, 1, 0.64], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, -0.06], [0, 0, 1, 0.64], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, 0.06], [0, 0, 1, 0.64], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, -0.18], [0, 0, 1, 0.64], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.30], [0, 1, 0, 0.18], [0, 0, 1, 0.64], [0, 0, 0, 1]]),
 ]
 
 # STACK PYRAMID (4-1-1)
 STACK_PYRAMID_POSES = [
-    torch.tensor([[1, 0, 0, -0.05], [0, 1, 0, -0.05], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, -0.05], [0, 1, 0, 0.05], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.05], [0, 1, 0, -0.05], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
-    torch.tensor([[1, 0, 0, 0.05], [0, 1, 0, 0.05], [0, 0, 1, 1.23], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, -0.05], [0, 1, 0, -0.05], [0, 0, 1, 0.63], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, -0.05], [0, 1, 0, 0.05], [0, 0, 1, 0.63], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.05], [0, 1, 0, -0.05], [0, 0, 1, 0.63], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0.05], [0, 1, 0, 0.05], [0, 0, 1, 0.63], [0, 0, 0, 1]]),
     #
-    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.4], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.8], [0, 0, 0, 1]]),
     #
-    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.55], [0, 0, 0, 1]]),
+    torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.95], [0, 0, 0, 1]]),
 ]
 
-# BOWL
-WOODEN_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 1.1], [0, 0, 0, 1]])
-BOWL_CAM_POS = torch.Tensor([-0.3, 1.2, 2.1])
-BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 1.25])
-BOWL_FRUIT_INIT_POS = torch.tensor([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 1.4], [0, 0, 0, 1]])
 
 
 #########################
@@ -460,6 +461,15 @@ OBJECT_INFO = [
         0.010
     ),
     ObjectInfo(
+        "pool_table",
+        "other_models/pool_table/source/pool_table.fbx",
+        30.000,
+        0,
+        0.3,
+        0.5,
+        0.010
+    ),
+    ObjectInfo(
         "red_bowl",
         "other_models/red_bowl/red_bowl.blend",
         7.000,
@@ -507,8 +517,9 @@ CLEANING_OBJS = [str(i).zfill(3) for i in range(19, 22)]
 KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
 DICE_OBJS = [str(i).zfill(3) for i in [5, 7, 8, 9]]
 
-YCBV_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
+YCBV_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()][:30]
 TABLE = [obj for obj in OBJECT_INFO if obj.name == "table"]
+# TABLE = [obj for obj in OBJECT_INFO if obj.name == "pool_table"]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 BEACH_BALL = [obj for obj in OBJECT_INFO if obj.name == "beach_ball"]
 WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]

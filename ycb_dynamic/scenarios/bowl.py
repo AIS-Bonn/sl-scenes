@@ -5,6 +5,7 @@ import numpy as np
 import stillleben as sl
 import torch
 import random
+from copy import deepcopy
 
 from ycb_dynamic.CONFIG import CONFIG
 import ycb_dynamic.CONSTANTS as CONSTANTS
@@ -51,11 +52,14 @@ class BowlScenario(Scenario):
         table.set_pose(CONSTANTS.TABLE_POSE)
         table.mass = self.table_weight
         table.static = True
+        self.z_offset = table.pose()[2, -1]
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
 
         wooden_bowl = sl.Object(self.wooden_bowl_mesh)
-        wooden_bowl.set_pose(CONSTANTS.WOODEN_BOWL_POSE)
+        bowl_pose = deepcopy(CONSTANTS.WOODEN_BOWL_POSE)
+        bowl_pose[2, -1] += self.z_offset
+        wooden_bowl.set_pose(bowl_pose)
         wooden_bowl.mass = self.wooden_bowl_weight
         wooden_bowl.static = True
         add_obj_to_scene(self.scene, wooden_bowl)
@@ -63,13 +67,14 @@ class BowlScenario(Scenario):
 
         # spawn several balls at random positions in the bowl
         k = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"] + 1)
-        obj_placement_angles = np.linspace(0, 2*np.pi, num=k).tolist()
+        obj_placement_angles = np.linspace(0, 2*np.pi, num=k+1).tolist()
         meshes_and_weights = random.choices(list(zip(self.fruit_meshes, self.fruit_weights)), k=k)
+        fruit_pose = deepcopy(CONSTANTS.BOWL_FRUIT_INIT_POS)
+        fruit_pose[2, -1] += self.z_offset
         for angle, (mesh, weight) in zip(obj_placement_angles, meshes_and_weights):
             obj = sl.Object(mesh)
-            p = CONSTANTS.BOWL_FRUIT_INIT_POS
-            p[:2, 3] = 0.33 * torch.tensor([np.sin(angle), np.cos(angle)])  # assign x and y coordiantes
-            obj.set_pose(p)
+            fruit_pose[:2, 3] = 0.33 * torch.tensor([np.sin(angle), np.cos(angle)])  # assign x and y coordiantes
+            obj.set_pose(fruit_pose)
             obj.mass = weight
             add_obj_to_scene(self.scene, obj)
             if(self.is_there_collision()):  # removing last object if colliding with anything else

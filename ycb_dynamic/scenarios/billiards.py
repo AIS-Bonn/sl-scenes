@@ -4,6 +4,7 @@
 import stillleben as sl
 import torch
 import random
+from copy import deepcopy
 
 import ycb_dynamic.utils.utils as utils
 from ycb_dynamic.CONFIG import CONFIG
@@ -51,15 +52,19 @@ class BillardsScenario(Scenario):
         table.set_pose(CONSTANTS.TABLE_POSE)
         table.mass = self.table_weight
         table.static = True
+        self.z_offset = table.pose()[2, -1]
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
 
         # assemble several objects in a triangle-like shape
         N = len(CONSTANTS.BILLIARDS_TRIANLGE_POSES)
+        obj_poses = deepcopy(CONSTANTS.BILLIARDS_TRIANLGE_POSES)
         for i, (mesh, weight) in enumerate(
                 random.choices(list(zip(self.objects_triangle_mesh, self.objects_triangle_weights)), k=N)):
             object = sl.Object(mesh)
-            object.set_pose(CONSTANTS.BILLIARDS_TRIANLGE_POSES[i])
+            pose = obj_poses[i]
+            pose[2, -1] += self.z_offset
+            object.set_pose(pose)
             object.mass = weight
             add_obj_to_scene(self.scene, object)
             if(self.is_there_collision()):  # removing last object if colliding with anything else
@@ -72,7 +77,7 @@ class BillardsScenario(Scenario):
         bp = bowling_ball.pose()
         x = random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"])
         y = random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"])
-        z = random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
+        z = self.z_offset + random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
         bp[:3, 3] = torch.tensor([x, y, z])
         bowling_ball.set_pose(bp)
         bowling_ball.mass = self.bowling_weight

@@ -195,7 +195,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--sim-steps-per-sec",
         type=int,
-        default=1500,
+        default=600,
         help="each simulation step uses the reciprocal of this value as input value for dt",
     )  # synpick: 500 (might not be enough)
     parser.add_argument(

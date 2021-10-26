@@ -54,6 +54,7 @@ class ThrowScenario(Scenario):
         table.set_pose(CONSTANTS.TABLE_POSE)
         table.mass = self.table_weight
         table.static = True
+        self.z_offset = table.pose()[2, -1]
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
 
@@ -64,7 +65,7 @@ class ThrowScenario(Scenario):
             p = obj.pose()
             x = random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"])
             y = random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"])
-            z = random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
+            z = self.z_offset + random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
             p[:3, 3] = torch.tensor([x, y, z])
             obj.set_pose(p)
             obj.mass = weight

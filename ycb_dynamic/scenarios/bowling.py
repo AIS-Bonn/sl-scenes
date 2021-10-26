@@ -54,10 +54,12 @@ class BowlingScenario(Scenario):
         table.static = True
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
+        self.z_offset = table.pose()[2, -1]
 
         # assemble a pyramid of wooden blocks
-        for wb_pose in CONSTANTS.WOOD_BLOCK_POSES:
+        for i, wb_pose in enumerate(CONSTANTS.WOOD_BLOCK_POSES):
             wood_block = sl.Object(self.wood_block_mesh)
+            wb_pose[2, -1] += self.z_offset
             wood_block.set_pose(wb_pose)
             wood_block.mass = self.wood_block_weight
             add_obj_to_scene(self.scene, wood_block)
@@ -66,6 +68,7 @@ class BowlingScenario(Scenario):
                 remove_obj_from_scene(self.scene, wood_block)
             else:
                 self.dynamic_objects.append(wood_block)
+
         return
 
     def add_bowling_ball(self):
@@ -76,7 +79,7 @@ class BowlingScenario(Scenario):
         bp = bowling_ball.pose()
         x = random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"])
         y = random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"])
-        z = random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
+        z = self.z_offset + random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
         bp[:3, 3] = torch.tensor([x, y, z])
         bowling_ball.set_pose(bp)
         bowling_ball.mass = self.bowling_weight

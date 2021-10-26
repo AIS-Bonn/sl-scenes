@@ -14,6 +14,7 @@ class Scenario(object):
     def __init__(self, cfg, scene):
         self.scene = scene
         self.meshes_loaded = False
+        self.z_offset = 0.
         self.lightmap = cfg.lightmap
         self.reset_sim()
 

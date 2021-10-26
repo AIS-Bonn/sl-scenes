@@ -55,3 +55,12 @@ def get_noisy_vect(v, mean, std):
     noise = torch.randn(v.shape) * std + mean
     noisy_v = v + noise
     return noisy_v
+
+
+def get_surface_height(surface):
+    """
+    Getting the height of the surface object, e.g. table
+    """
+    pose = surface.pose
+    height = pose[2, -1]
+    return height
