@@ -14,6 +14,7 @@ class Scenario(object):
     def __init__(self, cfg, scene):
         self.scene = scene
         self.meshes_loaded = False
+        self.z_offset = 0.
         self.lightmap = cfg.lightmap
         self.reset_sim()
 
@@ -62,6 +63,7 @@ class Scenario(object):
 def add_obj_to_scene(scene: sl.Scene, obj: sl.Object):
     obj.instance_index = len(scene.objects) + 1
     scene.add_object(obj)
+
 
 def remove_obj_from_scene(scene: sl.Scene, obj: sl.Object):
     obj.instance_index = len(scene.objects) - 1

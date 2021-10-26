@@ -1,9 +1,13 @@
+"""
+Tabletop Scenario: Objects are left to free-fall on top of a table
+"""
+
 import stillleben as sl
 import random
 import torch
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.object_models import load_table_and_ycbv
+from ycb_dynamic.object_models import MeshLoader
 from ycb_dynamic.camera import Camera
 from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene
 
@@ -22,10 +26,16 @@ class TabletopScenario(Scenario):
         return self.sim_t > self.prep_time
 
     def load_meshes(self):
-        loaded_meshes, loaded_mesh_weights = load_table_and_ycbv()
+        """ """
+        meshLoader = MeshLoader()
+        meshLoader.load_meshes(CONSTANTS.TABLE),
+        meshLoader.load_meshes(CONSTANTS.YCBV_OBJECTS),
+        loaded_meshes, loaded_mesh_weights = meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+
         self.table_mesh, self.obj_meshes = loaded_meshes
         self.table_weight, self.obj_weights = loaded_mesh_weights
         self.meshes_loaded = True
+        return
 
     def setup_objects(self):
         print("object setup...")
@@ -53,6 +63,13 @@ class TabletopScenario(Scenario):
             obj.mass = weight
             add_obj_to_scene(self.scene, obj)
             self.dynamic_objects.append(obj)
+            # removing last object if colliding with anything else
+            if(self.is_there_collision()):
+                remove_obj_from_scene(self.scene, obj)
+            else:
+                self.dynamic_objects.append(obj)
+
+            return
 
     def setup_cameras(self):
         print("camera setup...")

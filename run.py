@@ -1,3 +1,7 @@
+"""
+Main logic for running the simulator and generating data
+"""
+import argparse
 from pathlib import Path
 from contextlib import ExitStack
 import tqdm
@@ -8,24 +12,22 @@ import ycb_dynamic.CONSTANTS as CONSTANTS
 
 from ycb_dynamic.scenarios import (
     BillardsScenario,
+    BowlScenario,
     BowlingScenario,
-    CollisionScenario,
     DiceRollScenario,
     StackScenario,
     ThrowScenario,
-    BowlScenario
 )
 from ycb_dynamic.output import Writer
 
 
 SCENARIOS = {
     "billards": BillardsScenario,
+    "bowl": BowlScenario,
     "bowling": BowlingScenario,
-    "collision": CollisionScenario,
     "diceRoll": DiceRollScenario,
     "stack": StackScenario,
     "throw": ThrowScenario,
-    "bowl": BowlScenario
 }
 
 
@@ -43,7 +45,7 @@ def main(cfg):
     renderer = sl.RenderPass()
 
     if cfg.viewer:  # load scenario and view
-        res = init_populate_scene(cfg)
+        res = init_populate_scene(cfg, scenario_id=cfg.scenario)
         if(res["render"]):
             print(f"Scene successfully populated on iteration #{res['n_errors']}....")
             view_scenario(cfg, renderer, res["scenario"])
@@ -55,7 +57,7 @@ def main(cfg):
         scenario_ids = SCENARIOS.keys() if cfg.scenario == "all" else [cfg.scenario]
         for it in range(cfg.iterations):
             for scenario_id in scenario_ids:
-                res = init_populate_scene(cfg)
+                res = init_populate_scene(cfg, scenario_id=scenario_id)
                 if(res["render"]):
                     print(f"Scene successfully populated on iteration #{res['n_errors']}....")
                     run_and_render_scenario(cfg, renderer, res["scenario"], it)
@@ -65,7 +67,7 @@ def main(cfg):
     return
 
 
-def init_populate_scene(cfg, N_TRIALS=3):
+def init_populate_scene(cfg, scenario_id, N_TRIALS=3):
     """
     Initializing a scene, populating it with objects, and making sure there are
     no object collisions
@@ -75,12 +77,12 @@ def init_populate_scene(cfg, N_TRIALS=3):
     while is_there_collision and n_errors < N_TRIALS:
         n_errors += 1
         scene = sl.Scene(cfg.resolution)
-        scenario = SCENARIOS[cfg.scenario](cfg, scene)
+        scenario = SCENARIOS[scenario_id](cfg, scene)
         is_there_collision = scenario.is_there_collision()
     else:
         render = True if(n_errors < N_TRIALS) else False
 
-    return {"render":render, "scene":scene, "scenario":scenario, "n_errors":n_errors}
+    return {"render": render, "scene": scene, "scenario": scenario, "n_errors": n_errors}
 
 
 def view_scenario(cfg, renderer, scenario):
@@ -138,12 +140,8 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
                 writer.assemble_rgb_video(in_fps=cfg.sim_fps, out_fps=cfg.sim_fps)
 
 
-# ==============================================================================
-
-
 if __name__ == "__main__":
     utils.clear_cmd()
-    import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -189,14 +187,15 @@ if __name__ == "__main__":
         action="store_true",
         help="if specified, creates mp4 video files from the RGB frames of an episode",
     )
-    parser.add_argument("--resolution", default=(1920, 1080))
+    # parser.add_argument("--resolution", nargs='+', type=int, default=(1920, 1080))
+    parser.add_argument("--resolution", nargs='+', type=int, default=(1280, 800))
     parser.add_argument(
         "--frames", type=int, default=180, help="number of frames generated per episode"
     )
     parser.add_argument(
         "--sim-steps-per-sec",
         type=int,
-        default=1500,
+        default=600,
         help="each simulation step uses the reciprocal of this value as input value for dt",
     )  # synpick: 500 (might not be enough)
     parser.add_argument(
@@ -205,7 +204,6 @@ if __name__ == "__main__":
         default=25,
         help="number of sim steps passing between each frame",
     )
-
     cfg = parser.parse_args()
 
     # config preparation
