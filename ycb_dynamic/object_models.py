@@ -22,7 +22,8 @@ class MeshLoader:
 
     def get_meshes(self):
         """ """
-        return self.loaded_meshes
+        extract_singular = lambda x: x[0] if len(x) == 1 else x
+        return [extract_singular(item) for item in self.loaded_meshes]
 
     def load_meshes(self, obj_info : List[OBJECT_INFO.ObjectInfo], **kwargs):
         """
