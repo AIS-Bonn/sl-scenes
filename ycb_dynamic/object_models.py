@@ -2,6 +2,7 @@ import stillleben as sl
 import torch
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
+import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
 
 
 class MeshLoader:
@@ -53,8 +54,8 @@ class MeshLoader:
         return
 
 
-def mesh_flags(info: CONSTANTS.ObjectInfo):
-    if info.flags >= CONSTANTS.FLAG_CONCAVE:
+def mesh_flags(info: OBJECT_INFO.ObjectInfo):
+    if info.flags >= OBJECT_INFO.FLAG_CONCAVE:
         return sl.Mesh.Flag.NONE
     else:
         return sl.Mesh.Flag.PHYSICS_FORCE_CONVEX_HULL
