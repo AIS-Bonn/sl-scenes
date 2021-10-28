@@ -40,7 +40,7 @@ BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 1.25])
 BOWLING_CAM_POS = torch.Tensor([-0.5, 2.4, 1.5])
 
 # TABLE
-TABLE_POSE = torch.tensor([[0, 0, 1, 0], [1, 0, 0, 0], [0, 1, 0, 0.6], [0, 0, 0, 1]])
+TABLE_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.6], [0, 0, 0, 1]])
 
 # BOWL
 WOODEN_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.5], [0, 0, 0, 1]])
@@ -100,11 +100,9 @@ YCB object weight sources: http://www.ycbbenchmarks.com/wp-content/uploads/2015/
 A few notes on the 'scale' parameter: stillleben is completely metric, so non-metric meshes need to be scaled:
  - YCB-Video (BOP version) in millimeters -> scale = 0.001
  - YCB Objects (the originals) in meters -> scale = 1.0
- - Other objects: many are in cm, some are whatever, some we'd like to be bigger/smaller... -> varying scales
+ - Other objects in centimeters -> scale = 0.01
+ - However: you can scale all objects according to your needs (don't forget the weight)!
 """
-# source:
-# BOP-Compatible YCB-Video models use millimeter units for some strange reason.
-# -> sl is completely metric, so scale accordingly.
 OBJECT_INFO = [
     ObjectInfo(
         "002_master_chef_can",
@@ -620,59 +618,140 @@ OBJECT_INFO = [
         1.0,
     ),
     ObjectInfo(
-        "table",
-        "other_models/table/table.obj",
-        30.000,
+        "art_deco_table",
+        "other_models/art_deco_table/art_deco_table.obj",
+        30.0,
+        FLAG_CONCAVE,
+        0.5,
+        0.3,
+        0.01
+    ),
+    ObjectInfo(
+        "bowling_ball",
+        "other_models/bowling_ball/bowling_ball.obj",
+        7.000,
         0,
         0.3,
+        0.1,
+        0.01,
+    ),
+    ObjectInfo(
+        "folding_table",
+        "other_models/folding_table/folding_table.obj",
+        10.000,
+        FLAG_CONCAVE,
+        0.7,
         0.5,
-        0.010
+        0.01,
+    ),
+    ObjectInfo(
+        "laundry_basket",
+        "other_models/laundry_basket/laundry_basket.obj",
+        1.000,
+        FLAG_CONCAVE,
+        0.1,
+        0.5,
+        0.01,
+    ),
+    ObjectInfo(
+        "metal_chair",
+        "other_models/metal_chair/metal_chair.obj",
+        3.000,
+        FLAG_CONCAVE,
+        0.7,
+        0.5,
+        0.01,
+    ),
+    ObjectInfo(
+        "old_cupboard",
+        "other_models/old_cupboard/old_cupboard.obj",
+        30.000,
+        FLAG_CONCAVE,
+        0.1,
+        0.7,
+        0.01,
+    ),
+    ObjectInfo(
+        "plastic_chair",
+        "other_models/plastic_chair/plastic_chair.obj",
+        3.000,
+        FLAG_CONCAVE,
+        0.3,
+        0.5,
+        0.01,
     ),
     ObjectInfo(
         "pool_table",
-        "other_models/pool_table/source/pool_table.fbx",
-        30.000,
-        0,
+        "other_models/pool_table/pool_table.obj",
+        80.000,
+        FLAG_CONCAVE,
         0.3,
-        0.5,
-        0.010
+        0.7,
+        0.01
     ),
     ObjectInfo(
         "red_bowl",
-        "other_models/red_bowl/red_bowl.blend",
-        7.000,
+        "other_models/red_bowl/red_bowl.obj",
+        0.080,
         FLAG_CONCAVE,
         0.3,
         0.1,
-        0.1,
-    ),  # https://sketchfab.com/3d-models/bowl-13339ceb5ddc44aaa8b69b7cee51d9c3
+        0.01,
+    ),
     ObjectInfo(
-        "bowling_ball",
-        "other_models/bowling_ball/ball_centered.obj",
-        7.000,
-        0,
+        "shopping_cart",
+        "other_models/shopping_cart/shopping_cart.obj",
+        10.000,
+        FLAG_CONCAVE,
+        0.9,
         0.3,
-        0.1,
-        0.010,
-    ),  # https://free3d.com/3d-model/-bowling-ball-v1--953922.html
+        0.01,
+    ),
     ObjectInfo(
-        "beach_ball",
-        "other_models/beach_ball/beach_ball_centered.obj",
-        0.100,
-        0,
-        0.3,
+        "wicker_basket",
+        "other_models/wicker_basket/wicker_basket.obj",
+        0.200,
+        FLAG_CONCAVE,
         0.1,
-        0.010,
-    ),  # https://free3d.com/3d-model/beach-ball-v2--259926.html
+        0.7,
+        0.01,
+    ),
     ObjectInfo(
         "wooden_bowl",
-        "other_models/wooden_bowl/wooden_bowl.blend",
-        5.000,
+        "other_models/wooden_bowl/wooden_bowl.obj",
+        0.300,
         FLAG_CONCAVE,
         0.3,
         0.3,
-        0.180,
-    ),  # "Wooden Bowl" (https://skfb.ly/6XMIP) by MIKErowaveoven is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+        0.01,
+    ),
+    ObjectInfo(
+        "wooden_chair",
+        "other_models/wooden_chair/wooden_chair.obj",
+        3.000,
+        FLAG_CONCAVE,
+        0.3,
+        0.7,
+        0.01,
+    ),
+    ObjectInfo(
+        "wooden_cupboard",
+        "other_models/wooden_cupboard/wooden_cupboard.obj",
+        20.000,
+        FLAG_CONCAVE,
+        0.3,
+        0.7,
+        0.01,
+    ),
+    ObjectInfo(
+        "wooden_table",
+        "other_models/wooden_table/wooden_table.obj",
+        25.000,
+        FLAG_CONCAVE,
+        0.3,
+        0.7,
+        0.01,
+    ),
 ]
 
 
@@ -686,11 +765,14 @@ KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
 DICE_OBJS = [str(i).zfill(3) for i in [5, 7, 8, 9]]
 YCBV_OBJS = [str(i).zfill(3) for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 21, 24, 25, 35, 36, 37, 40, 51, 52, 61]]
 
-YCBV_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()][:30]
-TABLE = [obj for obj in OBJECT_INFO if obj.name == "table"]
-# TABLE = [obj for obj in OBJECT_INFO if obj.name == "pool_table"]
+YCB_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
+OTHER_OBJECTS = [obj for obj in OBJECT_INFO if not obj.name[0].isdigit()]
+TABLE = [obj for obj in OBJECT_INFO if obj.name == "wooden_table"]
+TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table")]
+CHAIRS = [obj for obj in OBJECT_INFO if obj.name.endswith("_chair")]
+CUPBOARDS = [obj for obj in OBJECT_INFO if obj.name.endswith("_cupboard")]
+BOWLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_bowl")]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
-BEACH_BALL = [obj for obj in OBJECT_INFO if obj.name == "beach_ball"]
 WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
 YCBV_OBJECTS = [  # Only considering the YCB-Video subset of objects
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in YCBV_OBJS
@@ -707,7 +789,6 @@ DICE_OBJECTS = [  # Considering objects that do roll, e.g. small and regular sha
 FRUIT_OBJECTS = [  # Considering fruits
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FRUIT_OBJS
 ]
-# BOWL = [obj for obj in OBJECT_INFO if obj.name in ["red_bowl", "wooden_bowl"]]
 BOWL = [obj for obj in OBJECT_INFO if obj.name == "red_bowl"]
 WOODEN_BOWL = [obj for obj in OBJECT_INFO if obj.name == "wooden_bowl"]
 
