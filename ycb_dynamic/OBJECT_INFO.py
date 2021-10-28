@@ -17,7 +17,7 @@ A few notes on the 'scale' parameter: stillleben is completely metric, so non-me
  - Other objects in centimeters -> scale = 0.01
  - However: you can scale all objects according to your needs (don't forget the weight)!
 """
-OBJECT_INFO = [
+ALL_OBJECTS = [
     ObjectInfo(
         "002_master_chef_can",
         "ycbv_models/models_fine/obj_000001.ply",

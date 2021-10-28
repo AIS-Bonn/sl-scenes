@@ -1,7 +1,6 @@
 """
  Billiards Scenario: A ball smashes through a bunch of objects placed in a billiards-triangle manner
 """
-import stillleben as sl
 import torch
 import random
 from copy import deepcopy
@@ -9,9 +8,8 @@ from copy import deepcopy
 import ycb_dynamic.utils.utils as utils
 from ycb_dynamic.CONFIG import CONFIG
 import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.object_models import MeshLoader
 from ycb_dynamic.camera import Camera
-from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene, remove_obj_from_scene
+from ycb_dynamic.scenarios.scenario import Scenario
 
 
 class BillardsScenario(Scenario):
@@ -21,83 +19,65 @@ class BillardsScenario(Scenario):
         self.prep_time = 0.002  # during this time (in s), the scene will not be rendered
         super(BillardsScenario, self).__init__(cfg, scene)   # also calls reset_sim()
 
+
     def can_render(self):
         """
         :return: True if scene has been prepared and can be rendered, False otherwise.
         """
         return self.sim_t > self.prep_time
 
-    def load_meshes(self):
-        """ """
-        meshLoader = MeshLoader()
-        meshLoader.load_meshes(CONSTANTS.TABLE),
-        meshLoader.load_meshes(CONSTANTS.BOWLING_BALL),
-        meshLoader.load_meshes(CONSTANTS.BILLIARDS_OBJECTS),
-        loaded_meshes, loaded_weights = meshLoader.get_meshes(), meshLoader.get_mesh_weights()
 
-        self.table_mesh, self.bowling_mesh, self.objects_triangle_mesh = loaded_meshes
-        self.table_weight, self.bowling_weight, self.objects_triangle_weights = loaded_weights
-        self.meshes_loaded = True
-        return
+    def load_meshes_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        self.mesh_loader.load_meshes(CONSTANTS.TABLE),
+        self.mesh_loader.load_meshes(CONSTANTS.BOWLING_BALL),
+        self.mesh_loader.load_meshes(CONSTANTS.BILLIARDS_OBJECTS),
 
-    def setup_objects(self):
-        """ """
-        print("object setup...")
-        self.static_objects, self.dynamic_objects = [], []
-        if not self.meshes_loaded:
-            self.load_meshes()  # if objects have not been loaded yet, load them
 
-        # place the static objects (table) into the scene
-        table = sl.Object(self.table_mesh)
-        table.set_pose(CONSTANTS.TABLE_POSE)
-        table.mass = self.table_weight
-        table.static = True
-        self.z_offset = table.pose()[2, -1]
-        add_obj_to_scene(self.scene, table)
-        self.static_objects.append(table)
-        table_z_offset = table.pose()[2, -1] + table.mesh.bbox.max[-1]  # NOTE: Rotated (?)
-        self.table_z_offset = table_z_offset
+    def setup_objects_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        table_info_mesh, bowling_ball_info_mesh, billards_obj_info_mesh = self.mesh_loader.get_meshes()
+
+        # place table
+        table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
+        self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
+        self.z_offset = self.table.pose()[2, -1]
 
         # assemble several objects in a triangle-like shape
         N = len(CONSTANTS.BILLIARDS_TRIANLGE_POSES)
         obj_poses = deepcopy(CONSTANTS.BILLIARDS_TRIANLGE_POSES)
-        for i, (mesh, weight) in enumerate(
-                random.choices(list(zip(self.objects_triangle_mesh, self.objects_triangle_weights)), k=N)):
-            object = sl.Object(mesh)
-            pose = obj_poses[i]
-            object_z_offset = object.mesh.bbox.max[-1]
-            pose[2, -1] += table_z_offset + object_z_offset
-            object.set_pose(pose)
-            object.mass = weight
-            add_obj_to_scene(self.scene, object)
-            if(self.is_there_collision()):  # removing last object if colliding with anything else
-                remove_obj_from_scene(self.scene, object)
-            else:
-                self.dynamic_objects.append(object)
+        for i, obj_info_mesh in enumerate(random.choices(billards_obj_info_mesh, k=N)):
+            mod_pose = obj_poses[i]
+            mod_pose[2, -1] += self.z_offset
+            obj_mod = {"mod_pose": mod_pose}
+            obj = self.add_object_to_scene(obj_info_mesh, False, **obj_mod)
+            if self.is_there_collision():  # removing last object if colliding with anything else
+                self.remove_obj_from_scene(obj)
 
-        # adding the bowling_ball with custom position and velocity
-        bowling_ball = sl.Object(self.bowling_mesh)
-        bp = bowling_ball.pose()
-        ball_z_offset = bp[2, -1] + bowling_ball.mesh.bbox.max[-1] + self.table_z_offset
-        x = random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"])
-        y = random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"])
-        z = ball_z_offset + random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
-        bp[:3, 3] = torch.tensor([x, y, z])
-        bowling_ball.set_pose(bp)
-        bowling_ball.mass = self.bowling_weight
-        bowling_ball.linear_velocity = utils.get_noisy_vect(
+        # add the bowling_ball with custom position and velocity
+        mod_t = torch.tensor([
+            random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"]),
+            random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"]),
+            random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"]) + self.z_offset
+        ])
+        mod_v_linear = utils.get_noisy_vect(
                 v=self.config["velocity"]["lin_velocity"],
                 mean=self.config["velocity"]["lin_noise_mean"],
                 std=self.config["velocity"]["lin_noise_std"]
             )
-        add_obj_to_scene(self.scene, bowling_ball)
-        self.dynamic_objects.append(bowling_ball)
-        return
+        bowling_mod = {"mod_t": mod_t, "mod_v_linear": mod_v_linear}
+        self.bowling_ball = self.add_object_to_scene(bowling_ball_info_mesh, False, **bowling_mod)
+
 
     def setup_cameras(self):
         print("camera setup...")
         self.cameras = []
         self.cameras.append(Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False))
+
 
     def simulate(self, dt):
         self.scene.simulate(dt)
