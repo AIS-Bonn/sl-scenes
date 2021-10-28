@@ -55,29 +55,23 @@ class BowlingScenario(Scenario):
         table.static = True
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
-        # self.z_offset = table.pose()[2, -1]
-        self.z_offset = table.pose()[2, -1] + table.mesh.bbox.max[1]  # Rotated (?)
-
-        # points = table.mesh.points
-        # points = table.mesh.bbox.max[-1]
-        # max_z, min_z = points.max()
-        # breakpoint()
+        table_z_offset = table.pose()[2, -1] + table.mesh.bbox.max[-1]  # NOTE: Rotated (?)
+        self.table_z_offset = table_z_offset
 
         # assemble a pyramid of wooden blocks
         block_poses = deepcopy(CONSTANTS.WOOD_BLOCK_POSES)
         for i, wb_pose in enumerate(block_poses):
             wood_block = sl.Object(self.wood_block_mesh)
-            wb_pose[2, -1] += self.z_offset + wood_block.mesh.bbox.max[-1]
+            object_z_offset = wood_block.mesh.bbox.max[-1]
+            wb_pose[2, -1] += table_z_offset + object_z_offset
             wood_block.set_pose(wb_pose)
             wood_block.mass = self.wood_block_weight
             add_obj_to_scene(self.scene, wood_block)
 
             if(self.is_there_collision()):  # removing last object if colliding with anything else
-                pass
-                # remove_obj_from_scene(self.scene, wood_block)
+                remove_obj_from_scene(self.scene, wood_block)
             else:
-                pass
-                # self.dynamic_objects.append(wood_block)
+                self.dynamic_objects.append(wood_block)
             self.dynamic_objects.append(wood_block)
 
         return
@@ -88,9 +82,10 @@ class BowlingScenario(Scenario):
             self.load_meshes()
         bowling_ball = sl.Object(self.bowling_mesh)
         bp = bowling_ball.pose()
+        ball_z_offset = bp[2, -1] + bowling_ball.mesh.bbox.max[-1] + self.table_z_offset
         x = random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"])
         y = random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"])
-        z = self.z_offset + random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
+        z = ball_z_offset + random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
         bp[:3, 3] = torch.tensor([x, y, z])
         bowling_ball.set_pose(bp)
         bowling_ball.mass = self.bowling_weight

@@ -57,15 +57,17 @@ class ThrowScenario(Scenario):
         self.z_offset = table.pose()[2, -1]
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
+        table_z_offset = table.pose()[2, -1] + table.mesh.bbox.max[-1]  # NOTE: Rotated (?)
 
         # throw some random YCB-Video objects onto the table, from the side
         N_objs = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"] + 1)
         for (mesh, weight) in random.choices(list(zip(self.obj_meshes, self.obj_weights)), k=N_objs):
             obj = sl.Object(mesh)
             p = obj.pose()
+            obj_z_offset = p[2, -1] + obj.mesh.bbox.max[-1] + table_z_offset
             x = random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"])
             y = random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"])
-            z = self.z_offset + random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
+            z = obj_z_offset + random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
             p[:3, 3] = torch.tensor([x, y, z])
             obj.set_pose(p)
             obj.mass = weight

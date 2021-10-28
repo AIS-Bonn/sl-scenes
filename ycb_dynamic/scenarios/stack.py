@@ -53,6 +53,7 @@ class StackScenario(Scenario):
         self.z_offset = table.pose()[2, -1]
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
+        table_z_offset = table.pose()[2, -1] + table.mesh.bbox.max[-1]  # NOTE: Rotated (?)
 
         # randomly sampling the number of stacks, and selecting mean (x,y) center positions
         N_poses = len(CONSTANTS.STACK_PYRAMID_POSES)
@@ -65,7 +66,7 @@ class StackScenario(Scenario):
         pyramid_centers = torch.zeros(N_stacks, 4, 4)
         pyramid_centers[:, 0,  -1] = x_coords
         pyramid_centers[:, 1, -1] = y_coords
-        pyramid_centers[:, 2, -1] = self.z_offset
+        pyramid_centers[:, 2, -1] = table_z_offset
 
         # assemble the pyramids of stacked objects. Initial poses are noisy, which might lead to pyramid falling
         for n in range(N_stacks):
@@ -73,6 +74,8 @@ class StackScenario(Scenario):
                 object = sl.Object(mesh)
                 base_pose = CONSTANTS.STACK_PYRAMID_POSES[i]
                 pose = base_pose + pyramid_centers[n]
+                obj_z_offset = object.mesh.bbox.max[-1]
+                pose[2, -1] += obj_z_offset
                 object.set_pose(pose)
                 object.mass = weight
                 add_obj_to_scene(self.scene, object)

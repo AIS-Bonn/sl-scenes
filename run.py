@@ -46,7 +46,7 @@ def main(cfg):
 
     if cfg.viewer:  # load scenario and view
         res = init_populate_scene(cfg, scenario_id=cfg.scenario)
-        if(res["render"] or not res["render"]):
+        if(res["render"]):
             print(f"Scene successfully populated on iteration #{res['n_errors']}....")
             view_scenario(cfg, renderer, res["scenario"])
         else:
@@ -67,7 +67,7 @@ def main(cfg):
     return
 
 
-def init_populate_scene(cfg, scenario_id, N_TRIALS=1):
+def init_populate_scene(cfg, scenario_id, N_TRIALS=3):
     """
     Initializing a scene, populating it with objects, and making sure there are
     no object collisions

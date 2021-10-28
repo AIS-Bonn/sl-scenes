@@ -55,6 +55,8 @@ class BillardsScenario(Scenario):
         self.z_offset = table.pose()[2, -1]
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
+        table_z_offset = table.pose()[2, -1] + table.mesh.bbox.max[-1]  # NOTE: Rotated (?)
+        self.table_z_offset = table_z_offset
 
         # assemble several objects in a triangle-like shape
         N = len(CONSTANTS.BILLIARDS_TRIANLGE_POSES)
@@ -63,7 +65,8 @@ class BillardsScenario(Scenario):
                 random.choices(list(zip(self.objects_triangle_mesh, self.objects_triangle_weights)), k=N)):
             object = sl.Object(mesh)
             pose = obj_poses[i]
-            pose[2, -1] += self.z_offset
+            object_z_offset = object.mesh.bbox.max[-1]
+            pose[2, -1] += table_z_offset + object_z_offset
             object.set_pose(pose)
             object.mass = weight
             add_obj_to_scene(self.scene, object)
@@ -75,9 +78,10 @@ class BillardsScenario(Scenario):
         # adding the bowling_ball with custom position and velocity
         bowling_ball = sl.Object(self.bowling_mesh)
         bp = bowling_ball.pose()
+        ball_z_offset = bp[2, -1] + bowling_ball.mesh.bbox.max[-1] + self.table_z_offset
         x = random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"])
         y = random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"])
-        z = self.z_offset + random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
+        z = ball_z_offset + random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
         bp[:3, 3] = torch.tensor([x, y, z])
         bowling_ball.set_pose(bp)
         bowling_ball.mass = self.bowling_weight

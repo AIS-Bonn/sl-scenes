@@ -52,13 +52,14 @@ class BowlScenario(Scenario):
         table.set_pose(CONSTANTS.TABLE_POSE)
         table.mass = self.table_weight
         table.static = True
-        self.z_offset = table.pose()[2, -1]
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
+        table_z_offset = table.pose()[2, -1] + table.mesh.bbox.max[-1]  # NOTE: Rotated (?)
 
         wooden_bowl = sl.Object(self.wooden_bowl_mesh)
         bowl_pose = deepcopy(CONSTANTS.WOODEN_BOWL_POSE)
-        bowl_pose[2, -1] += self.z_offset
+        bowl_offset = wooden_bowl.mesh.bbox.max[-1] + bowl_pose[2, -1]
+        bowl_pose[2, -1] = table_z_offset + bowl_offset
         wooden_bowl.set_pose(bowl_pose)
         wooden_bowl.mass = self.wooden_bowl_weight
         wooden_bowl.static = True
@@ -67,10 +68,11 @@ class BowlScenario(Scenario):
 
         # spawn several balls at random positions in the bowl
         k = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"] + 1)
+        rand_height = random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
         obj_placement_angles = np.linspace(0, 2*np.pi, num=k+1).tolist()
         meshes_and_weights = random.choices(list(zip(self.fruit_meshes, self.fruit_weights)), k=k)
         fruit_pose = deepcopy(CONSTANTS.BOWL_FRUIT_INIT_POS)
-        fruit_pose[2, -1] += self.z_offset
+        fruit_pose[2, -1] += table_z_offset + bowl_offset + rand_height
         for angle, (mesh, weight) in zip(obj_placement_angles, meshes_and_weights):
             obj = sl.Object(mesh)
             fruit_pose[:2, 3] = 0.33 * torch.tensor([np.sin(angle), np.cos(angle)])  # assign x and y coordiantes

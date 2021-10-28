@@ -13,8 +13,8 @@ CONFIG = {
                 "x_max": -0.9,
                 "y_min": 0.,
                 "y_max": 0.,
-                "z_min": 0.64,
-                "z_max": 0.64,
+                "z_min": 0.0,
+                "z_max": 0.2,
             },
             "velocity": {  # bowling ball velocity
                 "lin_velocity": torch.tensor([2.5, 0, 0]),
@@ -26,7 +26,14 @@ CONFIG = {
         # BOWL SCENE
         "bowl": {
             "camera": {},
-            "position": {},
+            "pos": {
+                "x_min": 0.,
+                "x_max": 0,
+                "y_min": 0.,
+                "y_max": 0.,
+                "z_min": 0.1,
+                "z_max": 0.3,
+            },
             "velocity": {},
             "other": {
                 "min_objs": 2,
@@ -41,8 +48,8 @@ CONFIG = {
                 "x_max": -0.9,
                 "y_min": 0.,
                 "y_max": 0.,
-                "z_min": 0.64,
-                "z_max": 0.64,
+                "z_min": 0.0,
+                "z_max": 0.2,
             },
             "velocity": {  # bowling ball velocity
                 "lin_velocity": torch.tensor([2.5, 0, 0]),
@@ -76,8 +83,8 @@ CONFIG = {
                 "x_max": 0.6,
                 "y_min": -1,
                 "y_max": -1,
-                "z_min": 0.6,
-                "z_max": 1.0,
+                "z_min": 0.1,
+                "z_max": 0.4,
             },
             "velocity": {
                 "lin_velocity": torch.Tensor([0, 2, 1.5]),
@@ -100,8 +107,8 @@ CONFIG = {
                 "x_max": -1.2,
                 "y_min": -0.4,
                 "y_max": 0.4,
-                "z_min": 0.6,
-                "z_max": 1.0,
+                "z_min": 0.2,
+                "z_max": 0.6,
             },
             "velocity": {
                 "lin_velocity": torch.Tensor([2, 0, 0]),
