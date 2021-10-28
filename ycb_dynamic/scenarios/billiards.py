@@ -19,13 +19,11 @@ class BillardsScenario(Scenario):
         self.prep_time = 0.002  # during this time (in s), the scene will not be rendered
         super(BillardsScenario, self).__init__(cfg, scene)   # also calls reset_sim()
 
-
     def can_render(self):
         """
         :return: True if scene has been prepared and can be rendered, False otherwise.
         """
         return self.sim_t > self.prep_time
-
 
     def load_meshes_(self):
         """
@@ -34,7 +32,6 @@ class BillardsScenario(Scenario):
         self.mesh_loader.load_meshes(CONSTANTS.TABLE),
         self.mesh_loader.load_meshes(CONSTANTS.BOWLING_BALL),
         self.mesh_loader.load_meshes(CONSTANTS.BILLIARDS_OBJECTS),
-
 
     def setup_objects_(self):
         """
@@ -55,7 +52,9 @@ class BillardsScenario(Scenario):
             mod_pose[2, -1] += self.z_offset
             obj_mod = {"mod_pose": mod_pose}
             obj = self.add_object_to_scene(obj_info_mesh, False, **obj_mod)
-            if self.is_there_collision():  # removing last object if colliding with anything else
+
+            # removing last object if colliding with anything else
+            if self.is_there_collision():
                 self.remove_obj_from_scene(obj)
 
         # add the bowling_ball with custom position and velocity
@@ -72,12 +71,10 @@ class BillardsScenario(Scenario):
         bowling_mod = {"mod_t": mod_t, "mod_v_linear": mod_v_linear}
         self.bowling_ball = self.add_object_to_scene(bowling_ball_info_mesh, False, **bowling_mod)
 
-
     def setup_cameras(self):
         print("camera setup...")
         self.cameras = []
         self.cameras.append(Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False))
-
 
     def simulate(self, dt):
         self.scene.simulate(dt)

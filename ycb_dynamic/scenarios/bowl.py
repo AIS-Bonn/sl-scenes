@@ -2,16 +2,14 @@
 Bowl Scenario: Several balls/fruits are placed inside a bowl, approaching and colliding with each other.
 """
 import numpy as np
-import stillleben as sl
 import torch
 import random
 from copy import deepcopy
 
 from ycb_dynamic.CONFIG import CONFIG
 import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.object_models import MeshLoader
 from ycb_dynamic.camera import Camera
-from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene, remove_obj_from_scene
+from ycb_dynamic.scenarios.scenario import Scenario
 
 
 class BowlScenario(Scenario):
@@ -27,60 +25,46 @@ class BowlScenario(Scenario):
         """
         return self.sim_t > self.prep_time
 
-    def load_meshes(self):
-        """ """
-        meshLoader = MeshLoader()
-        meshLoader.load_meshes(CONSTANTS.TABLE),
-        meshLoader.load_meshes(CONSTANTS.WOODEN_BOWL)
-        meshLoader.load_meshes(CONSTANTS.FRUIT_OBJECTS)
-        loaded_meshes, loaded_weights = meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+    def load_meshes_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        self.mesh_loader.load_meshes(CONSTANTS.TABLE),
+        self.mesh_loader.load_meshes(CONSTANTS.WOODEN_BOWL, **{"mod_scale": 5.0})  # scale bowl by 5
+        self.mesh_loader.load_meshes(CONSTANTS.FRUIT_OBJECTS)
 
-        self.table_mesh, self.wooden_bowl_mesh, self.fruit_meshes = loaded_meshes
-        self.table_weight, self.wooden_bowl_weight, self.fruit_weights = loaded_weights
-        self.meshes_loaded = True
-        return
+    def setup_objects_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        table_info_mesh, wooden_bowl_info_mesh, fruits_info_mesh = self.mesh_loader.get_meshes()
 
-    def setup_objects(self):
-        """ """
-        print("object setup...")
-        self.static_objects, self.dynamic_objects = [], []
-        if not self.meshes_loaded:
-            self.load_meshes()  # if objects have not been loaded yet, load them
+        # place table
+        table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
+        self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
+        self.z_offset = self.table.pose()[2, -1]
 
-        # place the static objects (table, bowl) into the scene
-        table = sl.Object(self.table_mesh)
-        table.set_pose(CONSTANTS.TABLE_POSE)
-        table.mass = self.table_weight
-        table.static = True
-        self.z_offset = table.pose()[2, -1]
-        add_obj_to_scene(self.scene, table)
-        self.static_objects.append(table)
-
-        wooden_bowl = sl.Object(self.wooden_bowl_mesh)
+        # place bowl
         bowl_pose = deepcopy(CONSTANTS.WOODEN_BOWL_POSE)
         bowl_pose[2, -1] += self.z_offset
-        wooden_bowl.set_pose(bowl_pose)
-        wooden_bowl.mass = self.wooden_bowl_weight
-        wooden_bowl.static = True
-        add_obj_to_scene(self.scene, wooden_bowl)
-        self.static_objects.append(wooden_bowl)
+        bowl_mod = {"mod_pose": bowl_pose}
+        self.bowl = self.add_object_to_scene(wooden_bowl_info_mesh, True, **bowl_mod)
 
         # spawn several balls at random positions in the bowl
         k = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"] + 1)
-        obj_placement_angles = np.linspace(0, 2*np.pi, num=k+1).tolist()
-        meshes_and_weights = random.choices(list(zip(self.fruit_meshes, self.fruit_weights)), k=k)
-        fruit_pose = deepcopy(CONSTANTS.BOWL_FRUIT_INIT_POS)
-        fruit_pose[2, -1] += self.z_offset
-        for angle, (mesh, weight) in zip(obj_placement_angles, meshes_and_weights):
-            obj = sl.Object(mesh)
-            fruit_pose[:2, 3] = 0.33 * torch.tensor([np.sin(angle), np.cos(angle)])  # assign x and y coordiantes
-            obj.set_pose(fruit_pose)
-            obj.mass = weight
-            add_obj_to_scene(self.scene, obj)
-            if(self.is_there_collision()):  # removing last object if colliding with anything else
-                remove_obj_from_scene(self.scene, obj)
-            else:
-                self.dynamic_objects.append(obj)
+        obj_placement_angles = np.linspace(0, 2*np.pi, num=self.config["other"]["max_objs"] + 1).tolist()[:-1]
+        obj_placement_angles = random.choices(obj_placement_angles, k=k)
+        fruits_info_mesh = random.choices(fruits_info_mesh, k=k)
+        for angle, fruit_info_mesh in zip(obj_placement_angles, fruits_info_mesh):
+            fruit_pose = deepcopy(CONSTANTS.BOWL_FRUIT_INIT_POS)
+            fruit_pose[:2, -1] = 0.33 * torch.tensor([np.sin(angle), np.cos(angle)])  # assign x and y coordiantes
+            fruit_pose[ 2, -1] += self.z_offset
+            fruit_mod = {"mod_pose": fruit_pose}
+            fruit = self.add_object_to_scene(fruit_info_mesh, False, **fruit_mod)
+
+            # removing last object if colliding with anything else
+            if self.is_there_collision():
+                self.remove_obj_from_scene(fruit)
 
     def setup_cameras(self):
         """ """

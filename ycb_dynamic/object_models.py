@@ -1,5 +1,6 @@
 import stillleben as sl
 import torch
+from typing import List
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
@@ -23,12 +24,12 @@ class MeshLoader:
         """ """
         return self.loaded_meshes
 
-    def load_meshes(self, obj_info : OBJECT_INFO.ObjectInfo, **kwargs):
+    def load_meshes(self, obj_info : List[OBJECT_INFO.ObjectInfo], **kwargs):
         """
-        Loads the meshes corresponding to given namedtuples 'objects'.
+        Loads the meshes whose information is given in parameter 'obj_info.
+        Each call of this method APPENDS a list to the loaded_meshes attribute.
         :param obj_info: The object information of the meshes to be loaded.
-        :param class_index_start: If specified, class index values are assigned starting from this number.
-        :return: The loaded meshes as a list, or the loaded mesh object itself if it's only one.
+        :param kwargs: additional mesh modifiers such as scale, specified with a leading 'mod_'
         """
         paths = [(self.base_dir / obj.mesh_fp).resolve() for obj in obj_info]
         scales = [obj.scale for obj in obj_info]
@@ -47,7 +48,6 @@ class MeshLoader:
 
         info_mesh_tuples = list(zip(obj_info, meshes))
         self.loaded_meshes.append(info_mesh_tuples)
-        return
 
 
 def mesh_flags(info: OBJECT_INFO.ObjectInfo):
@@ -87,7 +87,8 @@ class ObjectLoader:
         :param mesh:
         :param object_info:
         :param is_static:
-        :param obj_mod: Optional object modifiers, specified with a leading 'mod_'
+        :param obj_mod: Optional object modifiers, specified with a leading 'mod_'.
+            IMPORTANT: scaling is done during mesh loading!!!
         :return:
         """
         ins_idx = self.instance_idx + 1

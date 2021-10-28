@@ -64,7 +64,6 @@ class Scenario(object):
         if self.meshes_loaded:
             return
         print("mesh setup...")
-        self.mesh_loader = MeshLoader()
         self.load_meshes_()
         self.meshes_loaded = True
 
@@ -81,7 +80,6 @@ class Scenario(object):
         print("object setup...")
         if not self.meshes_loaded:
             self.load_meshes()  # if objects have not been loaded yet, load them
-        self.object_loader = ObjectLoader()
         self.setup_objects_()
         self.objects_loaded = True
 
