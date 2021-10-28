@@ -4,6 +4,7 @@ Bowling Scenario: A ball smashes through a tower of wooden blocks
 import stillleben as sl
 import torch
 import random
+from copy import deepcopy
 
 import ycb_dynamic.utils.utils as utils
 from ycb_dynamic.CONFIG import CONFIG
@@ -54,20 +55,30 @@ class BowlingScenario(Scenario):
         table.static = True
         add_obj_to_scene(self.scene, table)
         self.static_objects.append(table)
-        self.z_offset = table.pose()[2, -1]
+        # self.z_offset = table.pose()[2, -1]
+        self.z_offset = table.pose()[2, -1] + table.mesh.bbox.max[1]  # Rotated (?)
+
+        # points = table.mesh.points
+        # points = table.mesh.bbox.max[-1]
+        # max_z, min_z = points.max()
+        # breakpoint()
 
         # assemble a pyramid of wooden blocks
-        for i, wb_pose in enumerate(CONSTANTS.WOOD_BLOCK_POSES):
+        block_poses = deepcopy(CONSTANTS.WOOD_BLOCK_POSES)
+        for i, wb_pose in enumerate(block_poses):
             wood_block = sl.Object(self.wood_block_mesh)
-            wb_pose[2, -1] += self.z_offset
+            wb_pose[2, -1] += self.z_offset + wood_block.mesh.bbox.max[-1]
             wood_block.set_pose(wb_pose)
             wood_block.mass = self.wood_block_weight
             add_obj_to_scene(self.scene, wood_block)
 
             if(self.is_there_collision()):  # removing last object if colliding with anything else
-                remove_obj_from_scene(self.scene, wood_block)
+                pass
+                # remove_obj_from_scene(self.scene, wood_block)
             else:
-                self.dynamic_objects.append(wood_block)
+                pass
+                # self.dynamic_objects.append(wood_block)
+            self.dynamic_objects.append(wood_block)
 
         return
 
