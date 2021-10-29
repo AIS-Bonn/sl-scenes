@@ -68,6 +68,7 @@ def get_surface_height(surface):
 
 
 def positive_integer(var):
-    if type(var) != int or var < 1:
+    var = int(var)
+    if var < 1:
         raise argparse.ArgumentTypeError(f"invalid parameter: {var}")
     return var

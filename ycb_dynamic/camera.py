@@ -32,7 +32,7 @@ def create_coplanar_stereo_cams(name: str, cam_pos: torch.Tensor, cam_lookat: to
     """
     cam_up = torch.tensor([0., 0., 1.])  # TODO variable up vectors
     deviation_magnitude = stereo_cam_dist / 2
-    deviation_vec = torch.cross((cam_lookat - cam_pos), cam_up)
+    deviation_vec = torch.cross((cam_lookat - cam_pos).double(), cam_up.double()).float()
     deviation_vec *= deviation_magnitude / torch.linalg.norm(deviation_vec)
     cam_pos_left, cam_pos_right = cam_pos - deviation_vec, cam_pos + deviation_vec
     cam_lookat_left, cam_lookat_right = cam_lookat - deviation_vec, cam_lookat + deviation_vec  # only for coplanar st.
