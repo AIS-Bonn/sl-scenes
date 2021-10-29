@@ -25,7 +25,7 @@ OBJECT_INFO = [
         0,
         0.6,
         0.2,
-        0.1,
+        0.3,
         0.001,
     ),
     ObjectInfo(
@@ -55,7 +55,7 @@ OBJECT_INFO = [
         0,
         0.1,
         0.5,
-        0.1,
+        0.2,
         0.001,
     ),
     ObjectInfo(
@@ -65,7 +65,7 @@ OBJECT_INFO = [
         0,
         0.3,
         0.5,
-        0.1,
+        0.3,
         0.001,
     ),
     ObjectInfo(
@@ -75,7 +75,7 @@ OBJECT_INFO = [
         0,
         0.6,
         0.2,
-        0.1,
+        0.3,
         0.001,
     ),
     ObjectInfo(
@@ -105,7 +105,7 @@ OBJECT_INFO = [
         0,
         0.6,
         0.3,
-        0.1,
+        0.2,
         0.001,
     ),
     ObjectInfo(
@@ -115,7 +115,7 @@ OBJECT_INFO = [
         0,
         0.3,
         0.3,
-        0.1,
+        0.3,
         0.001,
     ),
     ObjectInfo(
@@ -125,7 +125,7 @@ OBJECT_INFO = [
         0,
         0.3,
         0.3,
-        0.1,
+        0.2,
         1.000,
     ),
     ObjectInfo(
@@ -135,7 +135,7 @@ OBJECT_INFO = [
         0,
         0.3,
         0.3,
-        0.1,
+        0.3,
         1.000
     ),
     ObjectInfo(
@@ -145,7 +145,7 @@ OBJECT_INFO = [
         0,
         0.3,
         0.4,
-        0.1,
+        0.3,
         1.000
     ),
     ObjectInfo(
@@ -155,7 +155,7 @@ OBJECT_INFO = [
         0,
         0.0,
         0.4,
-        0.1,
+        0.3,
         1.000
     ),
     ObjectInfo(
@@ -165,7 +165,7 @@ OBJECT_INFO = [
         0,
         0.1,
         0.3,
-        0.1,
+        0.3,
         1.000
     ),
     ObjectInfo(
@@ -175,7 +175,7 @@ OBJECT_INFO = [
         0,
         0.3,
         0.4,
-        0.1,
+        0.3,
         1.000
     ),
     ObjectInfo(
@@ -185,7 +185,7 @@ OBJECT_INFO = [
         0,
         0.3,
         0.3,
-        0.1,
+        0.3,
         1.000
     ),
     ObjectInfo(
@@ -195,7 +195,7 @@ OBJECT_INFO = [
         0,
         0.1,
         0.5,
-        0.1,
+        0.3,
         0.001,
     ),
     ObjectInfo(
@@ -205,7 +205,7 @@ OBJECT_INFO = [
         0,
         0.1,
         0.5,
-        0.1,
+        0.2,
         0.001,
     ),
     ObjectInfo(
@@ -215,7 +215,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.6,
         0.3,
-        0.1,
+        0.3,
         0.001,
     ),
     ObjectInfo(
@@ -225,7 +225,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.6,
         0.3,
-        0.1,
+        0.3,
         0.001,
     ),
     ObjectInfo(
@@ -235,7 +235,7 @@ OBJECT_INFO = [
         0,
         0.0,
         1.0,
-        0.1,
+        0.5,
         1.0,
     ),
     ObjectInfo(
@@ -245,7 +245,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.6,
         0.3,
-        0.1,
+        0.3,
         1.0,
     ),  # BAD QUALITY
     ObjectInfo(
@@ -255,7 +255,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.3,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),
     ObjectInfo(
@@ -265,7 +265,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.1,
         0.6,
-        0.1,
+        0.0,
         0.001,
     ),
     ObjectInfo(
@@ -275,7 +275,7 @@ OBJECT_INFO = [
         0,
         0.3,
         0.5,
-        0.1,
+        0.3,
         0.001,
     ),  # edited
     ObjectInfo(
@@ -295,7 +295,7 @@ OBJECT_INFO = [
         0,
         0.1,
         0.5,
-        0.1,
+        0.3,
         0.001,
     ),
     ObjectInfo(
@@ -305,7 +305,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.9,
         0.3,
-        0.1,
+        0.2,
         1.0,
     ),
     ObjectInfo(
@@ -315,7 +315,7 @@ OBJECT_INFO = [
         0,  # concave?
         0.1,
         0.5,
-        0.1,
+        0.2,
         1.0,
     ),
     ObjectInfo(
@@ -325,7 +325,7 @@ OBJECT_INFO = [
         0,  # concave?
         0.1,
         0.5,
-        0.1,
+        0.2,
         1.0,
     ),
     ObjectInfo(
@@ -335,7 +335,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,  # concave?
         0.1,
         0.5,
-        0.1,
+        0.2,
         1.0,
     ),
     ObjectInfo(
@@ -345,7 +345,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,  # concave?
         0.1,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),
     ObjectInfo(
@@ -355,7 +355,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,  # concave?
         0.1,
         0.5,
-        0.1,
+        0.3,
         0.001,
     ),
     ObjectInfo(
@@ -365,7 +365,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,  # concave?
         0.1,
         0.5,
-        0.1,
+        0.3,
         0.001,
     ),
     ObjectInfo(
@@ -375,7 +375,7 @@ OBJECT_INFO = [
         0,
         0.1,
         0.3,
-        0.1,
+        0.7,
         1.0,
     ),
     ObjectInfo(
@@ -385,7 +385,7 @@ OBJECT_INFO = [
         0,
         0.0,
         0.7,
-        0.1,
+        0.7,
         1.0,
     ),
     ObjectInfo(
@@ -395,7 +395,7 @@ OBJECT_INFO = [
         0,
         0.1,
         0.5,
-        0.1,
+        0.4,
         1.0,
     ),
     ObjectInfo(
@@ -405,7 +405,7 @@ OBJECT_INFO = [
         0,
         0.0,
         0.9,
-        0.1,
+        0.8,
         1.0,
     ),
     ObjectInfo(
@@ -415,7 +415,7 @@ OBJECT_INFO = [
         0,
         0.1,
         0.6,
-        0.1,
+        1.0,
         1.0,
     ),
     ObjectInfo(
@@ -425,7 +425,7 @@ OBJECT_INFO = [
         0,
         0.3,
         0.5,
-        0.1,
+        0.5,
         1.0,
     ),
     ObjectInfo(
@@ -435,7 +435,7 @@ OBJECT_INFO = [
         0,
         0.1,
         0.7,
-        0.1,
+        0.5,
         0.001,
     ),
     ObjectInfo(
@@ -445,7 +445,7 @@ OBJECT_INFO = [
         0,
         0.3,
         0.5,
-        0.1,
+        0.5,
         1.0
     ),
     ObjectInfo(
@@ -455,7 +455,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.1,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),  # BAD QUALITY (interior)
     ObjectInfo(
@@ -465,7 +465,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.1,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),  # BAD QUALITY (interior)
     ObjectInfo(
@@ -475,7 +475,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.1,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),  # BAD QUALITY (interior)
     ObjectInfo(
@@ -485,7 +485,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.1,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),  # BAD QUALITY (interior)
     ObjectInfo(
@@ -495,7 +495,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.1,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),  # BAD QUALITY (interior)
     ObjectInfo(
@@ -505,7 +505,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.1,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),  # BAD QUALITY (interior)
     ObjectInfo(
@@ -515,7 +515,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.1,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),  # BAD QUALITY (interior)
     ObjectInfo(
@@ -525,7 +525,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.1,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),  # BAD QUALITY (interior)
     ObjectInfo(
@@ -535,7 +535,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.1,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),  # BAD QUALITY (interior)
     ObjectInfo(
@@ -545,7 +545,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.1,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),  # BAD QUALITY (interior)
     ObjectInfo(
@@ -555,7 +555,7 @@ OBJECT_INFO = [
         0,
         0.3,
         0.5,
-        0.1,
+        0.3,
         1.0,
     ),
     ObjectInfo(
@@ -575,7 +575,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.3,
         0.5,
-        0.1,
+        0.2,
         1.0,
     ),
     ObjectInfo(
@@ -595,7 +595,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.5,
         0.3,
-        0.1,
+        0.0,
         0.01
     ),
     ObjectInfo(
@@ -605,7 +605,7 @@ OBJECT_INFO = [
         0,
         0.3,
         0.1,
-        0.1,
+        0.3,
         0.01,
     ),
     ObjectInfo(
@@ -665,7 +665,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.3,
         0.7,
-        0.1,
+        0.0,
         0.01
     ),
     ObjectInfo(
@@ -675,7 +675,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.3,
         0.1,
-        0.1,
+        0.3,
         0.01,
     ),
     ObjectInfo(
@@ -685,7 +685,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.9,
         0.3,
-        0.1,
+        0.0,
         0.01,
     ),
     ObjectInfo(
@@ -695,7 +695,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.1,
         0.7,
-        0.1,
+        0.4,
         0.01,
     ),
     ObjectInfo(
@@ -705,7 +705,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.3,
         0.3,
-        0.1,
+        0.3,
         0.01,
     ),
     ObjectInfo(
@@ -735,7 +735,7 @@ OBJECT_INFO = [
         FLAG_CONCAVE,
         0.3,
         0.7,
-        0.1,
+        0.0,
         0.01,
     ),
 ]
