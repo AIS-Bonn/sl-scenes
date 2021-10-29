@@ -10,7 +10,6 @@ from ycb_dynamic.object_models import MeshLoader, ObjectLoader
 from ycb_dynamic.lighting import get_lightmap
 from ycb_dynamic.camera import Camera, create_coplanar_stereo_cams, cam_pos_from_config
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
-import ycb_dynamic.CONSTANTS as CONSTANTS
 
 
 class Scenario(object):

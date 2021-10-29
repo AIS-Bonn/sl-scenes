@@ -7,7 +7,6 @@ import torch
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.CONFIG import CONFIG
-from ycb_dynamic.camera import Camera
 from ycb_dynamic.scenarios.scenario import Scenario
 
 
