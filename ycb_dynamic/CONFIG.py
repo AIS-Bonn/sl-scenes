@@ -121,6 +121,29 @@ CONFIG = {
                 "stacks_max": 3,
             }
         },
+        # TABLETOP SCENE
+        "tabletop": {
+            "camera": {
+                "elevation_angle_min": 15,
+                "elevation_angle_max": 15,
+                "orientation_angle_min": 0,
+                "orientation_angle_max": 360,
+                "orientation_angle_default": 76,
+                "distance_min": 2.00,
+                "distance_max": 2.00,
+                "lookat": torch.Tensor([0, 0, 0])
+            },
+            "pos": {
+                "x_min": -0.8,
+                "x_max": 0.8,
+                "y_min": -0.4,
+                "y_max": 0.4,
+                "z_min": 0.1,
+                "z_max": 0.3,
+            },
+            "velocity": {},
+            "other": {}
+        },
         # THROW SCENE
         "throw": {
             "camera": {

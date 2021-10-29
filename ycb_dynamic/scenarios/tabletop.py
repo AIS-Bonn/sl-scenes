@@ -5,6 +5,7 @@ import random
 import torch
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
+from ycb_dynamic.CONFIG import CONFIG
 from ycb_dynamic.camera import Camera
 from ycb_dynamic.scenarios.scenario import Scenario
 
@@ -13,7 +14,8 @@ from ycb_dynamic.scenarios.scenario import Scenario
 class TabletopScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Tabletop"
-        self.prep_time = 0.002  # during this time (in s), the scene will not be rendered
+        self.config = CONFIG["scenes"]["tabletop"]
+        self.prep_time = 0.000  # during this time (in s), the scene will not be rendered
         super(TabletopScenario, self).__init__(cfg, scene)   # also calls reset_sim()
 
     def can_render(self):
@@ -49,6 +51,7 @@ class TabletopScenario(Scenario):
             ])
             obj_mod = {"mod_t": mod_t}
             obj = self.add_object_to_scene(obj_info_mesh, False, **obj_mod)
+            obj = self.update_object_height(cur_obj=obj, objs=[self.table])
 
             # removing last object if colliding with anything else
             if self.is_there_collision():
