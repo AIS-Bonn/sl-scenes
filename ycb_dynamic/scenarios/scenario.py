@@ -7,22 +7,28 @@ import torch
 import stillleben as sl
 from ycb_dynamic.object_models import MeshLoader, ObjectLoader
 from ycb_dynamic.lighting import get_lightmap
+from ycb_dynamic.camera import Camera, create_coplanar_stereo_cams
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
 
 
 class Scenario(object):
     """ Abstract class for defining scenarios """
 
+    config = dict()
+
     def __init__(self, cfg, scene: sl.Scene):
         self.scene = scene
         self.mesh_loader = MeshLoader()
         self.object_loader = ObjectLoader()
-        self.meshes_loaded, self.objects_loaded = False, False
         self.z_offset = 0.
         self.lightmap = cfg.lightmap
+        self.n_cameras = cfg.cameras
+        self.coplanar_stereo = cfg.coplanar_stereo
+        self.coplanar_stereo_dist = cfg.coplanar_stereo_dist
         self.reset_sim()
 
     def reset_sim(self):
+        self.meshes_loaded, self.objects_loaded, self.cameras_loaded = False, False, False
         self.sim_t = 0
         self.setup_scene()
         self.setup_objects()
@@ -90,6 +96,26 @@ class Scenario(object):
         raise NotImplementedError
 
     def setup_cameras(self):
+        if self.cameras_loaded:
+            return
+        print("camera setup...")
+        self.cameras = []
+        cam_config = self.config["camera"]
+        camera_positions = NotImplemented  # TODO create default+random cam positions from config
+        cam_lookat = cam_config["lookat"]
+        for i, cam_pos in enumerate(camera_positions):
+            cam_name = f"cam_{str(i).zfill(2)}"
+            if self.coplanar_stereo:
+                self.cameras.extend(create_coplanar_stereo_cams(cam_name, cam_pos, cam_lookat, moving=False))
+            else:
+                self.cameras.append(Camera(cam_name, cam_pos, cam_lookat, moving=False))
+        self.setup_cameras_()  # e.g. scenario-specific height adjustment
+        self.cameras_loaded = True
+
+    def setup_cameras_(self):
+        """
+        Scenario-specific logic, e.g. height adjustment
+        """
         raise NotImplementedError
 
     def simulate(self, dt):

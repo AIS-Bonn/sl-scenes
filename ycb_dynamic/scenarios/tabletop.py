@@ -54,10 +54,13 @@ class TabletopScenario(Scenario):
             if self.is_there_collision():
                 self.remove_obj_from_scene(obj)
 
-    def setup_cameras(self):
-        print("camera setup...")
-        self.cameras = []
-        self.cameras.append(Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False))
+    def setup_cameras_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        self.cameras = [
+            self.update_camera_height(camera=cam, objs=[self.table]) for cam in self.cameras
+        ]
 
     def simulate(self, dt):
         self.scene.simulate(dt)

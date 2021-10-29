@@ -69,12 +69,13 @@ class BillardsScenario(Scenario):
         bowling_ball = self.add_object_to_scene(bowling_ball_info_mesh, False, **bowling_mod)
         _ = self.update_object_height(cur_obj=bowling_ball, objs=[self.table])
 
-    def setup_cameras(self):
-        print("camera setup...")
-        self.cameras = []
-        camera = Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False)
-        camera = self.update_camera_height(camera=camera, objs=[self.table])
-        self.cameras.append(camera)
+    def setup_cameras_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        self.cameras = [
+            self.update_camera_height(camera=cam, objs=[self.table]) for cam in self.cameras
+        ]
 
     def simulate(self, dt):
         self.scene.simulate(dt)

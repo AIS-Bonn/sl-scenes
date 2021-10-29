@@ -64,12 +64,13 @@ class BowlScenario(Scenario):
             if self.is_there_collision():
                 self.remove_obj_from_scene(fruit)
 
-    def setup_cameras(self):
-        print("camera setup...")
-        self.cameras = []
-        camera = Camera("main", CONSTANTS.BOWL_CAM_POS, CONSTANTS.BOWL_CAM_LOOKAT, moving=False)
-        camera = self.update_camera_height(camera=camera, objs=[self.table, self.bowl])
-        self.cameras.append(camera)
+    def setup_cameras_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        self.cameras = [
+            self.update_camera_height(camera=cam, objs=[self.table, self.bowl]) for cam in self.cameras
+        ]
 
     def simulate(self, dt):
         """ """

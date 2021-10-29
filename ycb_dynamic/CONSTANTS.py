@@ -32,12 +32,6 @@ ALL_LIGHTMAPS = {
 #########################
 # Scene global configurations
 #########################
-# TODO: Cameras are scene-dependent and variable --> move to CONFIG
-CAM_POS = torch.Tensor([0.5, 2.4, 1.2])
-CAM_LOOKAT = torch.Tensor([0, 0, 0.6])
-BOWL_CAM_POS = torch.Tensor([-0.3, 1.2, 1.])
-BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 0])
-BOWLING_CAM_POS = torch.Tensor([-0.5, 2.4, 0.3])
 
 # TABLE
 TABLE_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.0], [0, 0, 0, 1]])
