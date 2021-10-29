@@ -33,11 +33,10 @@ ALL_LIGHTMAPS = {
 # Scene global configurations
 #########################
 # TODO: Cameras are scene-dependent and variable --> move to CONFIG
-CAM_POS = torch.Tensor([0.5, 2.4, 1.2])
-CAM_LOOKAT = torch.Tensor([0, 0, 0.6])
-BOWL_CAM_POS = torch.Tensor([-0.3, 1.2, 1.])
+CAM_POS = torch.Tensor([-2, 2, 1.2])
+CAM_LOOKAT = torch.Tensor([0, 0, 0.5])
+BOWL_CAM_POS = torch.Tensor([-1.5, 0.75, 0.75])
 BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 0])
-BOWLING_CAM_POS = torch.Tensor([-0.5, 2.4, 0.3])
 
 # TABLE
 TABLE_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.0], [0, 0, 0, 1]])
@@ -99,10 +98,10 @@ YCBV_OBJS = [str(i).zfill(3) for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 21, 2
 
 YCB_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
 OTHER_OBJECTS = [obj for obj in OBJECT_INFO if not obj.name[0].isdigit()]
-TABLE = [obj for obj in OBJECT_INFO if obj.name == "art_deco_table"]
+# TABLE = [obj for obj in OBJECT_INFO if obj.name == "art_deco_table"]
 # TABLE = [obj for obj in OBJECT_INFO if obj.name == "wooden_table"]
 # TABLE = [obj for obj in OBJECT_INFO if obj.name == "folding_table"]
-# TABLE = [obj for obj in OBJECT_INFO if obj.name == "pool_table"]
+TABLE = [obj for obj in OBJECT_INFO if obj.name == "pool_table"]
 TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table")]
 CHAIRS = [obj for obj in OBJECT_INFO if obj.name.endswith("_chair")]
 CUPBOARDS = [obj for obj in OBJECT_INFO if obj.name.endswith("_cupboard")]

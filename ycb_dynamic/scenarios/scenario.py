@@ -111,23 +111,20 @@ class Scenario(object):
         z_pose = self.get_obj_z_offset(cur_obj)
         for obj in objs:
             z_pose = z_pose + self.get_obj_z_offset(obj)
-
         cur_obj_pose[2, -1] = z_pose
         cur_obj.set_pose(cur_obj_pose)
         return cur_obj
 
     def update_camera_height(self, camera, objs):
-        """ Updating the camera z-position """
+        """ Updating the camera position and the look-at parameter"""
 
-        z_pos = camera.start_pos[-1]
+        pos = camera.start_pos
         z_lookat = camera.start_lookat[-1]
         for obj in objs:
-            z_pos = z_pos + self.get_obj_z_offset(obj)
+            pos = pos + self.get_obj_offset(obj)
             z_lookat = z_lookat + self.get_obj_z_offset(obj)
-        camera.start_pos[-1] = z_pos
+        camera.start_pos = pos
         camera.start_lookat[-1] = z_lookat
-        print(camera.start_pos)
-        print(camera.start_lookat)
         camera.reset_cam()
         return camera
 
@@ -136,3 +133,9 @@ class Scenario(object):
         obj_pose = obj.pose()
         z_offset = obj_pose[2, -1] + obj.mesh.bbox.max[-1]
         return z_offset
+
+    def get_obj_offset(self, obj):
+        """ Obtaining the bbox boundaries (pos + size for x,y,z) for a given object"""
+        obj_pose = obj.pose()
+        offset = obj_pose[:3, -1] + obj.mesh.bbox.max
+        return offset
