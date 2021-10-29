@@ -127,9 +127,9 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
                     if not cfg.no_gen:
                         writer.write_frame(scenario, result)
                     cam.step()  # advance camera for next step if it's a moving one
-                    written_frames += 1
-                    pbar.update(1)
-                    pbar.set_postfix(sim_steps=sim_steps)
+                written_frames += 1
+                pbar.update(1)
+                pbar.set_postfix(sim_steps=sim_steps)
 
             # sim step
             scenario.simulate(1.0 / cfg.sim_steps_per_sec)

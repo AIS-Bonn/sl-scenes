@@ -116,7 +116,6 @@ class Scenario(object):
             cam_dist = random.uniform(cam_config["distance_min"], cam_config["distance_max"])
             cam_lookat = deepcopy(conf_cam_lookat)
             cam_pos = cam_pos_from_config(cam_lookat, cam_elev_angle, cam_ori_angle, cam_dist)
-            print(cam_pos, cam_lookat)
             cam_name = f"cam_{str(i).zfill(2)}"
             if self.coplanar_stereo:
                 self.cameras.extend(create_coplanar_stereo_cams(cam_name, cam_pos, cam_lookat,
