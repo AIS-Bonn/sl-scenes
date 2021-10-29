@@ -8,6 +8,8 @@ Everything non-code that can eventually be changed.
 """
 
 from pathlib import Path
+
+import numpy as np
 import torch
 from ycb_dynamic.OBJECT_INFO import OBJECT_INFO
 

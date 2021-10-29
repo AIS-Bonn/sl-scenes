@@ -1,14 +1,16 @@
 """
 Abstract class for defining scenarios
 """
+import random
 from typing import Tuple
 import numpy as np
 import torch
 import stillleben as sl
 from ycb_dynamic.object_models import MeshLoader, ObjectLoader
 from ycb_dynamic.lighting import get_lightmap
-from ycb_dynamic.camera import Camera, create_coplanar_stereo_cams
+from ycb_dynamic.camera import Camera, create_coplanar_stereo_cams, cam_pos_from_config
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
+import ycb_dynamic.CONSTANTS as CONSTANTS
 
 
 class Scenario(object):
@@ -101,12 +103,21 @@ class Scenario(object):
         print("camera setup...")
         self.cameras = []
         cam_config = self.config["camera"]
-        camera_positions = NotImplemented  # TODO create default+random cam positions from config
         cam_lookat = cam_config["lookat"]
-        for i, cam_pos in enumerate(camera_positions):
+
+        # pick default ori. angle and (n_cameras-1) other angles from a linspace of angles that are 5 degrees apart
+        default_ori_angle = cam_config["orientation_angle_default"]
+        cam_ori_angles = [0] + random.sample(np.linspace(0, 360, 72+1)[1:-1], k=self.n_cameras-1)
+        cam_ori_angles = [(angle + default_ori_angle) % 360 for angle in cam_ori_angles]
+
+        for i, cam_ori_angle in enumerate(cam_ori_angles):
+            cam_elev_angle = random.uniform(cam_config["elevation_angle_min"], cam_config["elevation_angle_max"])
+            cam_dist = random.uniform(cam_config["elevation_angle_min"], cam_config["elevation_angle_max"])
+            cam_pos = cam_pos_from_config(cam_lookat, cam_elev_angle, cam_ori_angle, cam_dist)
             cam_name = f"cam_{str(i).zfill(2)}"
             if self.coplanar_stereo:
-                self.cameras.extend(create_coplanar_stereo_cams(cam_name, cam_pos, cam_lookat, moving=False))
+                self.cameras.extend(create_coplanar_stereo_cams(cam_name, cam_pos, cam_lookat,
+                                                                self.coplanar_stereo_dist, moving=False))
             else:
                 self.cameras.append(Camera(cam_name, cam_pos, cam_lookat, moving=False))
         self.setup_cameras_()  # e.g. scenario-specific height adjustment

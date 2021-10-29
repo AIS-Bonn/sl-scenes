@@ -103,7 +103,7 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
         Writer(Path(cfg.out_path) / f"{it:06}_{scenario.name}_{cam.name}")
         for cam in cameras
     ]
-    frame_str = "" if cfg.no_gen else f": generating {cfg.frames} frames for {len(cameras)} cameras"
+    frame_str = "" if cfg.no_gen else f": generating {cfg.frames} frames for {len(cameras)} individual cameras"
     print(
         f"iteration {it}, scenario '{scenario.name}'{frame_str}"
     )
