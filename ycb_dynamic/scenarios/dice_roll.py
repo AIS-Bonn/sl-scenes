@@ -48,7 +48,7 @@ class DiceRollScenario(Scenario):
             mod_t = torch.tensor([
                 random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"]),
                 random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"]),
-                random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"]) + self.z_offset
+                random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
             ])
             mod_v_linear = utils.get_noisy_vect(
                     v=self.config["velocity"]["lin_velocity"],
@@ -69,7 +69,9 @@ class DiceRollScenario(Scenario):
     def setup_cameras(self):
         print("camera setup...")
         self.cameras = []
-        self.cameras.append(Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False))
+        camera = Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False)
+        camera = self.update_camera_height(camera=camera, objs=[self.table])
+        self.cameras.append(camera)
 
     def simulate(self, dt):
         self.scene.simulate(dt)

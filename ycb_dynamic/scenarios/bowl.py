@@ -41,14 +41,14 @@ class BowlScenario(Scenario):
 
         # place table
         table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
-        table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
+        self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
 
         # place bowl
         bowl_pose = deepcopy(CONSTANTS.WOODEN_BOWL_POSE)
         bowl_pose[2, -1] += self.z_offset
         bowl_mod = {"mod_pose": bowl_pose}
         bowl = self.add_object_to_scene(wooden_bowl_info_mesh, True, **bowl_mod)
-        bowl = self.update_object_height(cur_obj=bowl, objs=[table])
+        self.bowl = self.update_object_height(cur_obj=bowl, objs=[self.table])
 
         # spawn several balls at random positions in the bowl
         k = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"] + 1)
@@ -60,16 +60,16 @@ class BowlScenario(Scenario):
             fruit_pose[:2, -1] = 0.33 * torch.tensor([np.sin(angle), np.cos(angle)])  # assign x and y coordiantes
             fruit_mod = {"mod_pose": fruit_pose}
             fruit = self.add_object_to_scene(fruit_info_mesh, False, **fruit_mod)
-            fruit = self.update_object_height(cur_obj=fruit, objs=[table, bowl])
+            fruit = self.update_object_height(cur_obj=fruit, objs=[self.table, self.bowl])
             if self.is_there_collision():
                 self.remove_obj_from_scene(fruit)
 
     def setup_cameras(self):
-        """ """
         print("camera setup...")
         self.cameras = []
-        self.cameras.append(Camera("main", CONSTANTS.BOWL_CAM_POS,
-                                   CONSTANTS.BOWL_CAM_LOOKAT, moving=False))
+        camera = Camera("main", CONSTANTS.BOWL_CAM_POS, CONSTANTS.BOWL_CAM_LOOKAT, moving=False)
+        camera = self.update_camera_height(camera=camera, objs=[self.table, self.bowl])
+        self.cameras.append(camera)
 
     def simulate(self, dt):
         """ """

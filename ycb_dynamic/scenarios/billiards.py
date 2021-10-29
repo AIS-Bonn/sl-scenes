@@ -41,7 +41,7 @@ class BillardsScenario(Scenario):
 
         # place table
         table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
-        table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
+        self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
 
         # assemble several objects in a triangle-like shape
         N = len(CONSTANTS.BILLIARDS_TRIANLGE_POSES)
@@ -50,7 +50,7 @@ class BillardsScenario(Scenario):
             mod_pose = obj_poses[i]
             obj_mod = {"mod_pose": mod_pose}
             obj = self.add_object_to_scene(obj_info_mesh, False, **obj_mod)
-            obj = self.update_object_height(cur_obj=obj, objs=[table])
+            obj = self.update_object_height(cur_obj=obj, objs=[self.table])
             if self.is_there_collision():
                 self.remove_obj_from_scene(obj)
 
@@ -67,12 +67,14 @@ class BillardsScenario(Scenario):
             )
         bowling_mod = {"mod_t": mod_t, "mod_v_linear": mod_v_linear}
         bowling_ball = self.add_object_to_scene(bowling_ball_info_mesh, False, **bowling_mod)
-        _ = self.update_object_height(cur_obj=bowling_ball, objs=[table])
+        _ = self.update_object_height(cur_obj=bowling_ball, objs=[self.table])
 
     def setup_cameras(self):
         print("camera setup...")
         self.cameras = []
-        self.cameras.append(Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False))
+        camera = Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False)
+        camera = self.update_camera_height(camera=camera, objs=[self.table])
+        self.cameras.append(camera)
 
     def simulate(self, dt):
         self.scene.simulate(dt)

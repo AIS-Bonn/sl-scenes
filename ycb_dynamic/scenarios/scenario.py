@@ -116,6 +116,21 @@ class Scenario(object):
         cur_obj.set_pose(cur_obj_pose)
         return cur_obj
 
+    def update_camera_height(self, camera, objs):
+        """ Updating the camera z-position """
+
+        z_pos = camera.start_pos[-1]
+        z_lookat = camera.start_lookat[-1]
+        for obj in objs:
+            z_pos = z_pos + self.get_obj_z_offset(obj)
+            z_lookat = z_lookat + self.get_obj_z_offset(obj)
+        camera.start_pos[-1] = z_pos
+        camera.start_lookat[-1] = z_lookat
+        print(camera.start_pos)
+        print(camera.start_lookat)
+        camera.reset_cam()
+        return camera
+
     def get_obj_z_offset(self, obj):
         """ Obtaining the z_offset (z-pos + height) for a given object"""
         obj_pose = obj.pose()

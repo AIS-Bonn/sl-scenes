@@ -71,7 +71,9 @@ class ThrowScenario(Scenario):
     def setup_cameras(self):
         print("camera setup...")
         self.cameras = []
-        self.cameras.append(Camera("main", CONSTANTS.BOWLING_CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False))
+        camera = Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False)
+        camera = self.update_camera_height(camera=camera, objs=[self.table])
+        self.cameras.append(camera)
 
     def simulate(self, dt):
         self.scene.simulate(dt)

@@ -9,12 +9,10 @@ class Camera(object):
         self.moving = moving
         self.reset_cam()
 
-
     def reset_cam(self):
         self.t = 0
         self.pos = self.start_pos
         self.lookat = self.start_lookat
-
 
     def step(self):
         if not self.moving:
