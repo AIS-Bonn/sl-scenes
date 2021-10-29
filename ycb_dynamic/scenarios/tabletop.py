@@ -5,7 +5,7 @@ import random
 import torch
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.camera import Camera
+from ycb_dynamic.CONFIG import CONFIG
 from ycb_dynamic.scenarios.scenario import Scenario
 
 
@@ -13,7 +13,8 @@ from ycb_dynamic.scenarios.scenario import Scenario
 class TabletopScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Tabletop"
-        self.prep_time = 0.002  # during this time (in s), the scene will not be rendered
+        self.config = CONFIG["scenes"]["tabletop"]
+        self.prep_time = 0.000  # during this time (in s), the scene will not be rendered
         super(TabletopScenario, self).__init__(cfg, scene)   # also calls reset_sim()
 
     def can_render(self):
@@ -49,15 +50,19 @@ class TabletopScenario(Scenario):
             ])
             obj_mod = {"mod_t": mod_t}
             obj = self.add_object_to_scene(obj_info_mesh, False, **obj_mod)
+            obj = self.update_object_height(cur_obj=obj, objs=[self.table])
 
             # removing last object if colliding with anything else
             if self.is_there_collision():
                 self.remove_obj_from_scene(obj)
 
-    def setup_cameras(self):
-        print("camera setup...")
-        self.cameras = []
-        self.cameras.append(Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False))
+    def setup_cameras_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        self.cameras = [
+            self.update_camera_height(camera=cam, objs=[self.table]) for cam in self.cameras
+        ]
 
     def simulate(self, dt):
         self.scene.simulate(dt)

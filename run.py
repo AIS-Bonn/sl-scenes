@@ -16,6 +16,7 @@ from ycb_dynamic.scenarios import (
     BowlingScenario,
     DiceRollScenario,
     StackScenario,
+    TabletopScenario,
     ThrowScenario,
 )
 from ycb_dynamic.output import Writer
@@ -27,6 +28,7 @@ SCENARIOS = {
     "bowling": BowlingScenario,
     "diceRoll": DiceRollScenario,
     "stack": StackScenario,
+    "tabletop": TabletopScenario,
     "throw": ThrowScenario,
 }
 
@@ -103,7 +105,7 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
         Writer(Path(cfg.out_path) / f"{it:06}_{scenario.name}_{cam.name}")
         for cam in cameras
     ]
-    frame_str = "" if cfg.no_gen else f": generating {cfg.frames} frames for {len(cameras)} cameras"
+    frame_str = "" if cfg.no_gen else f": generating {cfg.frames} frames for {len(cameras)} individual cameras"
     print(
         f"iteration {it}, scenario '{scenario.name}'{frame_str}"
     )
@@ -125,9 +127,9 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
                     if not cfg.no_gen:
                         writer.write_frame(scenario, result)
                     cam.step()  # advance camera for next step if it's a moving one
-                    written_frames += 1
-                    pbar.update(1)
-                    pbar.set_postfix(sim_steps=sim_steps)
+                written_frames += 1
+                pbar.update(1)
+                pbar.set_postfix(sim_steps=sim_steps)
 
             # sim step
             scenario.simulate(1.0 / cfg.sim_steps_per_sec)
@@ -165,7 +167,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--iterations",
-        type=int,
+        type=utils.positive_integer,
         default=1,
         help="number of episodes to generate per scenario",
     )
@@ -204,13 +206,27 @@ if __name__ == "__main__":
         default=20,
         help="number of sim steps passing between each frame",
     )
+    parser.add_argument(
+        "--cameras",
+        type=utils.positive_integer,
+        default=1,
+        help="number of cameras to set up per scenario"
+    )
+    parser.add_argument(
+        "--coplanar-stereo",
+        action="store_true",
+        help="if specified, each specified camera becomes a coplanar"
+             "stereo pair of cameras"
+    )
+    parser.add_argument(
+        "--coplanar-stereo-dist",
+        type=float,
+        default=0.06,
+        help="distance between the cameras of a stereo pair (both in pos and lookat)"
+    )
     cfg = parser.parse_args()
 
     # config preparation
-    if cfg.iterations < 1:
-        print("parameter 'iterations' < 1, exiting...")
-        exit(0)
-
     if cfg.out_path == "":
         cfg.out_path = f"out/{utils.timestamp()}"
 

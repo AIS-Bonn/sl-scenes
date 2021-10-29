@@ -8,7 +8,6 @@ from copy import deepcopy
 
 from ycb_dynamic.CONFIG import CONFIG
 import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.camera import Camera
 from ycb_dynamic.scenarios.scenario import Scenario
 
 
@@ -51,7 +50,7 @@ class BowlScenario(Scenario):
         self.bowl = self.update_object_height(cur_obj=bowl, objs=[self.table])
 
         # spawn several balls at random positions in the bowl
-        k = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"] + 1)
+        k = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"])
         obj_placement_angles = np.linspace(0, 2*np.pi, num=self.config["other"]["max_objs"] + 1).tolist()[:-1]
         obj_placement_angles = random.sample(obj_placement_angles, k=k)  # no duplicates
         fruits_info_mesh = random.choices(fruits_info_mesh, k=k)  # duplicates OK
@@ -64,12 +63,13 @@ class BowlScenario(Scenario):
             if self.is_there_collision():
                 self.remove_obj_from_scene(fruit)
 
-    def setup_cameras(self):
-        print("camera setup...")
-        self.cameras = []
-        camera = Camera("main", CONSTANTS.BOWL_CAM_POS, CONSTANTS.BOWL_CAM_LOOKAT, moving=False)
-        camera = self.update_camera_height(camera=camera, objs=[self.table, self.bowl])
-        self.cameras.append(camera)
+    def setup_cameras_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        self.cameras = [
+            self.update_camera_height(camera=cam, objs=[self.table, self.bowl]) for cam in self.cameras
+        ]
 
     def simulate(self, dt):
         """ """

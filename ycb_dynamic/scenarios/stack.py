@@ -7,7 +7,6 @@ import torch
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.CONFIG import CONFIG
-from ycb_dynamic.camera import Camera
 from ycb_dynamic.scenarios.scenario import Scenario
 
 
@@ -63,12 +62,13 @@ class StackScenario(Scenario):
                 if self.is_there_collision():
                     self.remove_obj_from_scene(obj)
 
-    def setup_cameras(self):
-        print("camera setup...")
-        self.cameras = []
-        camera = Camera("main", CONSTANTS.CAM_POS, CONSTANTS.CAM_LOOKAT, moving=False)
-        camera = self.update_camera_height(camera=camera, objs=[self.table])
-        self.cameras.append(camera)
+    def setup_cameras_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        self.cameras = [
+            self.update_camera_height(camera=cam, objs=[self.table]) for cam in self.cameras
+        ]
 
     def simulate(self, dt):
         self.scene.simulate(dt)

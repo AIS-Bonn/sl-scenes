@@ -8,6 +8,8 @@ Everything non-code that can eventually be changed.
 """
 
 from pathlib import Path
+
+import numpy as np
 import torch
 from ycb_dynamic.OBJECT_INFO import OBJECT_INFO
 
@@ -32,11 +34,6 @@ ALL_LIGHTMAPS = {
 #########################
 # Scene global configurations
 #########################
-# TODO: Cameras are scene-dependent and variable --> move to CONFIG
-CAM_POS = torch.Tensor([-2, 2, 1.2])
-CAM_LOOKAT = torch.Tensor([0, 0, 0.5])
-BOWL_CAM_POS = torch.Tensor([-1.5, 0.75, 0.75])
-BOWL_CAM_LOOKAT = torch.Tensor([0, 0, 0])
 
 # TABLE
 TABLE_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.0], [0, 0, 0, 1]])

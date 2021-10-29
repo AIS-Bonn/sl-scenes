@@ -5,6 +5,7 @@ Utils methods
 import os
 import datetime
 import torch
+import argparse
 
 
 def clear_cmd():
@@ -64,3 +65,10 @@ def get_surface_height(surface):
     pose = surface.pose
     height = pose[2, -1]
     return height
+
+
+def positive_integer(var):
+    var = int(var)
+    if var < 1:
+        raise argparse.ArgumentTypeError(f"invalid parameter: {var}")
+    return var

@@ -3,11 +3,30 @@ Configurations and variables for each scene.
 """
 import torch
 
+"""
+Explanations:
+ - camera parameters:
+   - lookat: point of camera focus and starting point for cam_pos calculation.
+   - elevation angle (in degrees for better readability): val==0 means same height as lookat, val>0 means above lookat
+   - orientation angle (in degrees): val==0 means cam sits on XZ-plane,
+    increasing val shifts the pos clockwise when looking from above
+   - distance: length of displacement vector from lookat
+"""
+
 CONFIG = {
     "scenes": {
         # BILLARDS SCENE
         "billards": {
-            "camera": {},
+            "camera": {
+                "elevation_angle_min": 15,
+                "elevation_angle_max": 15,
+                "orientation_angle_min": 0,
+                "orientation_angle_max": 360,
+                "orientation_angle_default": 76,
+                "distance_min": 2.00,
+                "distance_max": 2.00,
+                "lookat": torch.Tensor([0, 0, 0])
+            },
             "pos": {  # bowling ball position
                 "x_min": -0.9,
                 "x_max": -0.9,
@@ -25,7 +44,16 @@ CONFIG = {
         },
         # BOWL SCENE
         "bowl": {
-            "camera": {},
+            "camera": {
+                "elevation_angle_min": 40,
+                "elevation_angle_max": 40,
+                "orientation_angle_min": 0,
+                "orientation_angle_max": 360,
+                "orientation_angle_default": 114,
+                "distance_min": 2.0,
+                "distance_max": 2.0,
+                "lookat": torch.Tensor([0, 0, 0])
+            },
             "pos": {
                 "x_min": 0.,
                 "x_max": 0,
@@ -42,7 +70,16 @@ CONFIG = {
         },
         # BOWLING SCENE
         "bowling": {
-            "camera": {},
+            "camera": {
+                "elevation_angle_min": 7,
+                "elevation_angle_max": 7,
+                "orientation_angle_min": 0,
+                "orientation_angle_max": 360,
+                "orientation_angle_default": 114,
+                "distance_min": 2.00,
+                "distance_max": 2.00,
+                "lookat": torch.Tensor([0, 0, 0])
+            },
             "pos": {  # bowling ball position
                 "x_min": -0.9,
                 "x_max": -0.9,
@@ -60,7 +97,16 @@ CONFIG = {
         },
         # STACK SCENE
         "stack": {
-            "camera": {},
+            "camera": {
+                "elevation_angle_min": 15,
+                "elevation_angle_max": 15,
+                "orientation_angle_min": 0,
+                "orientation_angle_max": 360,
+                "orientation_angle_default": 76,
+                "distance_min": 2.00,
+                "distance_max": 2.00,
+                "lookat": torch.Tensor([0, 0, 0])
+            },
             "pos": {
                 "x_min": -1,
                 "x_max": 1,
@@ -75,9 +121,41 @@ CONFIG = {
                 "stacks_max": 3,
             }
         },
+        # TABLETOP SCENE
+        "tabletop": {
+            "camera": {
+                "elevation_angle_min": 15,
+                "elevation_angle_max": 15,
+                "orientation_angle_min": 0,
+                "orientation_angle_max": 360,
+                "orientation_angle_default": 76,
+                "distance_min": 2.00,
+                "distance_max": 2.00,
+                "lookat": torch.Tensor([0, 0, 0])
+            },
+            "pos": {
+                "x_min": -0.8,
+                "x_max": 0.8,
+                "y_min": -0.4,
+                "y_max": 0.4,
+                "z_min": 0.1,
+                "z_max": 0.3,
+            },
+            "velocity": {},
+            "other": {}
+        },
         # THROW SCENE
         "throw": {
-            "camera": {},
+            "camera": {
+                "elevation_angle_min": 15,
+                "elevation_angle_max": 15,
+                "orientation_angle_min": 0,
+                "orientation_angle_max": 360,
+                "orientation_angle_default": 76,
+                "distance_min": 2.00,
+                "distance_max": 2.00,
+                "lookat": torch.Tensor([0, 0, 0])
+            },
             "pos": {
                 "x_min": -0.6,
                 "x_max": 0.6,
@@ -101,7 +179,16 @@ CONFIG = {
         },
         # DICE ROLL SCENE
         "dice_roll": {
-            "camera": {},
+            "camera": {
+                "elevation_angle_min": 15,
+                "elevation_angle_max": 15,
+                "orientation_angle_min": 0,
+                "orientation_angle_max": 360,
+                "orientation_angle_default": 76,
+                "distance_min": 2.00,
+                "distance_max": 2.00,
+                "lookat": torch.Tensor([0, 0, 0])
+            },
             "pos": {
                 "x_min": -1.2,
                 "x_max": -1.2,
