@@ -1,21 +1,53 @@
 import numpy as np
 import torch
+from copy import deepcopy
 
 
 class Camera(object):
-    def __init__(self, name: str, start_pos: torch.Tensor, start_lookat: torch.Tensor,
-                 moving: bool, stereo_deviation: float=0):
-        self.name = name  # can be used e.g. to name the corresponding output directories
-        self.start_pos = start_pos
-        self.start_lookat = start_lookat
+    def __init__(self, name: str, elev_angle: float, ori_angle: float, distance: float, lookat: torch.Tensor,
+                 up: torch.Tensor=torch.tensor([0., 0., 1.]), moving: bool=False, stereo_position: str="mono",
+                 stereo_pair_dist: float=0):
+        self.name = f"{name}_{stereo_position}" # can be used e.g. to name the corresponding output directories
         self.moving = moving
-        self.stereo_deviation = stereo_deviation
+        self.stereo_position = stereo_position
+        self.stereo_pair_dist = stereo_pair_dist
+        self.start_elev_angle = elev_angle
+        self.start_ori_angle = ori_angle
+        self.start_distance = distance
+        self.start_up = up
+        self.start_base_lookat = lookat
+        self.start_base_pos = cam_pos_from_config(self.start_base_lookat, self.start_elev_angle,
+                                                  self.start_ori_angle, self.start_distance)
+
         self.reset_cam()
 
     def reset_cam(self):
         self.t = 0
-        self.pos = self.start_pos
-        self.lookat = self.start_lookat
+        self.base_lookat = self.start_base_lookat
+        self.elev_angle = self.start_elev_angle
+        self.ori_angle = self.start_ori_angle
+        self.distance = self.start_distance
+        self.up = self.start_up
+
+    def stereo_deviation(self, vec):
+        deviation_vec = torch.cross((self.base_lookat - self.base_pos).double(), self.up.double()).float()
+        deviation_vec *= self.stereo_pair_dist / (2 * torch.linalg.norm(deviation_vec))
+        return vec - deviation_vec if self.stereo_position == "left" else vec + deviation_vec
+
+    @property
+    def base_pos(self):
+        return self.start_base_pos if not self.moving else \
+            cam_pos_from_config(self.base_lookat, self.elev_angle, self.ori_angle, self.distance)
+
+    @property
+    def pos(self):
+        pos = self.base_pos
+        return pos if self.stereo_position == "mono" else self.stereo_deviation(pos)
+
+    @property
+    def lookat(self):
+        lookat = self.base_lookat
+        return lookat if self.stereo_position == "mono" else self.stereo_deviation(lookat)
 
     def step(self):
         if not self.moving:
@@ -24,20 +56,17 @@ class Camera(object):
             raise NotImplementedError("TODO implement position/lookat change on step() invocation")
             # TODO respect stereo lookat deviation in movement!
 
-def create_coplanar_stereo_cams(name: str, cam_pos: torch.Tensor, cam_lookat: torch.Tensor,
-                                stereo_cam_dist: float, moving: bool):
+def create_coplanar_stereo_cams(name: str, elev_angle: float, ori_angle: float, distance: float,
+                                lookat: torch.Tensor, stereo_pair_dist: float,
+                                up: torch.Tensor=torch.tensor([0., 0., 1.]), moving: bool=False):
     """
     Creates a pair of coplanar stereo cameras.
     Both cameras deviate by half the specified distance from the given position and lookat.
     """
-    cam_up = torch.tensor([0., 0., 1.])  # TODO variable up vectors
-    deviation_magnitude = stereo_cam_dist / 2
-    deviation_vec = torch.cross((cam_lookat - cam_pos).double(), cam_up.double()).float()
-    deviation_vec *= deviation_magnitude / torch.linalg.norm(deviation_vec)
-    cam_pos_left, cam_pos_right = cam_pos - deviation_vec, cam_pos + deviation_vec
-    cam_lookat_left, cam_lookat_right = cam_lookat - deviation_vec, cam_lookat + deviation_vec  # only for coplanar st.
-    return Camera(name + "_left", cam_pos_left, cam_lookat_left, moving=moving, stereo_deviation=deviation_magnitude), \
-           Camera(name + "_right", cam_pos_right, cam_lookat_right, moving=moving, stereo_deviation=deviation_magnitude)
+    return Camera(name, elev_angle, ori_angle, distance, lookat, up=up, moving=moving,
+                  stereo_position="left", stereo_pair_dist=stereo_pair_dist), \
+           Camera(name, elev_angle, ori_angle, distance, lookat, up=up, moving=moving,
+                  stereo_position="right", stereo_pair_dist=stereo_pair_dist),
 
 def cam_pos_from_config(cam_lookat: torch.Tensor, elevation_angle: float, orientation_angle: float, distance: float):
     """

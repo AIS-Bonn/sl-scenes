@@ -115,13 +115,13 @@ class Scenario(object):
             cam_elev_angle = random.uniform(cam_config["elevation_angle_min"], cam_config["elevation_angle_max"])
             cam_dist = random.uniform(cam_config["distance_min"], cam_config["distance_max"])
             cam_lookat = deepcopy(conf_cam_lookat)
-            cam_pos = cam_pos_from_config(cam_lookat, cam_elev_angle, cam_ori_angle, cam_dist)
             cam_name = f"cam_{str(i).zfill(2)}"
             if self.coplanar_stereo:
-                self.cameras.extend(create_coplanar_stereo_cams(cam_name, cam_pos, cam_lookat,
-                                                                self.coplanar_stereo_dist, moving=False))
+                self.cameras.extend(create_coplanar_stereo_cams(cam_name, cam_elev_angle, cam_ori_angle, cam_dist,
+                                                                cam_lookat, stereo_pair_dist=self.coplanar_stereo_dist,
+                                                                moving=False))
             else:
-                self.cameras.append(Camera(cam_name, cam_pos, cam_lookat, moving=False))
+                self.cameras.append(Camera(cam_name, cam_elev_angle, cam_ori_angle, cam_dist, cam_lookat))
         self.setup_cameras_()  # e.g. scenario-specific height adjustment
         self.cameras_loaded = True
 
@@ -158,13 +158,13 @@ class Scenario(object):
     def update_camera_height(self, camera, objs):
         """ Updating the camera z-position """
 
-        z_pos = camera.start_pos[-1]
-        z_lookat = camera.start_lookat[-1]
+        z_pos = camera.start_base_pos[-1]
+        z_lookat = camera.start_base_lookat[-1]
         for obj in objs:
-            z_pos = z_pos + self.get_obj_z_offset(obj)
-            z_lookat = z_lookat + self.get_obj_z_offset(obj)
-        camera.start_pos[-1] = z_pos
-        camera.start_lookat[-1] = z_lookat
+            z_pos += self.get_obj_z_offset(obj)
+            z_lookat += self.get_obj_z_offset(obj)
+        camera.start_base_pos[-1] = z_pos
+        camera.start_base_lookat[-1] = z_lookat
         camera.reset_cam()
         return camera
 
