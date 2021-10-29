@@ -44,7 +44,7 @@ def main(cfg):
         sl.init_cuda()
     renderer = sl.RenderPass()
 
-    if cfg.viewer:  # load scenario and view
+    if cfg.scenario != "all" and cfg.viewer:  # load scenario and view
         res = init_populate_scene(cfg, scenario_id=cfg.scenario)
         if(res["render"]):
             print(f"Scene successfully populated on iteration #{res['n_errors']}....")

@@ -52,7 +52,9 @@ class BillardsScenario(Scenario):
             mod_pose[2, -1] += self.z_offset
             obj_mod = {"mod_pose": mod_pose}
             obj = self.add_object_to_scene(obj_info_mesh, False, **obj_mod)
-            if self.is_there_collision():  # removing last object if colliding with anything else
+
+            # removing last object if colliding with anything else
+            if self.is_there_collision():
                 self.remove_obj_from_scene(obj)
 
         # add the bowling_ball with custom position and velocity

@@ -1,16 +1,14 @@
 """
 Stacked Scenario: Objects with flat surfaces assemble pyramids, which max fall due to lack of support
 """
-import stillleben as sl
 import random
 import numpy as np
 import torch
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.CONFIG import CONFIG
-from ycb_dynamic.object_models import MeshLoader
 from ycb_dynamic.camera import Camera
-from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene, remove_obj_from_scene
+from ycb_dynamic.scenarios.scenario import Scenario
 
 
 class StackScenario(Scenario):
@@ -26,34 +24,23 @@ class StackScenario(Scenario):
         """
         return self.sim_t > self.prep_time
 
-    def load_meshes(self):
-        """ """
-        meshLoader = MeshLoader()
-        meshLoader.load_meshes(CONSTANTS.TABLE),
-        meshLoader.load_meshes(CONSTANTS.STACK_OBJECTS),
-        loaded_meshes, loaded_mesh_weights = meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+    def load_meshes_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        self.mesh_loader.load_meshes(CONSTANTS.TABLE),
+        self.mesh_loader.load_meshes(CONSTANTS.STACK_OBJECTS),
 
-        self.table_mesh, self.obj_meshes = loaded_meshes
-        self.table_weight, self.obj_weights = loaded_mesh_weights
-        self.meshes_loaded = True
-        return
+    def setup_objects_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        table_info_mesh, stack_info_meshes = self.mesh_loader.get_meshes()
 
-    def setup_objects(self):
-        """ """
-        print("object setup...")
-        self.static_objects, self.dynamic_objects = [], []
-        if not self.meshes_loaded:
-            self.load_meshes()  # if objects have not been loaded yet, load them
-
-        # place the static objects (table) into the scene
-        table = sl.Object(self.table_mesh)
-        table.set_pose(CONSTANTS.TABLE_POSE)
-        table.mass = self.table_weight
-        table.static = True
-        self.z_offset = table.pose()[2, -1]
-        add_obj_to_scene(self.scene, table)
-        self.static_objects.append(table)
-        table_z_offset = table.pose()[2, -1] + table.mesh.bbox.max[-1]  # NOTE: Rotated (?)
+        # place table
+        table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
+        self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
+        self.z_offset = self.table.pose()[2, -1]
 
         # randomly sampling the number of stacks, and selecting mean (x,y) center positions
         N_poses = len(CONSTANTS.STACK_PYRAMID_POSES)
@@ -70,22 +57,14 @@ class StackScenario(Scenario):
 
         # assemble the pyramids of stacked objects. Initial poses are noisy, which might lead to pyramid falling
         for n in range(N_stacks):
-            for i, (mesh, weight) in enumerate(random.choices(list(zip(self.obj_meshes, self.obj_weights)), k=N_poses)):
-                object = sl.Object(mesh)
+            for i, obj_info_mesh in enumerate(random.choices(stack_info_meshes, k=N_poses)):
                 base_pose = CONSTANTS.STACK_PYRAMID_POSES[i]
-                pose = base_pose + pyramid_centers[n]
-                obj_z_offset = object.mesh.bbox.max[-1]
-                pose[2, -1] += obj_z_offset
-                object.set_pose(pose)
-                object.mass = weight
-                add_obj_to_scene(self.scene, object)
-                # removing last object if colliding with anything else
-                if(self.is_there_collision()):
-                    remove_obj_from_scene(self.scene, object)
-                else:
-                    self.dynamic_objects.append(object)
+                obj_mod = {"mod_pose": base_pose + pyramid_centers[n]}
+                obj = self.add_object_to_scene(obj_info_mesh, False, **obj_mod)
 
-        return
+                # removing last object if colliding with anything else
+                if self.is_there_collision():
+                    self.remove_obj_from_scene(obj)
 
     def setup_cameras(self):
         print("camera setup...")

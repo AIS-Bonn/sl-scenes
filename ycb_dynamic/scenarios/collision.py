@@ -2,16 +2,14 @@
 DEPRECATED
 Bowl Scenario: Several balls/fruits are placed inside a bowl, approaching and colliding with each other.
 """
-import stillleben as sl
 import random
-import numpy as np
 import torch
+from copy import deepcopy
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.CONFIG import CONFIG
-from ycb_dynamic.object_models import MeshLoader
 from ycb_dynamic.camera import Camera
-from ycb_dynamic.scenarios.scenario import Scenario, add_obj_to_scene, remove_obj_from_scene
+from ycb_dynamic.scenarios.scenario import Scenario
 
 
 class CollisionScenario(Scenario):
@@ -27,52 +25,38 @@ class CollisionScenario(Scenario):
         """
         return self.sim_t > self.prep_time
 
-    def load_meshes(self):
-        """ """
-        meshLoader = MeshLoader()
-        meshLoader.load_meshes(CONSTANTS.BOWL),
-        # meshLoader.load_meshes(CONSTANTS.FRUIT_OBJS),  # NOTE: Currently only using fruits
-        meshLoader.load_meshes(CONSTANTS.YCBV_OBJECTS),
-        loaded_meshes, loaded_mesh_weights = meshLoader.get_meshes(), meshLoader.get_mesh_weights()
+    def load_meshes_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        self.mesh_loader.load_meshes(CONSTANTS.BOWL),
+        self.mesh_loader.load_meshes(CONSTANTS.YCBV_OBJECTS),
 
-        self.bowl_mesh, self.obj_meshes = loaded_meshes
-        self.bowl_weight, self.obj_weights = loaded_mesh_weights
-        self.meshes_loaded = True
+    def setup_objects_(self):
+        """
+        SCENARIO-SPECIFIC
+        """
+        bowl_info_mesh, ycbv_info_meshes = self.mesh_loader.get_meshes()
 
-        return
-
-    def setup_objects(self):
-        print("object setup...")
-        self.static_objects, self.dynamic_objects = [], []
-        if not self.meshes_loaded:
-            self.load_meshes()  # if objects have not been loaded yet, load them
-
-        # place the static objects (bowl) into the scene
-        breakpoint()
-        bowl = sl.Object(self.bowl_mesh)
-        bowl.set_pose(CONSTANTS.BOWL_POSE)
-        bowl.mass = self.bowl_weight
-        bowl.static = True
-        add_obj_to_scene(self.scene, bowl)
-        self.static_objects.append(bowl)
+        # place bowl
+        bowl_pose = deepcopy(CONSTANTS.BOWL_POSE)
+        bowl_pose[2, -1] += self.z_offset
+        bowl_mod = {"mod_pose": bowl_pose}
+        self.bowl = self.add_object_to_scene(bowl_info_mesh, True, **bowl_mod)
 
         # drop 10 random YCB-Video objects onto the table
-        for (mesh, weight) in random.choices(list(zip(self.obj_meshes, self.obj_weights)), k=10):
-            obj = sl.Object(mesh)
-            p = obj.pose()
-            x = random.uniform(CONSTANTS.DROP_LIMITS["x_min"], CONSTANTS.DROP_LIMITS["x_max"])
-            y = random.uniform(CONSTANTS.DROP_LIMITS["y_min"], CONSTANTS.DROP_LIMITS["y_max"])
-            z = random.uniform(CONSTANTS.DROP_LIMITS["z_min"], CONSTANTS.DROP_LIMITS["z_max"])
-            p[:3, 3] = torch.tensor([x, y, z])
-            obj.set_pose(p)
-            obj.mass = weight
-            add_obj_to_scene(self.scene, obj)
-            if(self.is_there_collision()):  # removing last object if colliding with anything else
-                remove_obj_from_scene(self.scene, obj)
-            else:
-                self.dynamic_objects.append(obj)
+        for ycbv_info_mesh in random.choices(ycbv_info_meshes, k=10):
+            mod_t = torch.tensor([
+                random.uniform(CONSTANTS.DROP_LIMITS["x_min"], CONSTANTS.DROP_LIMITS["x_max"]),
+                random.uniform(CONSTANTS.DROP_LIMITS["y_min"], CONSTANTS.DROP_LIMITS["y_max"]),
+                random.uniform(CONSTANTS.DROP_LIMITS["z_min"], CONSTANTS.DROP_LIMITS["z_max"])
+            ])
+            obj_mod = {"mod_t": mod_t}
+            obj = self.add_object_to_scene(ycbv_info_mesh, False, **obj_mod)
 
-        return
+            # removing last object if colliding with anything else
+            if self.is_there_collision():
+                self.remove_obj_from_scene(obj)
 
     def _add_pose_noise(self, pose):
         """ Sampling a noise matrix to add to the pose """
@@ -89,5 +73,3 @@ class CollisionScenario(Scenario):
     def simulate(self, dt):
         self.scene.simulate(dt)
         self.sim_t += dt
-
-#
