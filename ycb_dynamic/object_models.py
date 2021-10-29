@@ -1,6 +1,7 @@
 import stillleben as sl
 import torch
 from typing import List
+from matplotlib import pyplot as plt
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
@@ -56,7 +57,6 @@ def mesh_flags(info: OBJECT_INFO.ObjectInfo):
         return sl.Mesh.Flag.NONE
     else:
         return sl.Mesh.Flag.PHYSICS_FORCE_CONVEX_HULL
-
 
 
 class ObjectLoader:
@@ -118,3 +118,92 @@ class ObjectLoader:
         if decrement_ins_idx and obj is not None:
             self.instance_idx -= 1
         return obj
+
+
+class DecoratorLoader:
+    """
+    Class to add random decorative objects to the scene, which do not participate of the scene dynamics.
+    It is based on creating an occupancy matrix of the scene, finding empty locations and placing stuff there
+    """
+
+    def __init__(self, scene):
+        """ Object initializer """
+        bounds = {
+            "min_x": -3,
+            "max_x": 3,
+            "min_y": -3,
+            "max_y": 3,
+            "res": 0.25
+        }
+        self.scene = scene
+        decorations = CONSTANTS.CHAIRS + CONSTANTS.CUPBOARDS
+        self.mesh_loader = MeshLoader()
+        self.mesh_loader.load_meshes(decorations),
+        self.meshes = self.mesh_loader.get_meshes()[0]
+
+        self.x_vect = torch.arange(bounds["min_x"], bounds["max_x"] + bounds["res"], bounds["res"])
+        self.y_vect = torch.arange(bounds["min_y"], bounds["max_y"] + bounds["res"], bounds["res"])
+        self.grid_y, self.grid_x = torch.meshgrid(self.x_vect, self.y_vect)
+        self.occupancy_matrix = torch.zeros(int((bounds["max_x"] + bounds["res"] - bounds["min_x"]) / bounds["res"]),
+                                            int((bounds["max_y"] + bounds["res"] - bounds["min_y"]) / bounds["res"]))
+        return
+
+    def init_occupancy_matrix(self, objects):
+        """ Obtaining an occupancy matrix with empty positions and occupied positions"""
+        occ_matrix = self.occupancy_matrix.clone()
+        for _, obj in objects.items():
+            occ_matrix = self.update_occupancy_matrix(occ_matrix, obj)
+
+        # TODO: Add some margin, e.g., one cell
+
+        return occ_matrix
+
+    def update_occupancy_matrix(self, occ_matrix, obj):
+        """ Updating occupancy matrix given object """
+        pos_x, pos_y = obj.pose()[:2, -1]
+        min_x, min_y = obj.mesh.bbox.min[0] + pos_x, obj.mesh.bbox.min[1] + pos_y
+        max_x, max_y = obj.mesh.bbox.max[0] + pos_x, obj.mesh.bbox.max[1] + pos_y
+        y_coords = (self.grid_y >= min_y) & (self.grid_y < max_y)
+        x_coords = (self.grid_x >= min_x) & (self.grid_x < max_x)
+        occ_coords = y_coords & x_coords
+        occ_matrix[occ_coords] = 1
+        return occ_matrix
+
+    def add_object(self, object_loader, occ_matrix, object_id):
+        """ Loading an object and adding to the loader """
+        obj_info, obj_mesh = self.meshes[object_id]
+        pose = torch.eye(4)
+
+        # finding free position and shifting object there
+        free_positions = torch.where(occ_matrix == 0)
+        id = torch.randint(0, len(free_positions[0]), (1,))
+        pos_y, pos_x = free_positions[0][id], free_positions[1][id]
+        pose[:2, -1] = torch.cat([self.y_vect[pos_y], self.x_vect[pos_x]])
+
+        # TODO: Rotate object in the yaw direction
+
+        obj_mod = {"mod_pose": pose}
+        obj = object_loader.create_object(obj_info, obj_mesh, True, **obj_mod)
+        self.scene.add_object(obj)
+        occ_matrix = self.update_occupancy_matrix(occ_matrix, obj)
+        return obj, occ_matrix
+
+    def decorate_scene(self, object_loader):
+        """ Randomly adding some decoderation to a scene """
+        objects = object_loader.loaded_objects
+        occ_matrix = self.init_occupancy_matrix(objects)
+
+        N = torch.randint(low=2, high=6, size=(1,))
+        for i in range(N):
+            id = torch.randint(low=0, high=len(self.meshes), size=(1,))
+            obj, occ_matrix = self.add_object(object_loader, occ_matrix, object_id=id)
+
+        # plt.figure()
+        # plt.imshow(occ_matrix)
+        # plt.title(f"Occupacy Matrix after Decoration #{i+1}")
+        # plt.show()
+
+        return
+
+
+#

@@ -7,7 +7,7 @@ import numpy as np
 from copy import deepcopy
 import torch
 import stillleben as sl
-from ycb_dynamic.object_models import MeshLoader, ObjectLoader
+from ycb_dynamic.object_models import MeshLoader, ObjectLoader, DecoratorLoader
 from ycb_dynamic.lighting import get_lightmap
 from ycb_dynamic.camera import Camera, create_coplanar_stereo_cams, cam_pos_from_config
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
@@ -22,6 +22,8 @@ class Scenario(object):
         self.scene = scene
         self.mesh_loader = MeshLoader()
         self.object_loader = ObjectLoader()
+        self.decorator_loader = DecoratorLoader(scene=self.scene)
+        self.meshes_loaded, self.objects_loaded = False, False
         self.z_offset = 0.
         self.lightmap = cfg.lightmap
         self.n_cameras = cfg.cameras
@@ -35,6 +37,8 @@ class Scenario(object):
         self.setup_scene()
         self.setup_objects()
         self.setup_cameras()
+        self.decorate_scene()
+
 
     @property
     def static_objects(self):
@@ -49,6 +53,12 @@ class Scenario(object):
 
     def can_render(self):
         raise NotImplementedError
+
+    def decorate_scene(self):
+        self.decorator_loader.decorate_scene(object_loader=self.object_loader)
+        # for obj in objs:
+            # self.scene.add_object(obj)
+        return
 
     def setup_scene(self):
         """ Default setup_scene lighting and camera. Can be overriden from specific scenes """
@@ -150,20 +160,19 @@ class Scenario(object):
         z_pose = self.get_obj_z_offset(cur_obj)
         for obj in objs:
             z_pose = z_pose + self.get_obj_z_offset(obj)
-
         cur_obj_pose[2, -1] = z_pose
         cur_obj.set_pose(cur_obj_pose)
         return cur_obj
 
     def update_camera_height(self, camera, objs):
-        """ Updating the camera z-position """
+        """ Updating the camera position and the look-at parameter"""
 
-        z_pos = camera.start_base_pos[-1]
+        pos = camera.start_base_pos
         z_lookat = camera.start_base_lookat[-1]
         for obj in objs:
-            z_pos += self.get_obj_z_offset(obj)
+            pos += self.get_obj_offset(obj)
             z_lookat += self.get_obj_z_offset(obj)
-        camera.start_base_pos[-1] = z_pos
+        camera.start_base_pos = pos
         camera.start_base_lookat[-1] = z_lookat
         camera.reset_cam()
         return camera
@@ -173,3 +182,9 @@ class Scenario(object):
         obj_pose = obj.pose()
         z_offset = obj_pose[2, -1] + obj.mesh.bbox.max[-1]
         return z_offset
+
+    def get_obj_offset(self, obj):
+        """ Obtaining the bbox boundaries (pos + size for x,y,z) for a given object"""
+        obj_pose = obj.pose()
+        offset = obj_pose[:3, -1] + obj.mesh.bbox.max
+        return offset
