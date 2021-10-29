@@ -108,7 +108,6 @@ class ObjectLoader:
         obj.set_pose(pose)
         obj.linear_velocity = obj_mod.get("mod_v_linear", torch.tensor([0.0, 0.0, 0.0]))
         obj.angular_velocity = obj_mod.get("mod_v_angular", torch.tensor([0.0, 0.0, 0.0]))
-        obj.z_offset = pose[2, -1] + obj.mesh.bbox.max[-1]  # getting max object top position
         obj.static = is_static
         obj.instance_index = ins_idx
         self.loaded_objects[ins_idx] = obj

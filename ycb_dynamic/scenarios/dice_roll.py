@@ -41,7 +41,6 @@ class DiceRollScenario(Scenario):
         # place table
         table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
         self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
-        self.z_offset = self.table.pose()[2, -1]
 
         # throw 5 random objects onto the table, from one of the table ends
         N = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"] + 1)
@@ -63,8 +62,7 @@ class DiceRollScenario(Scenario):
             )
             obj_mod = {"mod_t": mod_t, "mod_v_linear": mod_v_linear, "mod_v_angular": mod_v_angular}
             obj = self.add_object_to_scene(obj_info_mesh, False, **obj_mod)
-
-            # removing last object if colliding with anything else
+            obj = self.update_object_height(cur_obj=obj, objs=[self.table])
             if self.is_there_collision():
                 self.remove_obj_from_scene(obj)
 

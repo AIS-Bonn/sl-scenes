@@ -201,7 +201,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--sim-steps-per-frame",
         type=int,
-        default=25,
+        default=20,
         help="number of sim steps passing between each frame",
     )
     cfg = parser.parse_args()
@@ -217,5 +217,5 @@ if __name__ == "__main__":
     cfg.sim_fps = (
         cfg.sim_steps_per_sec / cfg.sim_steps_per_frame
     )  # TODO 60 or even 120 for dynamic movement?
-
+    print(f"Generating {cfg.frames} frames at {cfg.sim_fps} fps")
     main(cfg)

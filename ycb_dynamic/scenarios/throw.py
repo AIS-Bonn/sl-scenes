@@ -43,7 +43,6 @@ class ThrowScenario(Scenario):
         # place table
         table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
         self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
-        self.z_offset = self.table.pose()[2, -1]
 
         # throw some random YCB-Video objects onto the table, from the side
         N_objs = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"] + 1)
@@ -51,7 +50,7 @@ class ThrowScenario(Scenario):
             mod_t = torch.tensor([
                 random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"]),
                 random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"]),
-                random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"]) + self.z_offset
+                random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
             ])
             mod_v_linear = utils.get_noisy_vect(
                     v=self.config["velocity"]["lin_velocity"],
@@ -65,8 +64,7 @@ class ThrowScenario(Scenario):
             )
             obj_mod = {"mod_t": mod_t, "mod_v_linear": mod_v_linear, "mod_v_angular": mod_v_angular}
             obj = self.add_object_to_scene(obj_info_mesh, False, **obj_mod)
-
-            # removing last object if colliding with anything else
+            obj = self.update_object_height(cur_obj=obj, objs=[self.table])
             if self.is_there_collision():
                 self.remove_obj_from_scene(obj)
 

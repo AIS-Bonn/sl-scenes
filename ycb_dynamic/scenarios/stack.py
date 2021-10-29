@@ -40,7 +40,6 @@ class StackScenario(Scenario):
         # place table
         table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
         self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
-        self.z_offset = self.table.pose()[2, -1]
 
         # randomly sampling the number of stacks, and selecting mean (x,y) center positions
         N_poses = len(CONSTANTS.STACK_PYRAMID_POSES)
@@ -53,7 +52,6 @@ class StackScenario(Scenario):
         pyramid_centers = torch.zeros(N_stacks, 4, 4)
         pyramid_centers[:, 0,  -1] = x_coords
         pyramid_centers[:, 1, -1] = y_coords
-        pyramid_centers[:, 2, -1] = table_z_offset
 
         # assemble the pyramids of stacked objects. Initial poses are noisy, which might lead to pyramid falling
         for n in range(N_stacks):
@@ -61,8 +59,7 @@ class StackScenario(Scenario):
                 base_pose = CONSTANTS.STACK_PYRAMID_POSES[i]
                 obj_mod = {"mod_pose": base_pose + pyramid_centers[n]}
                 obj = self.add_object_to_scene(obj_info_mesh, False, **obj_mod)
-
-                # removing last object if colliding with anything else
+                obj = self.update_object_height(cur_obj=obj, objs=[self.table])
                 if self.is_there_collision():
                     self.remove_obj_from_scene(obj)
 

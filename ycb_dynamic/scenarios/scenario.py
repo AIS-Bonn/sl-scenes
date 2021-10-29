@@ -104,3 +104,20 @@ class Scenario(object):
     def remove_obj_from_scene(self, obj: sl.Object, decrement_ins_idx: bool=True):
         self.scene.remove_object(obj)
         self.object_loader.remove_object(obj.instance_index, decrement_ins_idx=decrement_ins_idx)
+
+    def update_object_height(self, cur_obj, objs):
+        """ Updating an object z-position given a list of supporting objects"""
+        cur_obj_pose = cur_obj.pose()
+        z_pose = self.get_obj_z_offset(cur_obj)
+        for obj in objs:
+            z_pose = z_pose + self.get_obj_z_offset(obj)
+
+        cur_obj_pose[2, -1] = z_pose
+        cur_obj.set_pose(cur_obj_pose)
+        return cur_obj
+
+    def get_obj_z_offset(self, obj):
+        """ Obtaining the z_offset (z-pos + height) for a given object"""
+        obj_pose = obj.pose()
+        z_offset = obj_pose[2, -1] + obj.mesh.bbox.max[-1]
+        return z_offset

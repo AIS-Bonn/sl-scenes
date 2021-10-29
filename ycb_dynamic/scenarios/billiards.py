@@ -41,19 +41,16 @@ class BillardsScenario(Scenario):
 
         # place table
         table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
-        self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
-        self.z_offset = self.table.pose()[2, -1]
+        table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
 
         # assemble several objects in a triangle-like shape
         N = len(CONSTANTS.BILLIARDS_TRIANLGE_POSES)
         obj_poses = deepcopy(CONSTANTS.BILLIARDS_TRIANLGE_POSES)
         for i, obj_info_mesh in enumerate(random.choices(billards_obj_info_mesh, k=N)):
             mod_pose = obj_poses[i]
-            mod_pose[2, -1] += self.z_offset
             obj_mod = {"mod_pose": mod_pose}
             obj = self.add_object_to_scene(obj_info_mesh, False, **obj_mod)
-
-            # removing last object if colliding with anything else
+            obj = self.update_object_height(cur_obj=obj, objs=[table])
             if self.is_there_collision():
                 self.remove_obj_from_scene(obj)
 
@@ -61,7 +58,7 @@ class BillardsScenario(Scenario):
         mod_t = torch.tensor([
             random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"]),
             random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"]),
-            random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"]) + self.z_offset
+            random.uniform(self.config["pos"]["z_min"], self.config["pos"]["z_max"])
         ])
         mod_v_linear = utils.get_noisy_vect(
                 v=self.config["velocity"]["lin_velocity"],
@@ -69,7 +66,8 @@ class BillardsScenario(Scenario):
                 std=self.config["velocity"]["lin_noise_std"]
             )
         bowling_mod = {"mod_t": mod_t, "mod_v_linear": mod_v_linear}
-        self.bowling_ball = self.add_object_to_scene(bowling_ball_info_mesh, False, **bowling_mod)
+        bowling_ball = self.add_object_to_scene(bowling_ball_info_mesh, False, **bowling_mod)
+        _ = self.update_object_height(cur_obj=bowling_ball, objs=[table])
 
     def setup_cameras(self):
         print("camera setup...")

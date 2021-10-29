@@ -43,16 +43,13 @@ class BowlingScenario(Scenario):
         # place table
         table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
         self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
-        self.z_offset = self.table.pose()[2, -1]
 
         # assemble a pyramid of wooden blocks
         wood_block_poses = deepcopy(CONSTANTS.WOOD_BLOCK_POSES)
         for i, wood_block_pose in enumerate(wood_block_poses):
-            wood_block_pose[2, -1] += self.z_offset
             wood_block_mod = {"mod_pose": wood_block_pose}
             wood_block = self.add_object_to_scene(wood_block_info_mesh, False, **wood_block_mod)
-
-            # removing last object if colliding with anything else
+            wood_block = self.update_object_height(cur_obj=wood_block, objs=[self.table])
             if self.is_there_collision():
                 self.remove_obj_from_scene(wood_block)
 
@@ -78,6 +75,7 @@ class BowlingScenario(Scenario):
         )
         bowling_mod = {"mod_t": mod_t, "mod_v_linear": mod_v_linear}
         self.bowling_ball = self.add_object_to_scene(self.bowling_ball_info_mesh, False, **bowling_mod)
+        self.bowling_ball = self.update_object_height(cur_obj=self.bowling_ball, objs=[self.table])
         self.bowling_ball_loaded = True
 
     def setup_cameras(self):
