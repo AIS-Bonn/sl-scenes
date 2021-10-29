@@ -47,5 +47,6 @@ def cam_pos_from_config(cam_lookat: torch.Tensor, elevation_angle: float, orient
     cam_x = np.cos(orientation_angle * np.pi / 180.) * np.cos(elevation_angle * np.pi / 180.)
     cam_y = np.sin(orientation_angle * np.pi / 180.) * np.cos(elevation_angle * np.pi / 180.)
     cam_z = np.sin(elevation_angle * np.pi / 180.)
-    cam_pos = cam_lookat + torch.tensor([cam_x, cam_y, cam_z]) * distance
+    cam_xyz = torch.tensor([cam_x, cam_y, cam_z])
+    cam_pos = cam_lookat + cam_xyz * distance
     return cam_pos

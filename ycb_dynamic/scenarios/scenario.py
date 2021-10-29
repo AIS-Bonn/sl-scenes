@@ -107,12 +107,13 @@ class Scenario(object):
 
         # pick default ori. angle and (n_cameras-1) other angles from a linspace of angles that are 5 degrees apart
         default_ori_angle = cam_config["orientation_angle_default"]
-        cam_ori_angles = [0] + random.sample(np.linspace(0, 360, 72+1)[1:-1], k=self.n_cameras-1)
+        cam_ori_angles = [0] + random.sample(np.linspace(0, 360, 72+1).tolist()[1:-1], k=self.n_cameras-1)
         cam_ori_angles = [(angle + default_ori_angle) % 360 for angle in cam_ori_angles]
+        # TODO parameters 'orientation_angle_min/max' are not yet used!
 
         for i, cam_ori_angle in enumerate(cam_ori_angles):
             cam_elev_angle = random.uniform(cam_config["elevation_angle_min"], cam_config["elevation_angle_max"])
-            cam_dist = random.uniform(cam_config["elevation_angle_min"], cam_config["elevation_angle_max"])
+            cam_dist = random.uniform(cam_config["distance_min"], cam_config["distance_max"])
             cam_pos = cam_pos_from_config(cam_lookat, cam_elev_angle, cam_ori_angle, cam_dist)
             cam_name = f"cam_{str(i).zfill(2)}"
             if self.coplanar_stereo:
@@ -163,8 +164,6 @@ class Scenario(object):
             z_lookat = z_lookat + self.get_obj_z_offset(obj)
         camera.start_pos[-1] = z_pos
         camera.start_lookat[-1] = z_lookat
-        print(camera.start_pos)
-        print(camera.start_lookat)
         camera.reset_cam()
         return camera
 

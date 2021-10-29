@@ -51,7 +51,7 @@ class BowlScenario(Scenario):
         self.bowl = self.update_object_height(cur_obj=bowl, objs=[self.table])
 
         # spawn several balls at random positions in the bowl
-        k = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"] + 1)
+        k = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"])
         obj_placement_angles = np.linspace(0, 2*np.pi, num=self.config["other"]["max_objs"] + 1).tolist()[:-1]
         obj_placement_angles = random.sample(obj_placement_angles, k=k)  # no duplicates
         fruits_info_mesh = random.choices(fruits_info_mesh, k=k)  # duplicates OK
