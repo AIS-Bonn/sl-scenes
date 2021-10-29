@@ -71,7 +71,6 @@ class ObjectLoader:
         self.instance_idx = 0
         self.loaded_objects = dict()
 
-
     @property
     def static_objects(self):
         return [obj for obj in self.loaded_objects.values() if obj.static]
@@ -79,7 +78,6 @@ class ObjectLoader:
     @property
     def dynamic_objects(self):
         return [obj for obj in self.loaded_objects.values() if not obj.static]
-
 
     def create_object(self, object_info: OBJECT_INFO.ObjectInfo, mesh: sl.Mesh, is_static: bool, **obj_mod):
         """
@@ -108,11 +106,11 @@ class ObjectLoader:
         obj.set_pose(pose)
         obj.linear_velocity = obj_mod.get("mod_v_linear", torch.tensor([0.0, 0.0, 0.0]))
         obj.angular_velocity = obj_mod.get("mod_v_angular", torch.tensor([0.0, 0.0, 0.0]))
+        obj.z_offset = pose[2, -1] + obj.mesh.bbox.max[-1]  # getting max object top position
         obj.static = is_static
         obj.instance_index = ins_idx
         self.loaded_objects[ins_idx] = obj
         return obj
-
 
     def remove_object(self, instance_id, decrement_ins_idx=True):
         obj = self.loaded_objects.pop(instance_id, None)

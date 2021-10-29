@@ -97,7 +97,6 @@ KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
 DICE_OBJS = [str(i).zfill(3) for i in [5, 7, 8, 9]]
 YCBV_OBJS = [str(i).zfill(3) for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 21, 24, 25, 35, 36, 37, 40, 51, 52, 61]]
 
-<<<<<<< HEAD
 YCB_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
 OTHER_OBJECTS = [obj for obj in OBJECT_INFO if not obj.name[0].isdigit()]
 TABLE = [obj for obj in OBJECT_INFO if obj.name == "art_deco_table"]
@@ -110,38 +109,20 @@ CUPBOARDS = [obj for obj in OBJECT_INFO if obj.name.endswith("_cupboard")]
 BOWLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_bowl")]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
-=======
-from ycb_dynamic.OBJECT_INFO import ALL_OBJECTS
-
-YCB_OBJECTS = [obj for obj in ALL_OBJECTS if obj.name[0].isdigit()]
-OTHER_OBJECTS = [obj for obj in ALL_OBJECTS if not obj.name[0].isdigit()]
-TABLE = [obj for obj in ALL_OBJECTS if obj.name == "wooden_table"]
-TABLES = [obj for obj in ALL_OBJECTS if obj.name.endswith("_table")]
-CHAIRS = [obj for obj in ALL_OBJECTS if obj.name.endswith("_chair")]
-CUPBOARDS = [obj for obj in ALL_OBJECTS if obj.name.endswith("_cupboard")]
-BOWLS = [obj for obj in ALL_OBJECTS if obj.name.endswith("_bowl")]
-BOWLING_BALL = [obj for obj in ALL_OBJECTS if obj.name == "bowling_ball"]
-WOOD_BLOCK = [obj for obj in ALL_OBJECTS if obj.name == "036_wood_block"]
->>>>>>> b702de3bf7dc694c6529b2b44d5649f26cb52c82
 YCBV_OBJECTS = [  # Only considering the YCB-Video subset of objects
-    obj for obj in ALL_OBJECTS if obj.name.split("_")[0] in YCBV_OBJS
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in YCBV_OBJS
 ]
 STACK_OBJECTS = [  # Only considering a subset of 'stackable' objects
-    obj for obj in ALL_OBJECTS if obj.name.split("_")[0] in FLAT_OBJS
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FLAT_OBJS
 ]
 BILLIARDS_OBJECTS = [  # Considering objects that do not roll, e.g. only objects with flat surfaces
-    obj for obj in ALL_OBJECTS if obj.name.split("_")[0] in FLAT_OBJS
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FLAT_OBJS
 ]
 DICE_OBJECTS = [  # Considering objects that do roll, e.g. small and regular shapes
-    obj for obj in ALL_OBJECTS if obj.name.split("_")[0] in DICE_OBJS
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in DICE_OBJS
 ]
 FRUIT_OBJECTS = [  # Considering fruits
-    obj for obj in ALL_OBJECTS if obj.name.split("_")[0] in FRUIT_OBJS
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FRUIT_OBJS
 ]
-<<<<<<< HEAD
 BOWL = [obj for obj in OBJECT_INFO if obj.name == "red_bowl"]
 WOODEN_BOWL = [obj for obj in OBJECT_INFO if obj.name == "wooden_bowl"]
-=======
-BOWL = [obj for obj in ALL_OBJECTS if obj.name == "red_bowl"]
-WOODEN_BOWL = [obj for obj in ALL_OBJECTS if obj.name == "wooden_bowl"]
->>>>>>> b702de3bf7dc694c6529b2b44d5649f26cb52c82

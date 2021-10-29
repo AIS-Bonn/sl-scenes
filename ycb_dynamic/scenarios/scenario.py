@@ -97,13 +97,11 @@ class Scenario(object):
     def simulate(self, dt):
         raise NotImplementedError
 
-
     def add_object_to_scene(self, obj_info_mesh: Tuple[OBJECT_INFO.ObjectInfo, sl.Mesh], is_static: bool, **obj_mod):
         obj_info, obj_mesh = obj_info_mesh
         obj = self.object_loader.create_object(obj_info, obj_mesh, is_static, **obj_mod)
         self.scene.add_object(obj)
         return obj
-
 
     def remove_obj_from_scene(self, obj: sl.Object, decrement_ins_idx: bool=True):
         self.scene.remove_object(obj)
