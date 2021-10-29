@@ -100,14 +100,16 @@ YCB_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
 OTHER_OBJECTS = [obj for obj in OBJECT_INFO if not obj.name[0].isdigit()]
 # TABLE = [obj for obj in OBJECT_INFO if obj.name == "art_deco_table"]
 # TABLE = [obj for obj in OBJECT_INFO if obj.name == "wooden_table"]
-# TABLE = [obj for obj in OBJECT_INFO if obj.name == "folding_table"]
-TABLE = [obj for obj in OBJECT_INFO if obj.name == "pool_table"]
+TABLE = [obj for obj in OBJECT_INFO if obj.name == "folding_table"]
+# TABLE = [obj for obj in OBJECT_INFO if obj.name == "pool_table"]
 TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table")]
 CHAIRS = [obj for obj in OBJECT_INFO if obj.name.endswith("_chair")]
 CUPBOARDS = [obj for obj in OBJECT_INFO if obj.name.endswith("_cupboard")]
 BOWLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_bowl")]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
+
+
 YCBV_OBJECTS = [  # Only considering the YCB-Video subset of objects
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in YCBV_OBJS
 ]

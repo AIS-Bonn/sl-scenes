@@ -11,7 +11,6 @@ import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.camera import Camera
 from ycb_dynamic.scenarios.scenario import Scenario
 
-
 class BowlingScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Bowling"
@@ -55,6 +54,8 @@ class BowlingScenario(Scenario):
 
         # save bowling ball for later
         self.bowling_ball_info_mesh = bowling_ball_info_mesh
+
+        return
 
     def add_bowling_ball(self):
         """

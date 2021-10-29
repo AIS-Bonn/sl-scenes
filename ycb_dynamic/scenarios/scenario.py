@@ -5,7 +5,7 @@ from typing import Tuple
 import numpy as np
 import torch
 import stillleben as sl
-from ycb_dynamic.object_models import MeshLoader, ObjectLoader
+from ycb_dynamic.object_models import MeshLoader, ObjectLoader, DecoratorLoader
 from ycb_dynamic.lighting import get_lightmap
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
 
@@ -17,6 +17,7 @@ class Scenario(object):
         self.scene = scene
         self.mesh_loader = MeshLoader()
         self.object_loader = ObjectLoader()
+        self.decorator_loader = DecoratorLoader(scene=self.scene)
         self.meshes_loaded, self.objects_loaded = False, False
         self.z_offset = 0.
         self.lightmap = cfg.lightmap
@@ -27,6 +28,8 @@ class Scenario(object):
         self.setup_scene()
         self.setup_objects()
         self.setup_cameras()
+        self.decorate_scene()
+
 
     @property
     def static_objects(self):
@@ -41,6 +44,12 @@ class Scenario(object):
 
     def can_render(self):
         raise NotImplementedError
+
+    def decorate_scene(self):
+        self.decorator_loader.decorate_scene(object_loader=self.object_loader)
+        # for obj in objs:
+            # self.scene.add_object(obj)
+        return
 
     def setup_scene(self):
         """ Default setup_scene lighting and camera. Can be overriden from specific scenes """
