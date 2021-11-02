@@ -115,6 +115,7 @@ class ObjectLoader:
         obj.static = is_static
         obj.instance_index = ins_idx
         self.loaded_objects[ins_idx] = obj
+
         return obj
 
     def remove_object(self, instance_id, decrement_ins_idx=True):
@@ -156,12 +157,16 @@ class DecoratorLoader:
         n_cells = int(self.bounds["dist"] / self.bounds["res"]) + 1
         self.margin_kernel = torch.ones(1, 1, n_cells, n_cells) / (n_cells ** 2)
         self.pad = (n_cells // 2, n_cells // 2, n_cells // 2, n_cells // 2)
+
+        self.table_height = None
         return
 
     def init_occupancy_matrix(self, objects):
         """ Obtaining an occupancy matrix with empty and occupied positions"""
         occ_matrix = self.occupancy_matrix.clone()
         for _, obj in objects.items():
+            if("table" in obj.mesh.filename):
+                self.table_height = obj.mesh.bbox.max[-1]
             occ_matrix = self.update_occupancy_matrix(occ_matrix, obj)
         occ_matrix = self.add_object_margings(occ_matrix)
         return occ_matrix
@@ -214,15 +219,17 @@ class DecoratorLoader:
         obj = object_loader.create_object(obj_info, obj_mesh, True, **obj_mod)
         self.scene.add_object(obj)
 
-        # finding free position and shifting object there
+        # shifting object to a free position and adjusting z-coord to be aligned with the table
         position = self.find_free_spot(obj=obj, occ_matrix=occ_matrix)
         pose[:2, -1] = position if position is not None else torch.ones(2, 1)
+        pose[2, -1] += obj.mesh.bbox.max[-1] - self.table_height
 
         # Rotating object in yaw direction
         yaw_angle = (torch.rand((1,)) - 0.5) * self.pi  # [-pi / 2, pi / 2]
         angles = torch.cat([yaw_angle, torch.Tensor([0.]), torch.Tensor([0.])])
         rot_matrix = utils.get_rot_matrix(angles=angles)
         pose[:3, :3] = pose[:3, :3] @ rot_matrix
+
         obj.set_pose(pose)
 
         occ_matrix = self.update_occupancy_matrix(occ_matrix, obj)
@@ -240,6 +247,7 @@ class DecoratorLoader:
             id = torch.randint(low=0, high=len(self.meshes), size=(1,))
             obj, occ_matrix = self.add_object(object_loader, occ_matrix, object_id=id)
 
+        # For displaying the occupancy matrix after filling the room
         # plt.figure()
         # plt.imshow(occ_matrix)
         # plt.title(f"Occupacy Matrix after Decoration #{i+1}")
