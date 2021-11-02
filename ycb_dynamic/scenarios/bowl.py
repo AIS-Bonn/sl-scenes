@@ -29,7 +29,7 @@ class BowlScenario(Scenario):
         SCENARIO-SPECIFIC
         """
         self.mesh_loader.load_meshes(CONSTANTS.TABLE),
-        self.mesh_loader.load_meshes(CONSTANTS.WOODEN_BOWL, **{"mod_scale": [4.0]})  # scale bowl by 5
+        self.mesh_loader.load_meshes(CONSTANTS.BOWL, **{"mod_scale": [4.0]})  # scale bowl by 5
         self.mesh_loader.load_meshes(CONSTANTS.FRUIT_OBJECTS)
 
     def setup_objects_(self):
