@@ -738,4 +738,17 @@ OBJECT_INFO = [
         0.0,
         0.01,
     ),
+    ObjectInfo(
+        "parquet_living_floor",
+        "environment_models/parquet_living/parquet_living.obj",
+        1e3,
+        FLAG_CONCAVE,
+        0.3,
+        0.7,
+        0.0,
+        0.01,
+    ),
 ]
+
+
+# ["name", "mesh_fp", "weight", "flags", "metallic", "roughness", "restitution", "scale"],

@@ -1,4 +1,5 @@
 import stillleben as sl
+import os
 import torch
 import torch.nn.functional as F
 from math import ceil
@@ -158,15 +159,14 @@ class DecoratorLoader:
         self.margin_kernel = torch.ones(1, 1, n_cells, n_cells) / (n_cells ** 2)
         self.pad = (n_cells // 2, n_cells // 2, n_cells // 2, n_cells // 2)
 
-        self.table_height = None
         return
 
     def init_occupancy_matrix(self, objects):
         """ Obtaining an occupancy matrix with empty and occupied positions"""
         occ_matrix = self.occupancy_matrix.clone()
         for _, obj in objects.items():
-            if("table" in obj.mesh.filename):
-                self.table_height = obj.mesh.bbox.max[-1]
+            if(os.path.basename(obj.mesh.filename) in CONSTANTS.FLOOR_NAMES):
+                continue
             occ_matrix = self.update_occupancy_matrix(occ_matrix, obj)
         occ_matrix = self.add_object_margings(occ_matrix)
         return occ_matrix
@@ -221,8 +221,8 @@ class DecoratorLoader:
 
         # shifting object to a free position and adjusting z-coord to be aligned with the table
         position = self.find_free_spot(obj=obj, occ_matrix=occ_matrix)
-        pose[:2, -1] = position if position is not None else torch.ones(2, 1)
-        pose[2, -1] += obj.mesh.bbox.max[-1] - self.table_height
+        pose[:2, -1] = position if position is not None else torch.ones(2)
+        pose[2, -1] += obj.mesh.bbox.max[-1]
 
         # Rotating object in yaw direction
         yaw_angle = (torch.rand((1,)) - 0.5) * self.pi  # [-pi / 2, pi / 2]

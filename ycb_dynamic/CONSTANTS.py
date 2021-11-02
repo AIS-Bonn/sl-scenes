@@ -6,7 +6,7 @@ Constant values such as:
 
 Everything non-code that can eventually be changed.
 """
-
+import os
 from pathlib import Path
 
 import random
@@ -86,6 +86,7 @@ STACK_PYRAMID_POSES = [
 # Pre-defined object sets
 #########################
 
+# YCB Objects
 FLAT_OBJS = [str(i).zfill(3) for i in range(0, 11)]
 FRUIT_OBJS = [str(i).zfill(3) for i in range(11, 19)]
 CLEANING_OBJS = [str(i).zfill(3) for i in range(19, 22)]
@@ -93,20 +94,23 @@ KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
 DICE_OBJS = [str(i).zfill(3) for i in [5, 7, 8, 9]]
 YCBV_OBJS = [str(i).zfill(3) for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 21, 24, 25, 35, 36, 37, 40, 51, 52, 61]]
 
+# Meta-Subsets
 YCB_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
 OTHER_OBJECTS = [obj for obj in OBJECT_INFO if not obj.name[0].isdigit()]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
-# TABLE = [obj for obj in OBJECT_INFO if obj.name == "art_deco_table"]
-# TABLE = [obj for obj in OBJECT_INFO if obj.name == "wooden_table"]
-# TABLE = [obj for obj in OBJECT_INFO if obj.name == "folding_table"]
-# TABLE = [obj for obj in OBJECT_INFO if obj.name == "pool_table"]
-# WOODEN_BOWL = [obj for obj in OBJECT_INFO if obj.name == "wooden_bowl"]
+
+# Decoration Objects
 CHAIRS = [obj for obj in OBJECT_INFO if obj.name.endswith("_chair")]
 CUPBOARDS = [obj for obj in OBJECT_INFO if obj.name.endswith("_cupboard")]
 TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table")]
 BOWLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_bowl") and obj.name != "024_bowl"]
 
+# Surfaces
+FLOOR = [obj for obj in OBJECT_INFO if obj.name.endswith("_floor")]
+FLOOR_NAMES = [os.path.basename(obj.mesh_fp) for obj in OBJECT_INFO if obj.name.endswith("_floor")]
+
+# For accessing
 TABLE = [random.choice(TABLES)]
 BOWL = [random.choice(BOWLS)]
 YCBV_OBJECTS = [  # Only considering the YCB-Video subset of objects

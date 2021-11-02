@@ -42,6 +42,7 @@ class ThrowScenario(Scenario):
         # place table
         table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
         self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
+        self.table = self.update_object_height(cur_obj=self.table)
 
         # throw some random YCB-Video objects onto the table, from the side
         N_objs = random.randint(self.config["other"]["min_objs"], self.config["other"]["max_objs"] + 1)
