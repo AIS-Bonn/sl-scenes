@@ -1,8 +1,11 @@
 import stillleben as sl
 import torch
+import torch.nn.functional as F
+from math import floor, ceil
 from typing import List
 from matplotlib import pyplot as plt
 
+import ycb_dynamic.utils.utils as utils
 import ycb_dynamic.CONSTANTS as CONSTANTS
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
 
@@ -128,13 +131,17 @@ class DecoratorLoader:
 
     def __init__(self, scene):
         """ Object initializer """
+        self.pi = torch.acos(torch.zeros(1))
         bounds = {
-            "min_x": -3,
+            "min_x": -3,  # limits of the occupancy matrix. Define grid to place objects
             "max_x": 3,
             "min_y": -3,
             "max_y": 3,
-            "res": 0.25
+            "res": 0.25,  # resolution of the matrix (in meters)
+            "dist": 0.5   # minimum distance between objects
         }
+        self.bounds = bounds
+
         self.scene = scene
         decorations = CONSTANTS.CHAIRS + CONSTANTS.CUPBOARDS
         self.mesh_loader = MeshLoader()
@@ -146,16 +153,18 @@ class DecoratorLoader:
         self.grid_y, self.grid_x = torch.meshgrid(self.x_vect, self.y_vect)
         self.occupancy_matrix = torch.zeros(int((bounds["max_x"] + bounds["res"] - bounds["min_x"]) / bounds["res"]),
                                             int((bounds["max_y"] + bounds["res"] - bounds["min_y"]) / bounds["res"]))
+
+        n_cells = int(bounds["dist"] / bounds["res"]) + 1
+        self.margin_kernel = torch.ones(1, 1, n_cells, n_cells) / (n_cells ** 2)
+        self.pad = (n_cells // 2, n_cells // 2, n_cells // 2, n_cells // 2)
         return
 
     def init_occupancy_matrix(self, objects):
-        """ Obtaining an occupancy matrix with empty positions and occupied positions"""
+        """ Obtaining an occupancy matrix with empty and occupied positions"""
         occ_matrix = self.occupancy_matrix.clone()
         for _, obj in objects.items():
             occ_matrix = self.update_occupancy_matrix(occ_matrix, obj)
-
-        # TODO: Add some margin, e.g., one cell
-
+        occ_matrix = self.add_object_margings(occ_matrix)
         return occ_matrix
 
     def update_occupancy_matrix(self, occ_matrix, obj):
@@ -167,25 +176,59 @@ class DecoratorLoader:
         x_coords = (self.grid_x >= min_x) & (self.grid_x < max_x)
         occ_coords = y_coords & x_coords
         occ_matrix[occ_coords] = 1
+
         return occ_matrix
+
+    def add_object_margings(self, occ_matrix):
+        """ Adding margin to objects in occupancy matrix. Indicated with value 0.5"""
+        orig_pos = occ_matrix > 0.5
+        occ_matrix[occ_matrix <= 0.5] = 0
+        occ_matrix = F.pad(occ_matrix, self.pad).unsqueeze(0).unsqueeze(0)
+        occ_matrix = F.conv2d(occ_matrix, self.margin_kernel, stride=1)[0, 0]
+        occ_matrix[occ_matrix > 0] = 0.5
+        occ_matrix[orig_pos] = 1
+        return occ_matrix
+
+    def find_free_spot(self, obj, occ_matrix):
+        """ Finding a position in the occupancy matrix where the object wont collide with anything """
+        position = None
+        max = ceil((obj.mesh.bbox.max[:2].max().item() + self.bounds["dist"]) / self.bounds["res"] + 1)
+        max = max if max % 2 != 0 else max + 1
+        aux_matrix = F.conv2d(
+                occ_matrix.unsqueeze(0).unsqueeze(0),
+                torch.ones(1, 1, max, max),
+                padding=max//2
+            )[0, 0]
+        free_positions = torch.where(aux_matrix == 0)
+        if(len(free_positions[0]) > 0):
+            id = torch.randint(0, len(free_positions[0]), (1,))
+            pos_y, pos_x = free_positions[0][id], free_positions[1][id]
+            position = torch.cat([self.x_vect[pos_x], self.y_vect[pos_y]])
+
+        return position
 
     def add_object(self, object_loader, occ_matrix, object_id):
         """ Loading an object and adding to the loader """
         obj_info, obj_mesh = self.meshes[object_id]
         pose = torch.eye(4)
-
-        # finding free position and shifting object there
-        free_positions = torch.where(occ_matrix == 0)
-        id = torch.randint(0, len(free_positions[0]), (1,))
-        pos_y, pos_x = free_positions[0][id], free_positions[1][id]
-        pose[:2, -1] = torch.cat([self.y_vect[pos_y], self.x_vect[pos_x]])
-
-        # TODO: Rotate object in the yaw direction
-
         obj_mod = {"mod_pose": pose}
         obj = object_loader.create_object(obj_info, obj_mesh, True, **obj_mod)
         self.scene.add_object(obj)
+
+        # finding free position and shifting object there
+        position = self.find_free_spot(obj=obj, occ_matrix=occ_matrix)
+        pose[:2, -1] = position if position is not None else torch.ones(2, 1)
+
+        # Rotating object in yaw direction
+        yaw_angle = (torch.rand((1,)) - 0.5) * self.pi  # [-pi / 2, pi / 2]
+        angles = torch.cat([yaw_angle, torch.Tensor([0.]), torch.Tensor([0.])])
+        rot_matrix = utils.get_rot_matrix(angles=angles)
+        pose[:3, :3] = pose[:3, :3] @ rot_matrix
+        obj.set_pose(pose)
+
         occ_matrix = self.update_occupancy_matrix(occ_matrix, obj)
+        occ_matrix = self.add_object_margings(occ_matrix)
+
         return obj, occ_matrix
 
     def decorate_scene(self, object_loader):
@@ -193,7 +236,7 @@ class DecoratorLoader:
         objects = object_loader.loaded_objects
         occ_matrix = self.init_occupancy_matrix(objects)
 
-        N = torch.randint(low=2, high=6, size=(1,))
+        N = torch.randint(low=3, high=7, size=(1,))
         for i in range(N):
             id = torch.randint(low=0, high=len(self.meshes), size=(1,))
             obj, occ_matrix = self.add_object(object_loader, occ_matrix, object_id=id)
@@ -201,6 +244,7 @@ class DecoratorLoader:
         # plt.figure()
         # plt.imshow(occ_matrix)
         # plt.title(f"Occupacy Matrix after Decoration #{i+1}")
+        # plt.colorbar()
         # plt.show()
 
         return

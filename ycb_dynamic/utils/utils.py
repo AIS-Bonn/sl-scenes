@@ -24,7 +24,7 @@ def timestamp():
     return timestamp
 
 
-def _rot_matrix(self, angles):
+def get_rot_matrix(angles):
     """ Generating a rotation matrix given the rotation angles """
     yaw = torch.tensor([
         [torch.cos(angles[0]), -torch.sin(angles[0]), 0],
