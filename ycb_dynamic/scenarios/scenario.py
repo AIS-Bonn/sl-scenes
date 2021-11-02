@@ -166,15 +166,14 @@ class Scenario(object):
 
     def update_camera_height(self, camera, objs):
         """ Updating the camera position and the look-at parameter"""
-
         pos = camera.start_base_pos
         z_lookat = camera.start_base_lookat[-1]
         for obj in objs:
             pos += self.get_obj_offset(obj)
+            pos[-1] += 0.2  # NOTE: dirty hack. Should be a param
             z_lookat += self.get_obj_z_offset(obj)
         camera.start_base_pos = pos
         camera.start_base_lookat[-1] = z_lookat
-        camera.reset_cam()
         return camera
 
     def get_obj_z_offset(self, obj):
@@ -186,5 +185,6 @@ class Scenario(object):
     def get_obj_offset(self, obj):
         """ Obtaining the bbox boundaries (pos + size for x,y,z) for a given object"""
         obj_pose = obj.pose()
-        offset = obj_pose[:3, -1] + obj.mesh.bbox.max
+        offset_x, offset_y, offset_z = obj_pose[:3, -1] + obj.mesh.bbox.max
+        offset = torch.Tensor([-offset_x, -offset_y, offset_z])
         return offset

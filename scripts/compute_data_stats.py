@@ -11,8 +11,6 @@ import argparse
 import numpy as np
 import pandas as pd
 
-import ycb_dynamic.utils.utils as utils
-
 
 def get_args():
     """ Reading command line arguments """
@@ -234,6 +232,5 @@ def main(cfg):
 
 
 if __name__ == "__main__":
-    utils.clear_cmd()
     cfg = get_args()
     main(cfg)
