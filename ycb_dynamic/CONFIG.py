@@ -2,6 +2,7 @@
 Configurations and variables for each scene.
 """
 import torch
+import ycb_dynamic.CONSTANTS as CONSTANTS
 
 """
 Explanations:
@@ -14,6 +15,17 @@ Explanations:
 """
 
 CONFIG = {
+    "decorator": {
+        "decorations": CONSTANTS.CHAIRS + CONSTANTS.CUPBOARDS,
+        "bounds": {
+            "min_x": -3,  # limits of the occupancy matrix. Define grid to place objects
+            "max_x": 3,
+            "min_y": -3,
+            "max_y": 3,
+            "res": 0.25,  # resolution of the matrix (in meters)
+            "dist": 0.5   # minimum distance between objects
+        }
+    },
     "scenes": {
         # BILLARDS SCENE
         "billards": {

@@ -1,12 +1,13 @@
 import stillleben as sl
 import torch
 import torch.nn.functional as F
-from math import floor, ceil
+from math import ceil
 from typing import List
 from matplotlib import pyplot as plt
 
 import ycb_dynamic.utils.utils as utils
 import ycb_dynamic.CONSTANTS as CONSTANTS
+from ycb_dynamic.CONFIG import CONFIG
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
 
 
@@ -131,30 +132,28 @@ class DecoratorLoader:
 
     def __init__(self, scene):
         """ Object initializer """
+        decorations = CONFIG["decorator"]["decorations"]
+        self.bounds = CONFIG["decorator"]["bounds"]
         self.pi = torch.acos(torch.zeros(1))
-        bounds = {
-            "min_x": -3,  # limits of the occupancy matrix. Define grid to place objects
-            "max_x": 3,
-            "min_y": -3,
-            "max_y": 3,
-            "res": 0.25,  # resolution of the matrix (in meters)
-            "dist": 0.5   # minimum distance between objects
-        }
-        self.bounds = bounds
 
         self.scene = scene
-        decorations = CONSTANTS.CHAIRS + CONSTANTS.CUPBOARDS
         self.mesh_loader = MeshLoader()
         self.mesh_loader.load_meshes(decorations),
         self.meshes = self.mesh_loader.get_meshes()[0]
 
-        self.x_vect = torch.arange(bounds["min_x"], bounds["max_x"] + bounds["res"], bounds["res"])
-        self.y_vect = torch.arange(bounds["min_y"], bounds["max_y"] + bounds["res"], bounds["res"])
+        self.x_vect = torch.arange(
+                self.bounds["min_x"], self.bounds["max_x"] + self.bounds["res"], self.bounds["res"]
+            )
+        self.y_vect = torch.arange(
+                self.bounds["min_y"], self.bounds["max_y"] + self.bounds["res"], self.bounds["res"]
+            )
         self.grid_y, self.grid_x = torch.meshgrid(self.x_vect, self.y_vect)
-        self.occupancy_matrix = torch.zeros(int((bounds["max_x"] + bounds["res"] - bounds["min_x"]) / bounds["res"]),
-                                            int((bounds["max_y"] + bounds["res"] - bounds["min_y"]) / bounds["res"]))
+        self.occupancy_matrix = torch.zeros(
+                int((self.bounds["max_x"] + self.bounds["res"] - self.bounds["min_x"]) / self.bounds["res"]),
+                int((self.bounds["max_y"] + self.bounds["res"] - self.bounds["min_y"]) / self.bounds["res"])
+            )
 
-        n_cells = int(bounds["dist"] / bounds["res"]) + 1
+        n_cells = int(self.bounds["dist"] / self.bounds["res"]) + 1
         self.margin_kernel = torch.ones(1, 1, n_cells, n_cells) / (n_cells ** 2)
         self.pad = (n_cells // 2, n_cells // 2, n_cells // 2, n_cells // 2)
         return
