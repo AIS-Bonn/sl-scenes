@@ -41,6 +41,7 @@ class BillardsScenario(Scenario):
         # place table
         table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
         self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
+        self.table = self.update_object_height(cur_obj=self.table)
 
         # assemble several objects in a triangle-like shape
         N = len(CONSTANTS.BILLIARDS_TRIANLGE_POSES)

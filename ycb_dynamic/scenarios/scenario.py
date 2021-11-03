@@ -56,8 +56,6 @@ class Scenario(object):
 
     def decorate_scene(self):
         self.decorator_loader.decorate_scene(object_loader=self.object_loader)
-        # for obj in objs:
-            # self.scene.add_object(obj)
         return
 
     def setup_scene(self):
@@ -154,7 +152,7 @@ class Scenario(object):
         self.scene.remove_object(obj)
         self.object_loader.remove_object(obj.instance_index, decrement_ins_idx=decrement_ins_idx)
 
-    def update_object_height(self, cur_obj, objs):
+    def update_object_height(self, cur_obj, objs=[]):
         """ Updating an object z-position given a list of supporting objects"""
         cur_obj_pose = cur_obj.pose()
         z_pose = self.get_obj_z_offset(cur_obj)
@@ -164,7 +162,7 @@ class Scenario(object):
         cur_obj.set_pose(cur_obj_pose)
         return cur_obj
 
-    def update_camera_height(self, camera, objs):
+    def update_camera_height(self, camera, objs=[]):
         """ Updating the camera position and the look-at parameter"""
         pos = camera.start_base_pos
         z_lookat = camera.start_base_lookat[-1]

@@ -39,6 +39,7 @@ class StackScenario(Scenario):
         # place table
         table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
         self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
+        self.table = self.update_object_height(cur_obj=self.table)
 
         # randomly sampling the number of stacks, and selecting mean (x,y) center positions
         N_poses = len(CONSTANTS.STACK_PYRAMID_POSES)

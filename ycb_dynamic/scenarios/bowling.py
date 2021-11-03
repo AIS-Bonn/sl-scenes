@@ -41,6 +41,7 @@ class BowlingScenario(Scenario):
         # place table
         table_mod = {"mod_pose": CONSTANTS.TABLE_POSE}
         self.table = self.add_object_to_scene(table_info_mesh, True, **table_mod)
+        self.table = self.update_object_height(cur_obj=self.table)
 
         # assemble a pyramid of wooden blocks
         wood_block_poses = deepcopy(CONSTANTS.WOOD_BLOCK_POSES)
