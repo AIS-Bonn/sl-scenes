@@ -25,6 +25,11 @@ def elaborate(input):
     elif input == "h": return "height"
     return input
 
+def copy_overwrite(src, dst):
+    if os.path.exists(dst):
+        os.remove(dst)
+    shutil.copy(src, dst)
+
 
 if __name__ == '__main__':
 
@@ -32,12 +37,9 @@ if __name__ == '__main__':
     for dir in sorted(dirs):
 
         # copy floor and wall object files
-        if os.path.exists(str(BASE_DIR / dir / "floor.obj")):
-            os.remove(str(BASE_DIR / dir / "floor.obj"))
-        shutil.copy(str(BASE_DIR / "floor.obj"), str(BASE_DIR / dir / "floor.obj"))
-        if os.path.exists(str(BASE_DIR / dir / "wall.obj")):
-            os.remove(str(BASE_DIR / dir / "wall.obj"))
-        shutil.copy(str(BASE_DIR / "wall.obj"), str(BASE_DIR / dir / "wall.obj"))
+        obj_files = ["floor.obj", "floor_tiled1m.obj", "wall.obj", "wall_tiled1m.obj"]
+        for obj_file in obj_files:
+            copy_overwrite(str(BASE_DIR / obj_file), str(BASE_DIR / dir / obj_file))
 
         # prepare file paths and identifiers
         texture_files = glob.glob(f'{str(BASE_DIR)}/{dir}/*.png', recursive=True) \
