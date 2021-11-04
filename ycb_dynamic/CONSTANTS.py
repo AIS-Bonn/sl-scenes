@@ -106,13 +106,19 @@ CUPBOARDS = [obj for obj in OBJECT_INFO if obj.name.endswith("_cupboard")]
 TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table")]
 BOWLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_bowl") and obj.name != "024_bowl"]
 
-# Surfaces
-FLOOR = [obj for obj in OBJECT_INFO if obj.name.endswith("_floor")]
+# Surfaces and Rooms
+FLOORS = [obj for obj in OBJECT_INFO if obj.name.endswith("_floor")]
 FLOOR_NAMES = [os.path.basename(obj.mesh_fp) for obj in OBJECT_INFO if obj.name.endswith("_floor")]
+WALLS = [obj for obj in OBJECT_INFO if "walls" in obj.mesh_fp]
+ROOMS = [obj for obj in OBJECT_INFO if "complete_rooms" in obj.mesh_fp]
 
 # For accessing
 TABLE = [random.choice(TABLES)]
 BOWL = [random.choice(BOWLS)]
+ROOM = [random.choice(ROOMS)]
+FLOOR = [random.choice(FLOORS)]
+WALL = [random.choice(WALLS)]
+
 YCBV_OBJECTS = [  # Only considering the YCB-Video subset of objects
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in YCBV_OBJS
 ]

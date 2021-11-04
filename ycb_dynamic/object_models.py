@@ -226,7 +226,7 @@ class DecoratorLoader:
 
         # Rotating object in yaw direction
         yaw_angle = (torch.rand((1,)) - 0.5) * self.pi  # [-pi / 2, pi / 2]
-        angles = torch.cat([yaw_angle, torch.Tensor([0.]), torch.Tensor([0.])])
+        angles = torch.cat([yaw_angle, torch.zeros(2)])
         rot_matrix = utils.get_rot_matrix(angles=angles)
         pose[:3, :3] = pose[:3, :3] @ rot_matrix
 

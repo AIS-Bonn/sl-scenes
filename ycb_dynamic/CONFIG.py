@@ -15,6 +15,9 @@ Explanations:
 """
 
 CONFIG = {
+    "room": {
+        "prob_assembled": 0.3
+    },
     "decorator": {
         "decorations": CONSTANTS.CHAIRS + CONSTANTS.CUPBOARDS,
         "bounds": {

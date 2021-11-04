@@ -7,6 +7,7 @@ import numpy as np
 from copy import deepcopy
 import torch
 import stillleben as sl
+from ycb_dynamic.room_models import RoomAssembler
 from ycb_dynamic.object_models import MeshLoader, ObjectLoader, DecoratorLoader
 from ycb_dynamic.lighting import get_lightmap
 from ycb_dynamic.camera import Camera, create_coplanar_stereo_cams, cam_pos_from_config
@@ -21,8 +22,10 @@ class Scenario(object):
     def __init__(self, cfg, scene: sl.Scene):
         self.scene = scene
         self.mesh_loader = MeshLoader()
+        self.room_assembler = RoomAssembler(scene=self.scene)
         self.object_loader = ObjectLoader()
         self.decorator_loader = DecoratorLoader(scene=self.scene)
+
         self.meshes_loaded, self.objects_loaded = False, False
         self.z_offset = 0.
         self.lightmap = cfg.lightmap
@@ -30,6 +33,7 @@ class Scenario(object):
         self.coplanar_stereo = cfg.coplanar_stereo
         self.coplanar_stereo_dist = cfg.coplanar_stereo_dist
         self.reset_sim()
+        return
 
     def reset_sim(self):
         self.meshes_loaded, self.objects_loaded, self.cameras_loaded = False, False, False
@@ -61,11 +65,13 @@ class Scenario(object):
     def setup_scene(self):
         """ Default setup_scene lighting and camera. Can be overriden from specific scenes """
         self.scene.ambient_light = torch.tensor([0.7, 0.7, 0.7])
-        self.scene.light_map = get_lightmap(self.lightmap)
-        self.scene.choose_random_light_position()
+        _ = self.room_assembler.make_room()
+        # self.scene.light_map = get_lightmap(self.lightmap)
+        # self.scene.choose_random_light_position()
+        return
 
     def get_separations(self):
-        assert len(self.dynamic_objects) > 0, "Objects must be added to dynamic_objects before computing collisions"
+        # assert len(self.dynamic_objects) > 0, "Objects must be added to dynamic_objects before computing collisions"
         self.scene.check_collisions()
         separations = [obj.separation for obj in self.dynamic_objects if hasattr(obj, "separation")]
         return separations
@@ -177,7 +183,7 @@ class Scenario(object):
     def get_obj_z_offset(self, obj):
         """ Obtaining the z_offset (z-pos + height) for a given object"""
         obj_pose = obj.pose()
-        z_offset = obj_pose[2, -1] + obj.mesh.bbox.max[-1]
+        z_offset = obj_pose[2, -1] + (obj.mesh.bbox.max[-1] - obj.mesh.bbox.min[-1]) / 2
         return z_offset
 
     def get_obj_offset(self, obj):
