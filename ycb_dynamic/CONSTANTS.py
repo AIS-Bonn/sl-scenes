@@ -16,6 +16,7 @@ from ycb_dynamic.OBJECT_INFO import OBJECT_INFO
 
 # Paths and Directories
 MESH_BASE_DIR = Path(".") / "external_data" / "object_models"
+TEXT_BASE_DIR = Path(".") / "external_data" / "textures"
 
 # Lighting
 IBL_BASE_PATH = Path(".") / "external_data" / "light_maps"
@@ -108,8 +109,10 @@ BOWLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_bowl") and obj.name !
 
 # Surfaces and Rooms
 FLOORS = [obj for obj in OBJECT_INFO if obj.name.endswith("_floor")]
+# FLOORS = [obj for obj in OBJECT_INFO if obj.name.endswith("_floor") and "carpet" in obj.name]
 FLOOR_NAMES = [os.path.basename(obj.mesh_fp) for obj in OBJECT_INFO if obj.name.endswith("_floor")]
-WALLS = [obj for obj in OBJECT_INFO if "walls" in obj.mesh_fp]
+WALLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_wall")]
+# WALLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_wall") and "black_tiling" in obj.name]
 ROOMS = [obj for obj in OBJECT_INFO if "complete_rooms" in obj.mesh_fp]
 
 # For accessing

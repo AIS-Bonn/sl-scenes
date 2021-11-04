@@ -20,6 +20,7 @@ class MeshLoader:
     def __init__(self):
         """Module initializer"""
         self.base_dir = CONSTANTS.MESH_BASE_DIR
+        self.text_dir = CONSTANTS.TEXT_BASE_DIR
         self.reset()
 
     def reset(self):
@@ -38,7 +39,10 @@ class MeshLoader:
         :param obj_info: The object information of the meshes to be loaded.
         :param kwargs: additional mesh modifiers such as scale, specified with a leading 'mod_'
         """
-        paths = [(self.base_dir / obj.mesh_fp).resolve() for obj in obj_info]
+        paths = []
+        for obj in obj_info:
+            path = self.text_dir if obj.name.endswith("_floor") or obj.name.endswith("_wall") else self.base_dir
+            paths.append((path / obj.mesh_fp).resolve())
         scales = [obj.scale for obj in obj_info]
         mod_scales = kwargs.get("mod_scale", [1.0] * len(scales))
         scales = [s * ms for (s, ms) in zip(scales, mod_scales)]

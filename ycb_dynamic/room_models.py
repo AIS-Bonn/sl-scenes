@@ -61,7 +61,7 @@ class RoomAssembler:
         floor_info_mesh, wall_info_mesh = self.mesh_loader.get_meshes()
         floor = self.add_object_to_scene(floor_info_mesh)
         x1, y1, x2, y2 = *floor.mesh.bbox.min[:2], *floor.mesh.bbox.max[:2]
-        coords = [[x1, 0], [0, y1], [x2, 0], [0, y2]]
+        coords = [[0., y1], [x1, 0.], [0., y2], [x2, 0.]]
         for i, wall in enumerate(wall_info_mesh):
             pose = torch.eye(4)
             # BUG in get_rot_matrix()

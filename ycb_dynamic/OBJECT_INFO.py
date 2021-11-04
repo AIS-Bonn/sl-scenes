@@ -739,10 +739,10 @@ OBJECT_INFO = [
         0.0,
         0.01,
     ),
-    # FLOORS
+    # FLOORS & WALLS
     ObjectInfo(
-        "parquet_living_floor",
-        "floors/parquet_living/parquet_living.obj",
+        "bamboo_floor",
+        "bamboo_wall_2-4K/floor.obj",
         1e3,
         FLAG_CONCAVE,
         0.3,
@@ -751,8 +751,8 @@ OBJECT_INFO = [
         0.01,
     ),
     ObjectInfo(
-        "bathroom_floor",
-        "floors/bathroom_floor/bathroom_floor.obj",
+        "bamboo_wall",
+        "bamboo_wall_2-4K/wall.obj",
         1e3,
         FLAG_CONCAVE,
         0.3,
@@ -761,8 +761,8 @@ OBJECT_INFO = [
         0.01,
     ),
     ObjectInfo(
-        "metal_floor",
-        "floors/metal_floor/metal_floor.obj",
+        "black_tiling_floor",
+        "black_tiling_36-4K/floor.obj",
         1e3,
         FLAG_CONCAVE,
         0.3,
@@ -771,8 +771,8 @@ OBJECT_INFO = [
         0.01,
     ),
     ObjectInfo(
-        "mossy_stone",
-        "floors/mossy_stone/mossy_stone.obj",
+        "black_tiling_wall",
+        "black_tiling_36-4K/wall.obj",
         1e3,
         FLAG_CONCAVE,
         0.3,
@@ -781,8 +781,8 @@ OBJECT_INFO = [
         0.01,
     ),
     ObjectInfo(
-        "stone_floor",
-        "floors/stone_floor/stone_floor.obj",
+        "black_marble_floor",
+        "blackmarble_2-4K/floor.obj",
         1e3,
         FLAG_CONCAVE,
         0.3,
@@ -791,8 +791,8 @@ OBJECT_INFO = [
         0.01,
     ),
     ObjectInfo(
-        "stone_tile_floor",
-        "floors/stone_tile_floor/stone_tile_floor.obj",
+        "black_marble_wall",
+        "blackmarble_2-4K/wall.obj",
         1e3,
         FLAG_CONCAVE,
         0.3,
@@ -801,20 +801,8 @@ OBJECT_INFO = [
         0.01,
     ),
     ObjectInfo(
-        "wooden_floor",
-        "floors/wooden_floor/wooden_floor.obj",
-        1e3,
-        FLAG_CONCAVE,
-        0.3,
-        0.7,
-        0.0,
-        0.01,
-    ),
-    # WALLS
-    ObjectInfo(
-        "brick_wall_1",
-        # "walls/brick_wall_1/brick_wall_1_aux.obj",
-        "walls/brick_wall_1/brick_wall_1.obj",
+        "carpet7_floor",
+        "carpet_floor_7-4K/floor.obj",
         1e3,
         FLAG_CONCAVE,
         0.3,
@@ -823,8 +811,8 @@ OBJECT_INFO = [
         0.01,
     ),
     ObjectInfo(
-        "tiled_wall_1",
-        "wall_s/tiled_wall_1/tiled_wall_1.obj",
+        "carpet7_wall",
+        "carpet_floor_7-4K/wall.obj",
         1e3,
         FLAG_CONCAVE,
         0.3,
@@ -832,7 +820,9 @@ OBJECT_INFO = [
         0.0,
         0.01,
     ),
+    ####################
     # PREASSEMBLED ROOMS
+    ####################
     ObjectInfo(
         "bedroom",
         "complete_room_s/bedroom/bedroom.obj",
