@@ -2,10 +2,12 @@
 Main logic for running the simulator and generating data
 """
 import argparse
+import itertools
 from pathlib import Path
 from contextlib import ExitStack
 import tqdm
 import stillleben as sl
+
 
 import ycb_dynamic.utils.utils as utils
 import ycb_dynamic.CONSTANTS as CONSTANTS
@@ -100,45 +102,51 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
     TODO Doc
     """
 
-    cameras = scenario.cameras
-    writers = [
-        Writer(Path(cfg.out_path) / f"{it:06}_{scenario.name}_{cam.name}")
-        for cam in cameras
+    # a list of tuples (camera, writers), where each 'writers' itself is a list of tuples (stereo_position, writer)
+    writers_per_cam = [(cam, [
+            (stereo_pos, Writer(Path(cfg.out_path) / f"{it:06}_{scenario.name}_{cam.get_posed_name(stereo_pos)}"))
+                  for stereo_pos in cam.stereo_positions
+        ]) for cam in scenario.cameras
     ]
-    frame_str = "" if cfg.no_gen else f": generating {cfg.frames} frames for {len(cameras)} individual cameras"
+    # if cam information is not needed, these are the writers in a plain list
+    writers_list = [writer for (_, writer) in list(itertools.chain(*[writers for (cam, writers) in writers_per_cam]))]
+    frame_str = "" if cfg.no_gen else f": generating {cfg.frames} frames for {len(writers_list)} individual cameras"
     print(
         f"iteration {it}, scenario '{scenario.name}'{frame_str}"
     )
 
     with ExitStack() as stack:
 
-        for writer in writers:
+        for writer in writers_list:
             stack.enter_context(writer)
 
         sim_steps, written_frames = 0, 0
         pbar = tqdm.tqdm(total=cfg.frames)
+        sim_dt = 1.0 / cfg.sim_steps_per_sec
 
         while written_frames < cfg.frames:
             # after sim's prep period, save visualizations every SIM_STEPS_PER_FRAME sim steps
             if sim_steps % cfg.sim_steps_per_frame == 0 and scenario.can_render():
-                for writer, cam in zip(writers, cameras):
-                    scenario.set_camera_look_at(pos=cam.pos, lookat=cam.lookat)
-                    result = renderer.render(scenario.scene)
-                    if not cfg.no_gen:
-                        writer.write_frame(scenario, result)
-                    cam.step()  # advance camera for next step if it's a moving one
+                for cam, cam_writers in writers_per_cam:  # for every cam, there might exist multiple writers (stereo)
+                    for cam_stereo_pos, writer in cam_writers:  # set scene camera and render for each posed writer
+                        scenario.set_camera_look_at(pos=cam.get_pos(cam_stereo_pos),
+                                                    lookat=cam.get_lookat(cam_stereo_pos))
+                        result = renderer.render(scenario.scene)
+                        if not cfg.no_gen:
+                            writer.write_frame(scenario, result)
+                    cam.step(sim_dt)  # advance camera for next step if it's a moving one
                 written_frames += 1
                 pbar.update(1)
                 pbar.set_postfix(sim_steps=sim_steps)
 
             # sim step
-            scenario.simulate(1.0 / cfg.sim_steps_per_sec)
+            scenario.simulate(sim_dt)
             sim_steps += 1
             # time.sleep(10)
         pbar.close()
 
         if cfg.assemble_rgb and not cfg.no_gen:
-            for writer in writers:
+            for writer in writers_list:
                 writer.assemble_rgb_video(in_fps=cfg.sim_fps, out_fps=cfg.sim_fps)
 
 
