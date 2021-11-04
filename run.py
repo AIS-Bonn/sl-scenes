@@ -92,8 +92,7 @@ def init_populate_scene(cfg, scenario_id, N_TRIALS=3):
 def view_scenario(cfg, renderer, scenario):
     scene = scenario.scene
     view_cam = scenario.cameras[0]
-    scene.
-    look_at(position=view_cam.pos, look_at=view_cam.lookat)
+    scene.set_camera_look_at(position=view_cam.pos, look_at=view_cam.lookat)
     renderer.render(scene)
     sl.view(scene)
 

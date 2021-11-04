@@ -85,8 +85,9 @@ class RoomAssembler:
         wall = walls[wall_id]
         rot_matrix = utils.get_rot_matrix(angles=torch.cat([wall_id * self.pi, torch.zeros(2)]))
         wall_length, wall_width = (wall.mesh.bbox.max[:2] - wall.mesh.bbox.min[:2])
-        x_pos =  wall_length / 2 if wall_length > 0 else
-        y_pos =  wall_width / 2 if wall_width > 0 else random.uniform(floor.ms)
+        x_pos =  wall_length / 2 if wall_length > 0 else 0
+        y_pos =  wall_width / 2 if wall_width > 0 else 0#random.uniform(floor.ms)
+        x_y_pos = torch.tensor([x_pos, y_pos])
 
         # sampling object and adjusting its pose
         self.mesh_loader.load_meshes(CONSTANTS.FURNITURE)
