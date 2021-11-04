@@ -17,7 +17,6 @@ from ycb_dynamic.scenarios import (
     DiceRollScenario,
     StackScenario,
     TabletopScenario,
-    TestScenario,
     ThrowScenario,
 )
 from ycb_dynamic.output import Writer
@@ -30,7 +29,6 @@ SCENARIOS = {
     "diceRoll": DiceRollScenario,
     "stack": StackScenario,
     "tabletop": TabletopScenario,
-    "test": TestScenario,
     "throw": ThrowScenario,
 }
 
