@@ -1,7 +1,7 @@
 # OUR PROJECT
 .idea
 *.ini
-textures.zip
+*.zip
 dna.txt
 test.py
 

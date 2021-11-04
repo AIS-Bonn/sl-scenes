@@ -48,29 +48,57 @@ class RoomAssembler:
 
     def assemble_room(self):
         """ Assembling a custom room """
-        room = self.assemble_structure()
-
-        return room
+        floor, walls = self.assemble_structure()
+        # for i in range(random.randint(a=1, b=5)):
+        self.add_wall_furniture(floor, walls)
+        return None
 
     def assemble_structure(self):
         """ Assembling the main structure of the room, including floor and walls """
         self.mesh_loader.load_meshes(CONSTANTS.FLOOR),
         self.mesh_loader.load_meshes(CONSTANTS.WALL * 4),
 
-        # adding floor and walls
+        # adding floor
         floor_info_mesh, wall_info_mesh = self.mesh_loader.get_meshes()
         floor = self.add_object_to_scene(floor_info_mesh)
         x1, y1, x2, y2 = *floor.mesh.bbox.min[:2], *floor.mesh.bbox.max[:2]
         coords = [[0., y1], [x1, 0.], [0., y2], [x2, 0.]]
+
+        # adding walls
+        walls = []
         for i, wall in enumerate(wall_info_mesh):
             pose = torch.eye(4)
             # BUG in get_rot_matrix()
             rot_matrix = utils.get_rot_matrix(angles=torch.cat([i * self.pi, torch.zeros(2)]))
             pose[:3, :3] = pose[:3, :3] @ rot_matrix
             pose[:2, -1] = torch.Tensor(coords[i])
-            _ = self.add_object_to_scene(wall, pose=pose)
+            cur_wall = self.add_object_to_scene(wall, pose=pose)
+            walls.append(cur_wall)
 
-        return None
+        return floor, walls
+
+    def add_wall_furniture(self, floor, walls):
+        """ Adding some pieces of furniture next to the walls"""
+
+        # sample wall, its corresponding rotation, and location
+        wall_id = random.randint(0, 3)
+        wall = walls[wall_id]
+        rot_matrix = utils.get_rot_matrix(angles=torch.cat([wall_id * self.pi, torch.zeros(2)]))
+        wall_length, wall_width = (wall.mesh.bbox.max[:2] - wall.mesh.bbox.min[:2])
+        x_pos =  wall_length / 2 if wall_length > 0 else
+        y_pos =  wall_width / 2 if wall_width > 0 else random.uniform(floor.ms)
+
+        # sampling object and adjusting its pose
+        self.mesh_loader.load_meshes(CONSTANTS.FURNITURE)
+        furniture_info_mesh = self.mesh_loader.get_meshes()[-1]
+        obj = self.add_object_to_scene(furniture_info_mesh)
+        pose = obj.pose()
+        pose[:2, -1] += x_y_pos + obj.mesh.bbox.min[:2]
+        # pose[:3, :3] = pose[:3, :3] @ rot_matrix
+        obj.set_pose(pose)
+
+        self.mesh_loader.reset()
+        return
 
     def add_object_to_scene(self, obj_info_mesh, pose=None):
         """ Adding object to the scene and adjusting the z-component"""

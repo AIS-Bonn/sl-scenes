@@ -59,7 +59,7 @@ class Scenario(object):
         raise NotImplementedError
 
     def decorate_scene(self):
-        self.decorator_loader.decorate_scene(object_loader=self.object_loader)
+        # self.decorator_loader.decorate_scene(object_loader=self.object_loader)
         return
 
     def setup_scene(self):
