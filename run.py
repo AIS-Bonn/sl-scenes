@@ -123,6 +123,7 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
         sim_steps, written_frames = 0, 0
         pbar = tqdm.tqdm(total=cfg.frames)
         sim_dt = 1.0 / cfg.sim_steps_per_sec
+        cam_dt = sim_dt * cfg.sim_steps_per_frame
 
         while written_frames < cfg.frames:
             # after sim's prep period, save visualizations every SIM_STEPS_PER_FRAME sim steps
@@ -134,7 +135,7 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
                         result = renderer.render(scenario.scene)
                         if not cfg.no_gen:
                             writer.write_frame(scenario, result)
-                    cam.step(sim_dt)  # advance camera for next step if it's a moving one
+                    cam.step(cam_dt)  # advance camera for next step if it's a moving one
                 written_frames += 1
                 pbar.update(1)
                 pbar.set_postfix(sim_steps=sim_steps)
@@ -231,6 +232,15 @@ if __name__ == "__main__":
         type=float,
         default=0.06,
         help="distance between the cameras of a stereo pair (both in pos and lookat)"
+    )
+    parser.add_argument(
+        "--cam-movement-complexity",
+        type=int,
+        choices=[0, 1, 2, 3],
+        default=0,
+        help="specifies degree of complexity of camera movement. 0 = no movement, 1 = slight movement across <=1 dim, "
+             "2 = slight or moderate movement across <=2 dim, 3 = slight, moderate or strong movement across <=3 dim."
+             "Currently available dims: {elevation_angle, orientation_angle, distance_to_lookat}"
     )
     cfg = parser.parse_args()
 

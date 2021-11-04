@@ -29,6 +29,7 @@ class Scenario(object):
         self.n_cameras = cfg.cameras
         self.coplanar_stereo = cfg.coplanar_stereo
         self.coplanar_stereo_dist = cfg.coplanar_stereo_dist
+        self.cam_movement_complexity = cfg.cam_movement_complexity
         self.reset_sim()
 
     def reset_sim(self):
@@ -126,7 +127,7 @@ class Scenario(object):
             cam_name = f"cam_{str(i).zfill(2)}"
             cam_stereo_positions = ["left", "right"] if self.coplanar_stereo else ["mono"]
             self.cameras.append(Camera(cam_name, cam_elev_angle, cam_ori_angle, cam_dist, cam_lookat,
-                                       self.coplanar_stereo_dist, stereo_positions=cam_stereo_positions, moving=False))
+                                       self.coplanar_stereo_dist, cam_stereo_positions, self.cam_movement_complexity))
         self.setup_cameras_()  # e.g. scenario-specific height adjustment
         self.cameras_loaded = True
 
