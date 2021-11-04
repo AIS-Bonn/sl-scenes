@@ -590,7 +590,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "art_deco_table",
-        "other_models/art_deco_table/art_deco_table.obj",
+        "furniture/art_deco_table/art_deco_table.obj",
         30.0,
         FLAG_CONCAVE,
         0.5,
@@ -600,7 +600,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "bowling_ball",
-        "other_models/bowling_ball/bowling_ball.obj",
+        "misc/bowling_ball/bowling_ball.obj",
         7.000,
         0,
         0.3,
@@ -610,7 +610,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "folding_table",
-        "other_models/folding_table/folding_table.obj",
+        "furniture/folding_table/folding_table.obj",
         10.000,
         FLAG_CONCAVE,
         0.7,
@@ -620,7 +620,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "laundry_basket",
-        "other_models/laundry_basket/laundry_basket.obj",
+        "furniture/laundry_basket/laundry_basket.obj",
         1.000,
         FLAG_CONCAVE,
         0.1,
@@ -630,7 +630,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "metal_chair",
-        "other_models/metal_chair/metal_chair.obj",
+        "furniture/metal_chair/metal_chair.obj",
         3.000,
         FLAG_CONCAVE,
         0.7,
@@ -640,7 +640,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "old_cupboard",
-        "other_models/old_cupboard/old_cupboard.obj",
+        "furniture/old_cupboard/old_cupboard.obj",
         30.000,
         FLAG_CONCAVE,
         0.1,
@@ -650,7 +650,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "plastic_chair",
-        "other_models/plastic_chair/plastic_chair.obj",
+        "furniture/plastic_chair/plastic_chair.obj",
         3.000,
         FLAG_CONCAVE,
         0.3,
@@ -660,7 +660,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "pool_table",
-        "other_models/pool_table/pool_table.obj",
+        "furniture/pool_table/pool_table.obj",
         80.000,
         FLAG_CONCAVE,
         0.3,
@@ -670,7 +670,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "red_bowl",
-        "other_models/red_bowl/red_bowl.obj",
+        "misc/red_bowl/red_bowl.obj",
         0.080,
         FLAG_CONCAVE,
         0.3,
@@ -680,7 +680,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "shopping_cart",
-        "other_models/shopping_cart/shopping_cart.obj",
+        "misc/shopping_cart/shopping_cart.obj",
         10.000,
         FLAG_CONCAVE,
         0.9,
@@ -690,7 +690,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "wicker_basket",
-        "other_models/wicker_basket/wicker_basket.obj",
+        "misc/wicker_basket/wicker_basket.obj",
         0.200,
         FLAG_CONCAVE,
         0.1,
@@ -700,7 +700,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "wooden_bowl",
-        "other_models/wooden_bowl/wooden_bowl.obj",
+        "misc/wooden_bowl/wooden_bowl.obj",
         0.300,
         FLAG_CONCAVE,
         0.3,
@@ -710,7 +710,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "wooden_chair",
-        "other_models/wooden_chair/wooden_chair.obj",
+        "furniture/wooden_chair/wooden_chair.obj",
         3.000,
         FLAG_CONCAVE,
         0.3,
@@ -720,7 +720,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "wooden_cupboard",
-        "other_models/wooden_cupboard/wooden_cupboard.obj",
+        "furniture/wooden_cupboard/wooden_cupboard.obj",
         20.000,
         FLAG_CONCAVE,
         0.3,
@@ -730,7 +730,7 @@ OBJECT_INFO = [
     ),
     ObjectInfo(
         "wooden_table",
-        "other_models/wooden_table/wooden_table.obj",
+        "furniture/wooden_table/wooden_table.obj",
         25.000,
         FLAG_CONCAVE,
         0.3,
