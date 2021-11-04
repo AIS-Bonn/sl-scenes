@@ -10,7 +10,7 @@ import stillleben as sl
 from ycb_dynamic.room_models import RoomAssembler
 from ycb_dynamic.object_models import MeshLoader, ObjectLoader, DecoratorLoader
 from ycb_dynamic.lighting import get_lightmap
-from ycb_dynamic.camera import Camera, create_coplanar_stereo_cams, cam_pos_from_config
+from ycb_dynamic.camera import Camera
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
 
 
@@ -32,6 +32,7 @@ class Scenario(object):
         self.n_cameras = cfg.cameras
         self.coplanar_stereo = cfg.coplanar_stereo
         self.coplanar_stereo_dist = cfg.coplanar_stereo_dist
+        self.cam_movement_complexity = cfg.cam_movement_complexity
         self.reset_sim()
         return
 
@@ -130,12 +131,9 @@ class Scenario(object):
             cam_dist = random.uniform(cam_config["distance_min"], cam_config["distance_max"])
             cam_lookat = deepcopy(conf_cam_lookat)
             cam_name = f"cam_{str(i).zfill(2)}"
-            if self.coplanar_stereo:
-                self.cameras.extend(create_coplanar_stereo_cams(cam_name, cam_elev_angle, cam_ori_angle, cam_dist,
-                                                                cam_lookat, stereo_pair_dist=self.coplanar_stereo_dist,
-                                                                moving=False))
-            else:
-                self.cameras.append(Camera(cam_name, cam_elev_angle, cam_ori_angle, cam_dist, cam_lookat))
+            cam_stereo_positions = ["left", "right"] if self.coplanar_stereo else ["mono"]
+            self.cameras.append(Camera(cam_name, cam_elev_angle, cam_ori_angle, cam_dist, cam_lookat,
+                                       self.coplanar_stereo_dist, cam_stereo_positions, self.cam_movement_complexity))
         self.setup_cameras_()  # e.g. scenario-specific height adjustment
         self.cameras_loaded = True
 

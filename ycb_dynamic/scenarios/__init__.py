@@ -4,5 +4,4 @@ from .bowling import BowlingScenario
 from .dice_roll import DiceRollScenario
 from .stack import StackScenario
 from .tabletop import TabletopScenario
-from .test import TestScenario
 from .throw import ThrowScenario
