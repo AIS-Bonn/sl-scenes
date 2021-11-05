@@ -45,14 +45,12 @@ if __name__ == '__main__':
         texture_files = glob.glob(f'{str(BASE_DIR)}/{dir}/*.png', recursive=True) \
                         + glob.glob(f'{str(BASE_DIR)}/{dir}/*.jpg', recursive=True) \
                         + glob.glob(f'{str(BASE_DIR)}/{dir}/*.jpeg', recursive=True)
-        texture_file_keys = [re.sub("[-_]+",
-                          "_",
-                                    fn.split("/")[-1].replace("4K", ""))
-                       .replace("_.", ".")
-                       .replace(" ", "")
-                       .split("_")[-1].split(".")[0]
-                       .lower()
-                       .replace("level", "")
+        texture_file_keys = [re.sub("[-_]+", "_", fn.split("/")[-1].replace("4K", ""))
+                                 .replace("_.", ".")
+                                 .replace(" ", "")
+                                 .split("_")[-1].split(".")[0]
+                                 .lower()
+                                 .replace("level", "")
                              for fn in texture_files]
         texture_file_keys = [elaborate(m) for m in texture_file_keys]
 
