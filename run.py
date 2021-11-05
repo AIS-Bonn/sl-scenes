@@ -101,7 +101,7 @@ def view_scenario(cfg, renderer, scenario):
 
 def run_and_render_scenario(cfg, renderer, scenario, it):
     """
-    TODO Doc
+    TODO Doc 
     """
 
     # a list of tuples (camera, writers), where each 'writers' itself is a list of tuples (stereo_position, writer)
