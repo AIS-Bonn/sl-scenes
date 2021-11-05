@@ -140,7 +140,8 @@ class DecoratorLoader:
         """ Object initializer """
         self.config = CONFIG["decorator"]
         decorations = self.config["decorations"]
-        self.bounds = self.config["bounds"]
+        bounds = self.config["bounds"]
+        self.bounds = bounds
         self.pi = torch.acos(torch.zeros(1))
 
         self.scene = scene
@@ -148,63 +149,36 @@ class DecoratorLoader:
         self.mesh_loader.load_meshes(decorations),
         self.meshes = self.mesh_loader.get_meshes()[0]
 
-        self.x_vect = torch.arange(
-                self.bounds["min_x"], self.bounds["max_x"] + self.bounds["res"], self.bounds["res"]
-            )
-        self.y_vect = torch.arange(
-                self.bounds["min_y"], self.bounds["max_y"] + self.bounds["res"], self.bounds["res"]
-            )
-        self.grid_y, self.grid_x = torch.meshgrid(self.x_vect, self.y_vect)
-        self.occupancy_matrix = torch.zeros(
-                int((self.bounds["max_x"] + self.bounds["res"] - self.bounds["min_x"]) / self.bounds["res"]),
-                int((self.bounds["max_y"] + self.bounds["res"] - self.bounds["min_y"]) / self.bounds["res"])
-            )
-
-        n_cells = int(self.bounds["dist"] / self.bounds["res"]) + 1
-        self.margin_kernel = torch.ones(1, 1, n_cells, n_cells) / (n_cells ** 2)
-        self.pad = (n_cells // 2, n_cells // 2, n_cells // 2, n_cells // 2)
+        self.x_vect = torch.arange(bounds["min_x"], bounds["max_x"] + bounds["res"], bounds["res"])
+        self.y_vect = torch.arange(bounds["min_y"], bounds["max_y"] + bounds["res"], bounds["res"])
 
         return
 
-    def init_occupancy_matrix(self, objects):
+    def init_occupancy_matrix(self):
         """ Obtaining an occupancy matrix with empty and occupied positions"""
-        occ_matrix = self.occupancy_matrix.clone()
-        for _, obj in objects.items():
+        objects = self.scene.objects
+        self.occ_matrix = OccupancyMatrix(bounds=self.bounds)
+        for obj in objects:
             if(os.path.basename(obj.mesh.filename) in CONSTANTS.FLOOR_NAMES):
                 continue
-            occ_matrix = self.update_occupancy_matrix(occ_matrix, obj)
-        occ_matrix = self.add_object_margings(occ_matrix)
-        return occ_matrix
+            self.occ_matrix.update_occupancy_matrix(obj)
+        self.occ_matrix.add_object_margings()
 
-    def update_occupancy_matrix(self, occ_matrix, obj):
-        """ Updating occupancy matrix given object """
-        pos_x, pos_y = obj.pose()[:2, -1]
-        min_x, min_y = obj.mesh.bbox.min[0] + pos_x, obj.mesh.bbox.min[1] + pos_y
-        max_x, max_y = obj.mesh.bbox.max[0] + pos_x, obj.mesh.bbox.max[1] + pos_y
-        y_coords = (self.grid_y >= min_y) & (self.grid_y < max_y)
-        x_coords = (self.grid_x >= min_x) & (self.grid_x < max_x)
-        occ_coords = y_coords & x_coords
-        occ_matrix[occ_coords] = 1
+        # For displaying the occupancy matrix after filling the room
+        plt.figure()
+        plt.imshow(self.occ_matrix.occ_matrix)
+        plt.title(f"Occupacy Matrix after initiaization")
+        plt.colorbar()
 
-        return occ_matrix
+        return
 
-    def add_object_margings(self, occ_matrix):
-        """ Adding margin to objects in occupancy matrix. Indicated with value 0.5"""
-        orig_pos = occ_matrix > 0.5
-        occ_matrix[occ_matrix <= 0.5] = 0
-        occ_matrix = F.pad(occ_matrix, self.pad).unsqueeze(0).unsqueeze(0)
-        occ_matrix = F.conv2d(occ_matrix, self.margin_kernel, stride=1)[0, 0]
-        occ_matrix[occ_matrix > 0] = 0.5
-        occ_matrix[orig_pos] = 1
-        return occ_matrix
-
-    def find_free_spot(self, obj, occ_matrix):
+    def find_free_spot(self, obj):
         """ Finding a position in the occupancy matrix where the object wont collide with anything """
         position = None
         max = ceil((obj.mesh.bbox.max[:2].max().item() + self.bounds["dist"]) / self.bounds["res"] + 1)
         max = max if max % 2 != 0 else max + 1
         aux_matrix = F.conv2d(
-                occ_matrix.unsqueeze(0).unsqueeze(0),
+                self.occ_matrix.occ_matrix.unsqueeze(0).unsqueeze(0),
                 torch.ones(1, 1, max, max),
                 padding=max//2
             )[0, 0]
@@ -216,7 +190,7 @@ class DecoratorLoader:
 
         return position
 
-    def add_object(self, object_loader, occ_matrix, object_id):
+    def add_object(self, object_loader, object_id):
         """ Loading an object and adding to the loader """
         obj_info, obj_mesh = self.meshes[object_id]
         pose = torch.eye(4)
@@ -225,7 +199,7 @@ class DecoratorLoader:
         self.scene.add_object(obj)
 
         # shifting object to a free position and adjusting z-coord to be aligned with the table
-        position = self.find_free_spot(obj=obj, occ_matrix=occ_matrix)
+        position = self.find_free_spot(obj=obj)
         pose[:2, -1] = position if position is not None else torch.ones(2)
         pose[2, -1] += obj.mesh.bbox.max[-1]
 
@@ -236,30 +210,69 @@ class DecoratorLoader:
         pose[:3, :3] = pose[:3, :3] @ rot_matrix
 
         obj.set_pose(pose)
-
-        occ_matrix = self.update_occupancy_matrix(occ_matrix, obj)
-        occ_matrix = self.add_object_margings(occ_matrix)
-
-        return obj, occ_matrix
+        self.occ_matrix.update_occupancy_matrix(obj)
+        self.occ_matrix.add_object_margings()
+        return
 
     def decorate_scene(self, object_loader):
         """ Randomly adding some decoderation to a scene """
-        objects = object_loader.loaded_objects
-        occ_matrix = self.init_occupancy_matrix(objects)
+        self.init_occupancy_matrix()
 
         N = torch.randint(low=self.config["min_objs"], high=self.config["max_objs"], size=(1,))
         for i in range(N):
             id = torch.randint(low=0, high=len(self.meshes), size=(1,))
-            obj, occ_matrix = self.add_object(object_loader, occ_matrix, object_id=id)
+            self.add_object(object_loader, object_id=id)
 
         # For displaying the occupancy matrix after filling the room
-        # plt.figure()
-        # plt.imshow(occ_matrix)
-        # plt.title(f"Occupacy Matrix after Decoration #{i+1}")
-        # plt.colorbar()
-        # plt.show()
+        plt.figure()
+        plt.imshow(self.occ_matrix.occ_matrix)
+        plt.title(f"Occupacy Matrix after Decoration #{i+1}")
+        plt.colorbar()
+        plt.show()
 
         return
 
+
+class OccupancyMatrix:
+    """
+    Module that computes and updates an occupancy matrix of the room
+    """
+
+    def __init__(self, bounds):
+        """ Initializer of the occupancy matrix """
+        self.bounds = bounds
+        self.x_vect = torch.arange(bounds["min_x"], bounds["max_x"] + bounds["res"], bounds["res"])
+        self.y_vect = torch.arange(bounds["min_y"], bounds["max_y"] + bounds["res"], bounds["res"])
+        self.grid_y, self.grid_x = torch.meshgrid(self.x_vect, self.y_vect)
+        self.occ_matrix = torch.zeros(
+                int((bounds["max_x"] + bounds["res"] - bounds["min_x"]) / bounds["res"]),
+                int((bounds["max_y"] + bounds["res"] - bounds["min_y"]) / bounds["res"])
+            )
+
+        n_cells = int(bounds["dist"] / bounds["res"]) + 1
+        self.margin_kernel = torch.ones(1, 1, n_cells, n_cells) / (n_cells ** 2)
+        self.pad = (n_cells // 2, n_cells // 2, n_cells // 2, n_cells // 2)
+        return
+
+    def update_occupancy_matrix(self, obj):
+        """ Updating occupancy matrix given object """
+        pos_x, pos_y = obj.pose()[:2, -1]
+        min_x, min_y = obj.mesh.bbox.min[0] + pos_x, obj.mesh.bbox.min[1] + pos_y
+        max_x, max_y = obj.mesh.bbox.max[0] + pos_x, obj.mesh.bbox.max[1] + pos_y
+        y_coords = (self.grid_y >= min_y) & (self.grid_y < max_y)
+        x_coords = (self.grid_x >= min_x) & (self.grid_x < max_x)
+        occ_coords = y_coords & x_coords
+        self.occ_matrix[occ_coords] = 1
+        return
+
+    def add_object_margings(self):
+        """ Adding margin to objects in occupancy matrix. Indicated with value 0.5"""
+        orig_pos = self.occ_matrix > 0.5
+        self.occ_matrix[self.occ_matrix <= 0.5] = 0
+        self.occ_matrix = F.pad(self.occ_matrix, self.pad).unsqueeze(0).unsqueeze(0)
+        self.occ_matrix = F.conv2d(self.occ_matrix, self.margin_kernel, stride=1)[0, 0]
+        self.occ_matrix[self.occ_matrix > 0] = 0.5
+        self.occ_matrix[orig_pos] = 1
+        return
 
 #

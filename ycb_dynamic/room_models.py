@@ -32,7 +32,7 @@ class RoomAssembler:
 
     def make_room(self):
         """ Main logic for obtaining a room for the scene """
-        use_assembled = random.random() < 0 #self.config["prob_assembled"]
+        use_assembled = random.random() < self.config["prob_assembled"]
         if(use_assembled):
             room = self.get_existing_room()
         else:
@@ -106,7 +106,6 @@ class RoomAssembler:
         pose[:3, :3] = pose[:3, :3] @ rot_matrix  # TODO: adapt for rotations
         obj.set_pose(pose)
 
-        self.mesh_loader.reset()
         return
 
     def add_object_to_scene(self, obj_info_mesh, pose=None):
