@@ -19,7 +19,9 @@ CONFIG = {
         "prob_assembled": 0.3
     },
     "decorator": {
-        "decorations": CONSTANTS.CHAIRS + CONSTANTS.CUPBOARDS,
+        "decorations": CONSTANTS.CHAIRS,
+        "min_objs": 2,
+        "max_objs": 5,
         "bounds": {
             "min_x": -3,  # limits of the occupancy matrix. Define grid to place objects
             "max_x": 3,

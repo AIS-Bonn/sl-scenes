@@ -138,8 +138,9 @@ class DecoratorLoader:
 
     def __init__(self, scene):
         """ Object initializer """
-        decorations = CONFIG["decorator"]["decorations"]
-        self.bounds = CONFIG["decorator"]["bounds"]
+        self.config = CONFIG["decorator"]
+        decorations = self.config["decorations"]
+        self.bounds = self.config["bounds"]
         self.pi = torch.acos(torch.zeros(1))
 
         self.scene = scene
@@ -246,7 +247,7 @@ class DecoratorLoader:
         objects = object_loader.loaded_objects
         occ_matrix = self.init_occupancy_matrix(objects)
 
-        N = torch.randint(low=3, high=7, size=(1,))
+        N = torch.randint(low=self.config["min_objs"], high=self.config["max_objs"], size=(1,))
         for i in range(N):
             id = torch.randint(low=0, high=len(self.meshes), size=(1,))
             obj, occ_matrix = self.add_object(object_loader, occ_matrix, object_id=id)

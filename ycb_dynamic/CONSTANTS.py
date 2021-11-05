@@ -106,7 +106,9 @@ CHAIRS = [obj for obj in OBJECT_INFO if obj.name.endswith("_chair")]
 CUPBOARDS = [obj for obj in OBJECT_INFO if obj.name.endswith("_cupboard")]
 TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table")]
 BOWLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_bowl") and obj.name != "024_bowl"]
-FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and "table" not in obj.name ]
+FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and
+                                            "table" not in obj.name and
+                                            "chair" not in obj.name]
 # FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and obj.name == "kitchen_wood_m"]
 
 

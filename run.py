@@ -94,14 +94,15 @@ def init_populate_scene(cfg, scenario_id, N_TRIALS=3):
 def view_scenario(cfg, renderer, scenario):
     scene = scenario.scene
     view_cam = scenario.cameras[0]
-    scene.set_camera_look_at(position=view_cam.pos, look_at=view_cam.lookat)
+    # scene.set_camera_look_at(position=view_cam.pos, look_at=view_cam.lookat)
+    scene.set_camera_look_at(position=view_cam.get_pos(), look_at=view_cam.get_lookat())
     renderer.render(scene)
     sl.view(scene)
 
 
 def run_and_render_scenario(cfg, renderer, scenario, it):
     """
-    TODO Doc 
+    TODO Doc
     """
 
     # a list of tuples (camera, writers), where each 'writers' itself is a list of tuples (stereo_position, writer)

@@ -49,8 +49,7 @@ class RoomAssembler:
     def assemble_room(self):
         """ Assembling a custom room """
         floor, walls = self.assemble_structure()
-        n_objs = random.randint(a=1, b=5)
-        # n_objs = 1
+        n_objs = random.randint(a=3, b=6)
         for i in range(n_objs):
             self.add_wall_furniture(floor, walls)
         return None
@@ -85,7 +84,7 @@ class RoomAssembler:
         # sampling random wall and random object
         wall_id = random.randint(0, 3)
         wall = walls[wall_id]
-        self.mesh_loader.load_meshes(CONSTANTS.FURNITURE)
+        self.mesh_loader.load_meshes([random.choice(CONSTANTS.FURNITURES)])
         furniture_info_mesh = self.mesh_loader.get_meshes()[-1]
         obj = self.add_object_to_scene(furniture_info_mesh)
 
@@ -104,7 +103,7 @@ class RoomAssembler:
                       pose[0, -1] + x_pos + obj_bbox.min[0]
         pose[1, -1] = pose[1, -1] + y_pos + obj_bbox.max[1] if y_pos < 0 else \
                       pose[1, -1] + y_pos + obj_bbox.min[1]
-        # pose[:3, :3] = pose[:3, :3] @ rot_matrix  # TODO: adapt for rotations
+        pose[:3, :3] = pose[:3, :3] @ rot_matrix  # TODO: adapt for rotations
         obj.set_pose(pose)
 
         self.mesh_loader.reset()
