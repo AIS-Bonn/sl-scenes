@@ -37,7 +37,8 @@ if __name__ == '__main__':
     for dir in sorted(dirs):
 
         # copy floor and wall object files
-        obj_files = ["floor.obj", "floor_tiled1m.obj", "wall.obj", "wall_tiled1m.obj"]
+        obj_files = ["floor_6m.obj", "floor_8m.obj", "floor_6m_tiled.obj", "floor_8m_tiled.obj",
+                     "wall_6m.obj", "wall_8m.obj", "wall_6m_tiled.obj", "wall_8m_tiled.obj"]
         for obj_file in obj_files:
             copy_overwrite(str(BASE_DIR / obj_file), str(BASE_DIR / dir / obj_file))
 
