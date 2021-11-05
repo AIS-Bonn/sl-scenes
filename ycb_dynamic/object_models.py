@@ -165,10 +165,10 @@ class DecoratorLoader:
         self.occ_matrix.add_object_margings()
 
         # For displaying the occupancy matrix after filling the room
-        plt.figure()
-        plt.imshow(self.occ_matrix.occ_matrix)
-        plt.title(f"Occupacy Matrix after initiaization")
-        plt.colorbar()
+        # plt.figure()
+        # plt.imshow(self.occ_matrix.occ_matrix)
+        # plt.title(f"Occupacy Matrix after initiaization")
+        # plt.colorbar()
 
         return
 
@@ -224,11 +224,11 @@ class DecoratorLoader:
             self.add_object(object_loader, object_id=id)
 
         # For displaying the occupancy matrix after filling the room
-        plt.figure()
-        plt.imshow(self.occ_matrix.occ_matrix)
-        plt.title(f"Occupacy Matrix after Decoration #{i+1}")
-        plt.colorbar()
-        plt.show()
+        # plt.figure()
+        # plt.imshow(self.occ_matrix.occ_matrix)
+        # plt.title(f"Occupacy Matrix after Decoration #{i+1}")
+        # plt.colorbar()
+        # plt.show()
 
         return
 
