@@ -16,6 +16,7 @@ from ycb_dynamic.OBJECT_INFO import OBJECT_INFO
 
 # Paths and Directories
 MESH_BASE_DIR = Path(".") / "external_data" / "object_models"
+TEXT_BASE_DIR = Path(".") / "external_data" / "textures"
 
 # Lighting
 IBL_BASE_PATH = Path(".") / "external_data" / "light_maps"
@@ -105,14 +106,30 @@ CHAIRS = [obj for obj in OBJECT_INFO if obj.name.endswith("_chair")]
 CUPBOARDS = [obj for obj in OBJECT_INFO if obj.name.endswith("_cupboard")]
 TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table")]
 BOWLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_bowl") and obj.name != "024_bowl"]
+FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and
+                                            "table" not in obj.name and
+                                            "chair" not in obj.name]
+# FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and obj.name == "kitchen_wood_m"]
 
-# Surfaces
-FLOOR = [obj for obj in OBJECT_INFO if obj.name.endswith("_floor")]
+
+
+# Surfaces and Rooms
+FLOORS = [obj for obj in OBJECT_INFO if obj.name.endswith("_floor")]
+# FLOORS = [obj for obj in OBJECT_INFO if obj.name.endswith("_floor") and "carpet" in obj.name]
 FLOOR_NAMES = [os.path.basename(obj.mesh_fp) for obj in OBJECT_INFO if obj.name.endswith("_floor")]
+WALLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_wall")]
+# WALLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_wall") and "black_tiling" in obj.name]
+ROOMS = [obj for obj in OBJECT_INFO if "complete_rooms" in obj.mesh_fp]
+
 
 # For accessing
 TABLE = [random.choice(TABLES)]
 BOWL = [random.choice(BOWLS)]
+ROOM = [random.choice(ROOMS)]
+FLOOR = [random.choice(FLOORS)]
+WALL = [random.choice(WALLS)]
+FURNITURE = [random.choice(FURNITURES)]
+
 YCBV_OBJECTS = [  # Only considering the YCB-Video subset of objects
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in YCBV_OBJS
 ]

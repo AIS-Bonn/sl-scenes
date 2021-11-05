@@ -1,6 +1,7 @@
 # OUR PROJECT
 .idea
 *.ini
+*.zip
 dna.txt
 test.py
 
