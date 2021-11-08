@@ -102,78 +102,78 @@
         "mesh_fp": "ycbv_models/models_fine/obj_000010.ply",
         "weight": 0.066,
         "flags": 0,
-        "metallic": 0.3,
-        "roughness": 0.3,
+        "metallic": 0.0,
+        "roughness": 0.8,
         "restitution": 0.3,
         "scale": 0.001,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.8,
+        "dynamic_friction": 0.6
     },
     "012_strawberry": {
         "mesh_fp": "ycb_models/012_strawberry/google_512k/textured.obj",
         "weight": 0.066,
         "flags": 0,
         "metallic": 0.3,
-        "roughness": 0.3,
+        "roughness": 0.8,
         "restitution": 0.2,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.5,
+        "dynamic_friction": 0.3
     },
     "013_apple": {
         "mesh_fp": "ycb_models/013_apple/google_512k/textured.obj",
         "weight": 0.18,
         "flags": 0,
         "metallic": 0.3,
-        "roughness": 0.3,
+        "roughness": 0.6,
         "restitution": 0.3,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.3
     },
     "014_lemon": {
         "mesh_fp": "ycb_models/014_lemon/google_512k/textured.obj",
         "weight": 0.1,
         "flags": 0,
         "metallic": 0.3,
-        "roughness": 0.4,
+        "roughness": 0.6,
         "restitution": 0.3,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.5,
+        "dynamic_friction": 0.4
     },
     "015_peach": {
         "mesh_fp": "ycb_models/015_peach/google_512k/textured.obj",
         "weight": 0.15,
         "flags": 0,
         "metallic": 0.0,
-        "roughness": 0.4,
+        "roughness": 1.0,
         "restitution": 0.3,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.6,
+        "dynamic_friction": 0.4
     },
     "016_pear": {
         "mesh_fp": "ycb_models/016_pear/google_512k/textured.obj",
         "weight": 0.17,
         "flags": 0,
         "metallic": 0.1,
-        "roughness": 0.3,
+        "roughness": 0.8,
         "restitution": 0.3,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.5,
+        "dynamic_friction": 0.3
     },
     "017_orange": {
         "mesh_fp": "ycb_models/017_orange/google_512k/textured.obj",
         "weight": 0.15,
         "flags": 0,
         "metallic": 0.3,
-        "roughness": 0.4,
+        "roughness": 0.6,
         "restitution": 0.3,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.6,
+        "dynamic_friction": 0.4
     },
     "018_plum": {
         "mesh_fp": "ycb_models/018_plum/google_512k/textured.obj",
@@ -183,8 +183,8 @@
         "roughness": 0.3,
         "restitution": 0.3,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.2
     },
     "019_pitcher_base": {
         "mesh_fp": "ycbv_models/models_fine/obj_000011.ply",
@@ -238,8 +238,8 @@
         "roughness": 1.0,
         "restitution": 0.5,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.8,
+        "dynamic_friction": 0.5
     },
     "029_plate": {
         "mesh_fp": "ycb_models/029_plate/google_512k/textured.obj",
@@ -271,8 +271,8 @@
         "roughness": 0.6,
         "restitution": 0.0,
         "scale": 0.001,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.5,
+        "dynamic_friction": 0.3
     },
     "036_wood_block": {
         "mesh_fp": "ycbv_models/models_fine/obj_000016_rotated.ply",
@@ -282,8 +282,8 @@
         "roughness": 0.5,
         "restitution": 0.3,
         "scale": 0.001,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.6,
+        "dynamic_friction": 0.4
     },
     "037_scissors": {
         "mesh_fp": "ycbv_models/models_fine/obj_000017.ply",
@@ -293,8 +293,8 @@
         "roughness": 0.5,
         "restitution": 0.1,
         "scale": 0.001,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.6,
+        "dynamic_friction": 0.3
     },
     "040_large_marker": {
         "mesh_fp": "ycbv_models/models_fine/obj_000018.ply",
@@ -315,8 +315,8 @@
         "roughness": 0.3,
         "restitution": 0.2,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.2
     },
     "043_phillips_screwdriver": {
         "mesh_fp": "ycb_models/043_phillips_screwdriver/google_512k/textured.obj",
@@ -326,8 +326,8 @@
         "roughness": 0.5,
         "restitution": 0.2,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.2
     },
     "044_flat_screwdriver": {
         "mesh_fp": "ycb_models/044_flat_screwdriver/google_512k/textured.obj",
@@ -337,8 +337,8 @@
         "roughness": 0.5,
         "restitution": 0.2,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.2
     },
     "048_hammer": {
         "mesh_fp": "ycb_models/048_hammer/google_512k/textured.obj",
@@ -348,8 +348,8 @@
         "roughness": 0.5,
         "restitution": 0.2,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.6,
+        "dynamic_friction": 0.3
     },
     "050_medium_clamp": {
         "mesh_fp": "ycb_models/050_medium_clamp/google_512k/textured.obj",
@@ -392,7 +392,7 @@
         "roughness": 0.3,
         "restitution": 0.7,
         "scale": 1.0,
-        "static_friction": 0.2,
+        "static_friction": 0.3,
         "dynamic_friction": 0.1
     },
     "054_softball": {
@@ -403,7 +403,7 @@
         "roughness": 0.7,
         "restitution": 0.7,
         "scale": 1.0,
-        "static_friction": 0.2,
+        "static_friction": 0.3,
         "dynamic_friction": 0.1
     },
     "055_baseball": {
@@ -414,7 +414,7 @@
         "roughness": 0.5,
         "restitution": 0.4,
         "scale": 1.0,
-        "static_friction": 0.2,
+        "static_friction": 0.4,
         "dynamic_friction": 0.1
     },
     "056_tennis_ball": {
@@ -425,8 +425,8 @@
         "roughness": 0.9,
         "restitution": 0.8,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.2
     },
     "057_racquetball": {
         "mesh_fp": "ycb_models/057_racquetball/google_512k/textured.obj",
@@ -436,7 +436,7 @@
         "roughness": 0.6,
         "restitution": 1.0,
         "scale": 1.0,
-        "static_friction": 0.2,
+        "static_friction": 0.4,
         "dynamic_friction": 0.1
     },
     "058_golf_ball": {
@@ -447,7 +447,7 @@
         "roughness": 0.5,
         "restitution": 0.5,
         "scale": 1.0,
-        "static_friction": 0.2,
+        "static_friction": 0.4,
         "dynamic_friction": 0.1
     },
     "061_foam_brick": {
@@ -458,8 +458,8 @@
         "roughness": 0.7,
         "restitution": 0.5,
         "scale": 0.001,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.6,
+        "dynamic_friction": 0.4
     },
     "062_dice": {
         "mesh_fp": "ycb_models/062_dice/google_64k/textured.obj",
@@ -590,8 +590,8 @@
         "roughness": 0.5,
         "restitution": 0.3,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.2
     },
     "071_nine_hole_peg_test": {
         "mesh_fp": "ycb_models/071_nine_hole_peg_test/google_512k/textured.obj",
@@ -601,8 +601,8 @@
         "roughness": 0.5,
         "restitution": 0.1,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.5,
+        "dynamic_friction": 0.3
     },
     "072-a_toy_airplane": {
         "mesh_fp": "ycb_models/072-a_toy_airplane/google_512k/textured.obj",
@@ -612,8 +612,8 @@
         "roughness": 0.5,
         "restitution": 0.2,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.2
     },
     "077_rubiks_cube": {
         "mesh_fp": "ycb_models/077_rubiks_cube/google_512k/textured.obj",
@@ -623,8 +623,8 @@
         "roughness": 0.4,
         "restitution": 0.1,
         "scale": 1.0,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.1,
+        "dynamic_friction": 0.0
     },
     "bowling_ball": {
         "mesh_fp": "misc/bowling_ball/bowling_ball.obj",
@@ -634,8 +634,8 @@
         "roughness": 0.1,
         "restitution": 0.3,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0
     },
     "folding_table": {
         "mesh_fp": "furniture/folding_table/folding_table.obj",
@@ -645,8 +645,8 @@
         "roughness": 0.5,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.3
     },
     "laundry_basket": {
         "mesh_fp": "misc/laundry_basket/laundry_basket.obj",
@@ -656,8 +656,8 @@
         "roughness": 0.5,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.3,
+        "dynamic_friction": 0.2
     },
     "red_bowl": {
         "mesh_fp": "misc/red_bowl/red_bowl.obj",
@@ -678,8 +678,8 @@
         "roughness": 0.3,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.3,
+        "dynamic_friction": 0.2
     },
     "wicker_basket": {
         "mesh_fp": "misc/wicker_basket/wicker_basket.obj",
@@ -689,8 +689,8 @@
         "roughness": 0.7,
         "restitution": 0.4,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.7,
+        "dynamic_friction": 0.3
     },
     "wooden_bowl": {
         "mesh_fp": "misc/wooden_bowl/wooden_bowl.obj",
@@ -700,8 +700,8 @@
         "roughness": 0.3,
         "restitution": 0.3,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.2
     },
     "wooden_chair": {
         "mesh_fp": "furniture/wooden_chair/wooden_chair.obj",
@@ -711,8 +711,8 @@
         "roughness": 0.7,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.5,
+        "dynamic_friction": 0.3
     },
     "wooden_table": {
         "mesh_fp": "furniture/wooden_table/wooden_table.obj",
@@ -722,8 +722,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.6,
+        "dynamic_friction": 0.4
     },
     "metal_chair": {
         "mesh_fp": "furniture/metal_chair/metal_chair.obj",
@@ -733,8 +733,8 @@
         "roughness": 0.5,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.3,
+        "dynamic_friction": 0.3
     },
     "plastic_chair": {
         "mesh_fp": "furniture/plastic_chair/plastic_chair.obj",
@@ -744,8 +744,8 @@
         "roughness": 0.5,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.3,
+        "dynamic_friction": 0.2
     },
     "pool_table": {
         "mesh_fp": "furniture/pool_table/pool_table.obj",
@@ -755,8 +755,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.7,
+        "dynamic_friction": 0.2
     },
     "art_deco_table": {
         "mesh_fp": "furniture/art_deco_table/art_deco_table.obj",
@@ -777,8 +777,8 @@
         "roughness": 0.7,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.5,
+        "dynamic_friction": 0.3
     },
     "old_cupboard": {
         "mesh_fp": "furniture/old_cupboard/old_cupboard.obj",
@@ -788,8 +788,8 @@
         "roughness": 0.7,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.6,
+        "dynamic_friction": 0.4
     },
     "alex_drawer": {
         "mesh_fp": "furniture/alex_drawer/alex_drawer.obj",
@@ -799,7 +799,7 @@
         "roughness": 0.7,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
+        "static_friction": 0.3,
         "dynamic_friction": 0.1
     },
     "art_deco_tab": {
@@ -821,7 +821,7 @@
         "roughness": 0.7,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
+        "static_friction": 0.3,
         "dynamic_friction": 0.1
     },
     "kitchen_wood_m": {
@@ -832,8 +832,8 @@
         "roughness": 0.7,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.2
     },
     "tall_dresser": {
         "mesh_fp": "furniture/tall_dresser/tall_dresser.obj",
@@ -843,8 +843,8 @@
         "roughness": 0.7,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.2
     },
     "television_wall_mounted": {
         "mesh_fp": "furniture/television_wall_mounted/television_wall_mounted.obj",
@@ -854,8 +854,8 @@
         "roughness": 0.7,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.2
     },
     "tv_cabinet": {
         "mesh_fp": "furniture/tv_cabinet/tv_cabinet.obj",
@@ -865,7 +865,7 @@
         "roughness": 0.7,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
+        "static_friction": 0.3,
         "dynamic_friction": 0.1
     },
     "wooden_drawer": {
@@ -876,7 +876,7 @@
         "roughness": 0.7,
         "restitution": 0.1,
         "scale": 0.01,
-        "static_friction": 0.2,
+        "static_friction": 0.3,
         "dynamic_friction": 0.1
     },
     "bamboo_floor": {
@@ -909,8 +909,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.1,
+        "dynamic_friction": 0.0
     },
     "black_tiling_wall": {
         "mesh_fp": "black_tiling_36-4K/wall.obj",
@@ -920,8 +920,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.1,
+        "dynamic_friction": 0.0
     },
     "black_marble_floor": {
         "mesh_fp": "blackmarble_2-4K/floor.obj",
@@ -931,8 +931,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0
     },
     "black_marble_wall": {
         "mesh_fp": "blackmarble_2-4K/wall.obj",
@@ -942,8 +942,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0
     },
     "blackwood_azerocare_marble-4K_floor": {
         "mesh_fp": "blackwood_azerocare_marble-4K/floor.obj",
@@ -953,8 +953,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0
     },
     "blackwood_azerocare_marble-4K_wall": {
         "mesh_fp": "blackwood_azerocare_marble-4K/wall.obj",
@@ -964,8 +964,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0
     },
     "blue_agathe_marble-4K_floor": {
         "mesh_fp": "blue_agathe_marble-4K/floor.obj",
@@ -975,8 +975,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0
     },
     "blue_agathe_marble-4K_wall": {
         "mesh_fp": "blue_agathe_marble-4K/wall.obj",
@@ -986,8 +986,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0
     },
     "bluemarble_2-4K_floor": {
         "mesh_fp": "bluemarble_2-4K/floor.obj",
@@ -997,8 +997,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0
     },
     "bluemarble_2-4K_wall": {
         "mesh_fp": "bluemarble_2-4K/wall.obj",
@@ -1008,8 +1008,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0
     },
     "brick_wall_4-4K_floor": {
         "mesh_fp": "brick_wall_4-4K/floor.obj",
@@ -1063,8 +1063,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0
     },
     "bronzemarble_1_floor": {
         "mesh_fp": "bronzemarble_1-4K/floor.obj",
@@ -1074,8 +1074,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0
     },
     "cafe_caledonia_granite_floor": {
         "mesh_fp": "cafe_caledonia_granite-4K/floor.obj",
@@ -1085,8 +1085,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.1,
+        "dynamic_friction": 0.0
     },
     "cafe_caledonia_granite_wall": {
         "mesh_fp": "cafe_caledonia_granite-4K/wall.obj",
@@ -1096,8 +1096,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.1,
+        "dynamic_friction": 0.0
     },
     "carpet_floor_5_floor": {
         "mesh_fp": "carpet_floor_5-4K/floor.obj",
@@ -1107,8 +1107,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.8,
+        "dynamic_friction": 0.8
     },
     "carpet_floor_5_wall": {
         "mesh_fp": "carpet_floor_5-4K/wall.obj",
@@ -1118,8 +1118,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.8,
+        "dynamic_friction": 0.8
     },
     "carpet_floor_6_floor": {
         "mesh_fp": "carpet_floor_6-4K/floor.obj",
@@ -1129,8 +1129,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.8,
+        "dynamic_friction": 0.8
     },
     "carpet_floor_6_wall": {
         "mesh_fp": "carpet_floor_6-4K/wall.obj",
@@ -1140,8 +1140,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.8,
+        "dynamic_friction": 0.8
     },
     "carpet_floor_7_floor": {
         "mesh_fp": "carpet_floor_6-4K/floor.obj",
@@ -1151,8 +1151,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.8,
+        "dynamic_friction": 0.8
     },
     "carpet_floor_7_wall": {
         "mesh_fp": "carpet_floor_6-4K/wall.obj",
@@ -1162,8 +1162,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.8,
+        "dynamic_friction": 0.8
     },
     "casino_carpet_3_floor": {
         "mesh_fp": "casino_carpet_3-4K/floor.obj",
@@ -1173,8 +1173,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.8,
+        "dynamic_friction": 0.8
     },
     "casino_carpet_3_wall": {
         "mesh_fp": "casino_carpet_3-4K/wall.obj",
@@ -1184,8 +1184,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.8,
+        "dynamic_friction": 0.8
     },
     "bedroom": {
         "mesh_fp": "complete_room_s/bedroom/bedroom.obj",
@@ -1195,8 +1195,8 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.3
     },
     "kings_room": {
         "mesh_fp": "complete_rooms/kings_room/kings_room.obj",
@@ -1206,7 +1206,7 @@
         "roughness": 0.7,
         "restitution": 0.0,
         "scale": 0.01,
-        "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "static_friction": 0.4,
+        "dynamic_friction": 0.3
     }
 }
