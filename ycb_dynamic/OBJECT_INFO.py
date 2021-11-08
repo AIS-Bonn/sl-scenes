@@ -6,7 +6,8 @@ from collections import namedtuple
 FLAG_CONCAVE = 1 << 0
 ObjectInfo = namedtuple(
     "ObjectInfo",
-    ["name", "mesh_fp", "weight", "flags", "metallic", "roughness", "restitution", "scale"],
+    ["name", "mesh_fp", "weight", "flags", "metallic", "roughness",
+     "restitution", "scale", "static_friction", "dynamic_friction"],
 )
 
 """
@@ -27,6 +28,8 @@ OBJECT_INFO = [
         0.2,
         0.3,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "003_cracker_box",
@@ -37,6 +40,8 @@ OBJECT_INFO = [
         0.5,
         0.1,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "004_sugar_box",
@@ -47,6 +52,8 @@ OBJECT_INFO = [
         0.5,
         0.1,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "005_tomato_soup_can",
@@ -57,6 +64,8 @@ OBJECT_INFO = [
         0.5,
         0.2,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "006_mustard_bottle",
@@ -67,6 +76,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "007_tuna_fish_can",
@@ -77,6 +88,8 @@ OBJECT_INFO = [
         0.2,
         0.3,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "008_pudding_box",
@@ -87,6 +100,8 @@ OBJECT_INFO = [
         0.5,
         0.1,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "009_gelatin_box",
@@ -97,6 +112,8 @@ OBJECT_INFO = [
         0.5,
         0.1,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "010_potted_meat_can",
@@ -107,6 +124,8 @@ OBJECT_INFO = [
         0.3,
         0.2,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "011_banana",
@@ -117,6 +136,8 @@ OBJECT_INFO = [
         0.3,
         0.3,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "012_strawberry",
@@ -127,6 +148,8 @@ OBJECT_INFO = [
         0.3,
         0.2,
         1.000,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "013_apple",
@@ -136,7 +159,9 @@ OBJECT_INFO = [
         0.3,
         0.3,
         0.3,
-        1.000
+        1.000,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "014_lemon",
@@ -146,7 +171,9 @@ OBJECT_INFO = [
         0.3,
         0.4,
         0.3,
-        1.000
+        1.000,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "015_peach",
@@ -156,7 +183,9 @@ OBJECT_INFO = [
         0.0,
         0.4,
         0.3,
-        1.000
+        1.000,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "016_pear",
@@ -166,7 +195,9 @@ OBJECT_INFO = [
         0.1,
         0.3,
         0.3,
-        1.000
+        1.000,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "017_orange",
@@ -176,7 +207,9 @@ OBJECT_INFO = [
         0.3,
         0.4,
         0.3,
-        1.000
+        1.000,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "018_plum",
@@ -186,7 +219,9 @@ OBJECT_INFO = [
         0.3,
         0.3,
         0.3,
-        1.000
+        1.000,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "019_pitcher_base",
@@ -197,6 +232,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "021_bleach_cleanser",
@@ -207,6 +244,8 @@ OBJECT_INFO = [
         0.5,
         0.2,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "024_bowl",
@@ -217,6 +256,8 @@ OBJECT_INFO = [
         0.3,
         0.3,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "025_mug",
@@ -227,6 +268,8 @@ OBJECT_INFO = [
         0.3,
         0.3,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "026_sponge",
@@ -237,6 +280,8 @@ OBJECT_INFO = [
         1.0,
         0.5,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "029_plate",
@@ -247,6 +292,8 @@ OBJECT_INFO = [
         0.3,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),  # BAD QUALITY
     ObjectInfo(
         "033_spatula",
@@ -257,6 +304,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "035_power_drill",
@@ -267,6 +316,8 @@ OBJECT_INFO = [
         0.6,
         0.0,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "036_wood_block",
@@ -277,6 +328,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         0.001,
+        0.2,
+        0.1
     ),  # edited
     ObjectInfo(
         "037_scissors",
@@ -287,6 +340,8 @@ OBJECT_INFO = [
         0.5,
         0.1,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "040_large_marker",
@@ -297,6 +352,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "042_adjustable_wrench",
@@ -307,6 +364,8 @@ OBJECT_INFO = [
         0.3,
         0.2,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "043_phillips_screwdriver",
@@ -317,6 +376,8 @@ OBJECT_INFO = [
         0.5,
         0.2,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "044_flat_screwdriver",
@@ -327,6 +388,8 @@ OBJECT_INFO = [
         0.5,
         0.2,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "048_hammer",
@@ -337,6 +400,8 @@ OBJECT_INFO = [
         0.5,
         0.2,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "050_medium_clamp",
@@ -347,6 +412,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "051_large_clamp",
@@ -357,6 +424,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "052_extra_large_clamp",
@@ -367,6 +436,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "053_mini_soccer_ball",
@@ -377,6 +448,8 @@ OBJECT_INFO = [
         0.3,
         0.7,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "054_softball",
@@ -387,6 +460,8 @@ OBJECT_INFO = [
         0.7,
         0.7,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "055_baseball",
@@ -397,6 +472,8 @@ OBJECT_INFO = [
         0.5,
         0.4,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "056_tennis_ball",
@@ -407,6 +484,8 @@ OBJECT_INFO = [
         0.9,
         0.8,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "057_racquetball",
@@ -417,6 +496,8 @@ OBJECT_INFO = [
         0.6,
         1.0,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "058_golf_ball",
@@ -427,6 +508,8 @@ OBJECT_INFO = [
         0.5,
         0.5,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "061_foam_brick",
@@ -437,6 +520,8 @@ OBJECT_INFO = [
         0.7,
         0.5,
         0.001,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "062_dice",
@@ -446,7 +531,9 @@ OBJECT_INFO = [
         0.3,
         0.5,
         0.5,
-        1.0
+        1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "065-a_cups",
@@ -457,6 +544,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),  # BAD QUALITY (interior)
     ObjectInfo(
         "065-b_cups",
@@ -467,6 +556,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),  # BAD QUALITY (interior)
     ObjectInfo(
         "065-c_cups",
@@ -477,6 +568,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),  # BAD QUALITY (interior)
     ObjectInfo(
         "065-d_cups",
@@ -487,6 +580,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),  # BAD QUALITY (interior)
     ObjectInfo(
         "065-e_cups",
@@ -497,6 +592,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),  # BAD QUALITY (interior)
     ObjectInfo(
         "065-f_cups",
@@ -507,6 +604,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),  # BAD QUALITY (interior)
     ObjectInfo(
         "065-g_cups",
@@ -517,6 +616,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),  # BAD QUALITY (interior)
     ObjectInfo(
         "065-h_cups",
@@ -527,6 +628,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),  # BAD QUALITY (interior)
     ObjectInfo(
         "065-i_cups",
@@ -537,6 +640,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),  # BAD QUALITY (interior)
     ObjectInfo(
         "065-j_cups",
@@ -547,6 +652,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),  # BAD QUALITY (interior)
     ObjectInfo(
         "070-b_colored_wood_blocks",
@@ -557,6 +664,8 @@ OBJECT_INFO = [
         0.5,
         0.3,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "071_nine_hole_peg_test",
@@ -567,6 +676,8 @@ OBJECT_INFO = [
         0.5,
         0.1,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "072-a_toy_airplane",
@@ -577,6 +688,8 @@ OBJECT_INFO = [
         0.5,
         0.2,
         1.0,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "077_rubiks_cube",
@@ -587,6 +700,8 @@ OBJECT_INFO = [
         0.4,
         0.1,
         1.0,
+        0.2,
+        0.1
     ),
     # DECORATION
     ObjectInfo(
@@ -598,6 +713,8 @@ OBJECT_INFO = [
         0.1,
         0.3,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "folding_table",
@@ -608,6 +725,8 @@ OBJECT_INFO = [
         0.5,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "laundry_basket",
@@ -618,6 +737,8 @@ OBJECT_INFO = [
         0.5,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "red_bowl",
@@ -628,6 +749,8 @@ OBJECT_INFO = [
         0.1,
         0.3,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "shopping_cart",
@@ -638,6 +761,8 @@ OBJECT_INFO = [
         0.3,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "wicker_basket",
@@ -648,6 +773,8 @@ OBJECT_INFO = [
         0.7,
         0.4,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "wooden_bowl",
@@ -658,6 +785,8 @@ OBJECT_INFO = [
         0.3,
         0.3,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "wooden_chair",
@@ -668,6 +797,8 @@ OBJECT_INFO = [
         0.7,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "wooden_table",
@@ -678,6 +809,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "metal_chair",
@@ -688,6 +821,8 @@ OBJECT_INFO = [
         0.5,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "plastic_chair",
@@ -698,6 +833,8 @@ OBJECT_INFO = [
         0.5,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "pool_table",
@@ -707,7 +844,9 @@ OBJECT_INFO = [
         0.3,
         0.7,
         0.0,
-        0.01
+        0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "art_deco_table",
@@ -717,7 +856,9 @@ OBJECT_INFO = [
         0.5,
         0.3,
         0.0,
-        0.01
+        0.01,
+        0.2,
+        0.1
     ),
     #################
     # WALL FURNITURE
@@ -731,6 +872,8 @@ OBJECT_INFO = [
         0.7,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "old_cupboard",
@@ -741,6 +884,8 @@ OBJECT_INFO = [
         0.7,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "alex_drawer",
@@ -751,6 +896,8 @@ OBJECT_INFO = [
         0.7,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "art_deco_tab",
@@ -761,6 +908,8 @@ OBJECT_INFO = [
         0.7,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "kitchen_white_s",
@@ -771,6 +920,8 @@ OBJECT_INFO = [
         0.7,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     # ObjectInfo(
     #     "kitchen_wood_l",
@@ -781,6 +932,8 @@ OBJECT_INFO = [
     #     0.7,
     #     0.1,
     #     0.01,
+    #     0.2,
+    #     0.1
     # ),
     ObjectInfo(
         "kitchen_wood_m",
@@ -791,6 +944,8 @@ OBJECT_INFO = [
         0.7,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "tall_dresser",
@@ -801,6 +956,8 @@ OBJECT_INFO = [
         0.7,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "television_wall_mounted",
@@ -811,6 +968,8 @@ OBJECT_INFO = [
         0.7,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "tv_cabinet",
@@ -821,6 +980,8 @@ OBJECT_INFO = [
         0.7,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "wooden_drawer",
@@ -831,6 +992,8 @@ OBJECT_INFO = [
         0.7,
         0.1,
         0.01,
+        0.2,
+        0.1
     ),
     #################
     # FLOORS & WALLS
@@ -844,6 +1007,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "bamboo_wall",
@@ -854,6 +1019,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "black_tiling_floor",
@@ -864,6 +1031,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "black_tiling_wall",
@@ -874,6 +1043,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "black_marble_floor",
@@ -884,6 +1055,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "black_marble_wall",
@@ -894,6 +1067,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "blackwood_azerocare_marble-4K_floor",
@@ -904,6 +1079,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "blackwood_azerocare_marble-4K_wall",
@@ -914,6 +1091,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "blue_agathe_marble-4K_floor",
@@ -924,6 +1103,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "blue_agathe_marble-4K_wall",
@@ -934,6 +1115,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "bluemarble_2-4K_floor",
@@ -944,6 +1127,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "bluemarble_2-4K_wall",
@@ -954,6 +1139,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "brick_wall_4-4K_floor",
@@ -964,6 +1151,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "brick_wall_4-4K_wall",
@@ -974,6 +1163,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "brick_wall_11-4K_floor",
@@ -984,6 +1175,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "brick_wall_11-4K_wall",
@@ -994,6 +1187,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "bronzemarble_1-4K_wall",
@@ -1004,6 +1199,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "bronzemarble_1_floor",
@@ -1014,6 +1211,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "cafe_caledonia_granite_floor",
@@ -1024,6 +1223,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "cafe_caledonia_granite_wall",
@@ -1034,6 +1235,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "carpet_floor_5_floor",
@@ -1044,6 +1247,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "carpet_floor_5_wall",
@@ -1054,6 +1259,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "carpet_floor_6_floor",
@@ -1064,6 +1271,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "carpet_floor_6_wall",
@@ -1074,6 +1283,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "carpet_floor_7_floor",
@@ -1084,6 +1295,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "carpet_floor_7_wall",
@@ -1094,6 +1307,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "casino_carpet_3_floor",
@@ -1104,6 +1319,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "casino_carpet_3_wall",
@@ -1114,6 +1331,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ####################
     # PREASSEMBLED ROOMS
@@ -1127,6 +1346,8 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
     ObjectInfo(
         "kings_room",
@@ -1137,8 +1358,7 @@ OBJECT_INFO = [
         0.7,
         0.0,
         0.01,
+        0.2,
+        0.1
     ),
 ]
-
-
-# ["name", "mesh_fp", "weight", "flags", "metallic", "roughness", "restitution", "scale"],
