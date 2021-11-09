@@ -210,12 +210,17 @@ class Writer(object):
             self.gt_file.write(',\n\n')
 
         def gt(o):
-            T = world_in_camera @ o.pose()
+            T = o.pose()
+            T_m2c = world_in_camera @ T
 
-            cam_R_m2c = T[:3,:3].contiguous()
-            cam_t_m2c = T[:3,3] * 1000.0 # millimeters, of course.
+            cam_R = T[:3,:3].contiguous()
+            cam_t = T[:3,3] * 1000.0 # millimeters, of course.
 
-            return f'{{"cam_R_m2c": {cam_R_m2c.view(-1).tolist()}, "cam_t_m2c": {cam_t_m2c.tolist()}' \
+            cam_R_m2c = T_m2c[:3,:3].contiguous()
+            cam_t_m2c = T_m2c[:3,3] * 1000.0 # millimeters, of course.
+
+            return f'{{"cam_R": {cam_R.view(-1).tolist()}, "cam_t": {cam_t.tolist()}' \
+                   f', "cam_R_m2c": {cam_R_m2c.view(-1).tolist()}, "cam_t_m2c": {cam_t_m2c.tolist()}' \
                    f', "obj_id": {o.mesh.class_index}, "ins_id": {o.instance_index}}}'
 
         formatted_gt = ",\n".join([ gt(o) for o in active_objects ])
