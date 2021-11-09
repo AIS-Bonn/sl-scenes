@@ -9,7 +9,7 @@ camera_movement_constraints = CONFIG["camera_movement"]
 class Camera(object):
     def __init__(self, name: str, elev_angle: float, ori_angle: float, distance: float, lookat: torch.Tensor,
                  stereo_pair_dist: float, stereo_positions: List[str], movement_complexity: int):
-        self.name = name # can be used e.g. to name the corresponding output directories
+        self.name = name  # can be used e.g. to name the corresponding output directories
         self.movement_complexity = movement_complexity
         self.moving = self.movement_complexity > 0
         self.stereo_pair_dist = stereo_pair_dist
@@ -18,6 +18,7 @@ class Camera(object):
         self.start_ori_angle = ori_angle
         self.start_distance = distance
         self.start_base_lookat = lookat
+        self.start_up_vec = torch.tensor([0.0, 0.0, 1.0])  # TODO adjustable up vector instead of [0, 0, 1]
 
         self.reset_cam()
         self.setup_cam_pos_func()
@@ -90,9 +91,8 @@ class Camera(object):
 
     def stereo_deviation(self, vec, stereo_position):
 
-        # TODO use cam's up vector instead of [0, 0, 1]. This is OK as long as camera is not rolled
         deviation_vec = torch.cross(
-            (self.base_lookat - self.base_pos).double(), torch.tensor([0.0, 0.0, 1.0]).double()
+            (self.base_lookat - self.base_pos).double(), self.start_up_vec.double()
         ).float()
         deviation_vec *= self.stereo_pair_dist / (2 * torch.linalg.norm(deviation_vec))
         return vec - deviation_vec if stereo_position == "left" else vec + deviation_vec
