@@ -31,6 +31,28 @@ CONFIG = {
             "dist": 0.5   # minimum distance between objects
         }
     },
+    "camera_movement": {
+        "delta_elev": {
+            "min": [-5, -10, -30],
+            "max": [10, 20, 30]
+        },
+        "delta_ori": {
+            "min": [-20, -40, -80],
+            "max": [20, 40, 80]
+        },
+        "delta_dist": {
+            "min": [-0.2, -0.5, -1.0],
+            "max": [0.2, 0.5, 1.0]
+        },
+        "t_duration": {
+            "min": [2, 1, 0.5],
+            "max": [3, 3, 3]
+        },
+        "t_start": {
+            "min": [0, 0, 0],
+            "max": [1, 1, 1]
+        }
+    },
     "scenes": {
         # BILLARDS SCENE
         "billards": {
