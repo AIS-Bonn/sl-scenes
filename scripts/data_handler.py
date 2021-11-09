@@ -3,13 +3,12 @@ import os
 from pathlib import Path
 from typing import List, Union
 
-import matplotlib.pyplot as plt
+from PIL import Image
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 from dual_quaternions import DualQuaternion
 
 import torch
-import torchvision.transforms.functional as TF
 from torch.utils.data import Dataset, DataLoader
 from torch.utils.data._utils.collate import default_collate as default_collate
 from torch_geometric.data import Data, HeteroData, Batch
@@ -158,21 +157,18 @@ class YCBDynamicDataset(Dataset):
     def get_rgb(self, sequence_dir: Path):
         frames_rgb = sorted(os.listdir(str(sequence_dir / 'rgb')))
         frames_rgb = [str(sequence_dir / 'rgb' / rgb) for rgb in frames_rgb]
-        frames_rgb = [plt.imread(rgb) for rgb in frames_rgb]
-        frames_rgb = [preprocess_rgb(rgb) for rgb in frames_rgb]
+        frames_rgb = [Image.open(rgb).resize(self.img_size) for rgb in frames_rgb]
+        frames_rgb = [preprocess_rgb(np.array(rgb)) for rgb in frames_rgb]
         frames_rgb = torch.stack(frames_rgb, dim=0)
-        if frames_rgb.shape[-2:] != self.img_size:
-            frames_rgb = TF.resize(frames_rgb, size=self.img_size)
+
         return frames_rgb
 
     def get_mask(self, sequence_dir: Path, frame_type: str):
         frames_mask = sorted(os.listdir(str(sequence_dir / frame_type)))
         frames_mask = [str(sequence_dir / frame_type / mask) for mask in frames_mask]
-        frames_mask = [plt.imread(mask) for mask in frames_mask]
-        frames_mask = [preprocess_mask(mask) for mask in frames_mask]
+        frames_mask = [Image.open(mask).resize(self.img_size) for mask in frames_mask]
+        frames_mask = [preprocess_mask(np.array(mask)) for mask in frames_mask]
         frames_mask = torch.stack(frames_mask, dim=0)
-        if frames_mask.shape[-2:] != self.img_size:
-            frames_mask = TF.resize(frames_mask, size=self.img_size)
         return frames_mask
 
     def get_object_poses(self, sequence_dir: Path):
