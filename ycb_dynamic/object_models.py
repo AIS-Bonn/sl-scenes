@@ -2,9 +2,8 @@ import stillleben as sl
 import os
 import torch
 import torch.nn.functional as F
-from math import ceil
+from math import ceil, floor
 from typing import List
-from matplotlib import pyplot as plt
 
 import ycb_dynamic.utils.utils as utils
 import ycb_dynamic.CONSTANTS as CONSTANTS
@@ -183,23 +182,11 @@ class DecoratorLoader:
         # initializing occupancy matrix
         self.occ_matrix = OccupancyMatrix(bounds=self.bounds, objects=self.scene.objects)
 
-        # For displaying the occupancy matrix before filling the room
-        # plt.figure()
-        # plt.imshow(self.occ_matrix.occ_matrix)
-        # plt.title("Occupancy Matrix prior to Decoration")
-        # plt.colorbar()
-
+        # iteratively placing objects while avoiding collision
         N = torch.randint(low=self.config["min_objs"], high=self.config["max_objs"], size=(1,))
         for i in range(N):
             id = torch.randint(low=0, high=len(self.meshes), size=(1,))
             self.add_object(object_loader, object_id=id)
-
-        # For displaying the occupancy matrix after filling the room
-        # plt.figure()
-        # plt.imshow(self.occ_matrix.occ_matrix)
-        # plt.title(f"Occupacy Matrix after Decoration #{i+1}")
-        # plt.colorbar()
-        # plt.show()
 
         return
 
@@ -219,7 +206,7 @@ class OccupancyMatrix:
 
         n_cells = int(bounds["dist"] / bounds["res"]) + 1
         self.margin_kernel = torch.ones(1, 1, n_cells, n_cells) / (n_cells ** 2)
-        self.pad = (n_cells // 2, n_cells // 2, n_cells // 2, n_cells // 2)
+        self.pad = (n_cells//2, n_cells//2, n_cells//2, n_cells//2)
 
         if objects is not None:
             self.init_occupancy_matrix(objects=objects)
@@ -249,23 +236,37 @@ class OccupancyMatrix:
         Useful to place objects only next to walls.
         """
         matrix = self.get_empty_occ_matrix() + 1
-        scaled_width = int(ceil((width + self.bounds["dist"]) / self.bounds["res"]) + 1)  # physical to matrix coords
+        scaled_width = int(ceil((width + self.bounds["dist"] + self.bounds["res"]) / self.bounds["res"]) + 1)
+
         if(end_x is not None):
             matrix[:, :scaled_width] = 0 if end_x is False else 1
             matrix[:, -scaled_width:] = 0 if end_x else 1
         if(end_y is not None):
             matrix[:scaled_width, :] = 0 if end_y is False else 1
             matrix[-scaled_width:, :] = 0 if end_y else 1
+
         return matrix
 
     def update_occupancy_matrix(self, obj):
         """ Updating occupancy matrix given object """
-        pos_x, pos_y = obj.pose()[:2, -1]
-        min_x, min_y = obj.mesh.bbox.min[0] + pos_x, obj.mesh.bbox.min[1] + pos_y
-        max_x, max_y = obj.mesh.bbox.max[0] + pos_x, obj.mesh.bbox.max[1] + pos_y
+        pose = obj.pose()
+        pos_x, pos_y = pose[:2, -1]
+        rot_mat = pose[:2, :2]
+        angle = utils.get_angle_from_mat(rot_mat, deg=True)
+        bbox_x_min, bbox_x_max = obj.mesh.bbox.min[0], obj.mesh.bbox.max[0]
+        bbox_y_min, bbox_y_max = obj.mesh.bbox.min[1], obj.mesh.bbox.max[1]
+        if(torch.isclose(angle.abs(), torch.tensor([90.]))):  # for rotated objects
+            bbox_x_min, bbox_y_min = bbox_y_min, bbox_x_min
+            bbox_x_max, bbox_y_max = bbox_y_max, bbox_x_max
+
+        # min_x, min_y = min(bbox_x_min, -1e-3) + pos_x, min(bbox_y_min, -1e-3) + pos_y
+        # max_x, max_y = max(bbox_x_max, 1e-3) + pos_x, max(bbox_y_max, 1e-3) + pos_y
+        min_x, min_y = bbox_x_min + pos_x, bbox_y_min + pos_y
+        max_x, max_y = bbox_x_max + pos_x, bbox_y_max + pos_y
         y_coords = (self.grid_y >= min_y) & (self.grid_y < max_y)
         x_coords = (self.grid_x >= min_x) & (self.grid_x < max_x)
         occ_coords = y_coords & x_coords
+
         self.occ_matrix[occ_coords] = 1
         return
 
@@ -296,6 +297,7 @@ class OccupancyMatrix:
         position: torch Tensor
             Location [x, y] where the object can be safely placed
         """
+
         # obtaining restricted occupancy matrix
         cur_occ_matrix = self.occ_matrix.clone()
         H, W = cur_occ_matrix.shape
@@ -305,10 +307,11 @@ class OccupancyMatrix:
         # filtering matrix to account for min-distance parameter
         max = ceil((obj.mesh.bbox.max[:2].max().item() + self.bounds["dist"]) / self.bounds["res"] + 1)
         max = max if max % 2 != 0 else max + 1
+        kernel = [max, max]
         aux_matrix = F.conv2d(
                 cur_occ_matrix.view(1, 1, H, W),
-                torch.ones(1, 1, max, max),
-                padding=max//2
+                torch.ones(1, 1, int(kernel[1]), int(kernel[0])),
+                padding=(int(kernel[1])//2, int(kernel[0])//2)
             )[0, 0]
 
         # finding free position, if any
@@ -318,9 +321,6 @@ class OccupancyMatrix:
             id = torch.randint(0, len(free_positions[0]), (1,))
             pos_y, pos_x = free_positions[0][id], free_positions[1][id]
             position = torch.cat([self.x_vect[pos_x], self.y_vect[pos_y]])
-        else:
-            print("No free positions...")
-            pass
 
         return position
 

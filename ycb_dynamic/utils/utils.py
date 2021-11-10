@@ -10,6 +10,8 @@ import argparse
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
 
+PI = torch.acos(torch.tensor(-1))
+
 
 def clear_cmd():
     """Clearning command line window"""
@@ -46,6 +48,17 @@ def get_rot_matrix(angles):
     ])
     rot_matrix = yaw @ pitch @ roll
     return rot_matrix
+
+
+def get_angle_from_mat(mat, deg=False):
+    """ Obtaining angle from 2D rot mat """
+    if(mat[0, 0] < 1e-4 and mat[1, 0].abs() > 0.99):
+        ang = PI / 2
+    else:
+        ang = torch.atan(mat[1, 0] / mat[0, 0])
+
+    ang = ang * 180. / PI if deg else ang
+    return ang
 
 
 def get_rand_num(N=1, low=0, high=1):

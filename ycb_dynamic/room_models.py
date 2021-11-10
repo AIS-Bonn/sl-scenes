@@ -5,7 +5,6 @@ Modules for assembling realistic rooms for the YCB-Dynamic scenes
 import os
 import torch
 import random
-from matplotlib import pyplot as plt
 
 import ycb_dynamic.utils.utils as utils
 from ycb_dynamic.object_models import MeshLoader, ObjectLoader, OccupancyMatrix
@@ -75,18 +74,13 @@ class RoomAssembler:
 
     def add_wall_furniture(self):
         """ Adding furniture to the walls, e.g., cabinets and kitchen stuff"""
+
         if not self.use_assembled:
             # intializing occupancy matrix for collision avoidance
             self.occ_matrix = OccupancyMatrix(
                     bounds=CONFIG["decorator"]["bounds"],
                     objects=self.scene.objects
                 )
-
-            # For displaying the occupancy matrix before filling the room
-            # plt.figure()
-            # plt.imshow(self.occ_matrix.occ_matrix)
-            # plt.title("Occupancy Matrix prior to Room Filling")
-            # plt.colorbar()
 
             n_objs = random.randint(a=3, b=6)  # TODO: get param from CONFIG
             for i in range(n_objs):
