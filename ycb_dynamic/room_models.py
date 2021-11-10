@@ -5,9 +5,10 @@ Modules for assembling realistic rooms for the YCB-Dynamic scenes
 import os
 import torch
 import random
+from matplotlib import pyplot as plt
 
 import ycb_dynamic.utils.utils as utils
-from ycb_dynamic.object_models import MeshLoader, ObjectLoader
+from ycb_dynamic.object_models import MeshLoader, ObjectLoader, OccupancyMatrix
 import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.CONFIG import CONFIG
 
@@ -48,19 +49,6 @@ class RoomAssembler:
         return
 
     def assemble_room(self):
-        """ Assembling a custom room """
-        self.floor, self.walls = self.assemble_structure()
-        return
-
-    def add_wall_furniture(self):
-        """ Adding furniture to the walls, e.g., cabinets and kitchen stuff"""
-        if not self.use_assembled:
-            n_objs = random.randint(a=3, b=6)
-            for i in range(n_objs):
-                self.add_furniture_element(floor=self.floor, walls=self.walls)
-        return
-
-    def assemble_structure(self):
         """ Assembling the main structure of the room, including floor and walls """
         self.mesh_loader.load_meshes(CONSTANTS.FLOOR),
         self.mesh_loader.load_meshes(CONSTANTS.WALL * 4),
@@ -82,7 +70,29 @@ class RoomAssembler:
             cur_wall = self.add_object_to_scene(wall, pose=pose)
             walls.append(cur_wall)
 
-        return floor, walls
+        self.floor, self.walls = floor, walls
+        return
+
+    def add_wall_furniture(self):
+        """ Adding furniture to the walls, e.g., cabinets and kitchen stuff"""
+        if not self.use_assembled:
+            # intializing occupancy matrix for collision avoidance
+            self.occ_matrix = OccupancyMatrix(
+                    bounds=CONFIG["decorator"]["bounds"],
+                    objects=self.scene.objects
+                )
+
+            # For displaying the occupancy matrix before filling the room
+            # plt.figure()
+            # plt.imshow(self.occ_matrix.occ_matrix)
+            # plt.title("Occupancy Matrix prior to Room Filling")
+            # plt.colorbar()
+
+            n_objs = random.randint(a=3, b=6)  # TODO: get param from CONFIG
+            for i in range(n_objs):
+                self.add_furniture_element(floor=self.floor, walls=self.walls)
+
+        return
 
     def add_furniture_element(self, floor, walls):
         """ Adding some pieces of furniture next to the walls"""
@@ -95,21 +105,37 @@ class RoomAssembler:
         obj = self.add_object_to_scene(furniture_info_mesh)
 
         # obtaining rotation and location to place object
-        floor_bbox, wall_bbox, obj_bbox = floor.mesh.bbox, wall.mesh.bbox, obj.mesh.bbox
-        wall_pose = wall.pose()
-        x_pos = wall_pose[0, -1] if wall_pose[0, -1] != 0 else random.uniform(floor_bbox.min[0], floor_bbox.max[0])
-        y_pos = wall_pose[1, -1] if wall_pose[1, -1] != 0 else random.uniform(floor_bbox.min[1], floor_bbox.max[1])
+        wall_pose, obj_bbox = wall.pose(), obj.mesh.bbox
+        x_pos = wall_pose[0, -1] if wall_pose[0, -1] != 0 else None
+        y_pos = wall_pose[1, -1] if wall_pose[1, -1] != 0 else None
+        max_obj_width = obj.mesh.bbox.max[0] if wall_id in [0, 2] else obj.mesh.bbox.max[1]
         rot_matrix = utils.get_rot_matrix(angles=torch.cat([wall_id * self.pi, torch.zeros(2)]))
 
-        # Adjusting object pose by translating to wall and applying corresponding rotation
-        pose = obj.pose()
-        pose[0, -1] = pose[0, -1] + x_pos + obj_bbox.max[0] if x_pos < 0 else \
-                      pose[0, -1] + x_pos + obj_bbox.min[0]
-        pose[1, -1] = pose[1, -1] + y_pos + obj_bbox.max[1] if y_pos < 0 else \
-                      pose[1, -1] + y_pos + obj_bbox.min[1]
-        pose[:3, :3] = pose[:3, :3] @ rot_matrix  # TODO: adapt for rotations
-        obj.set_pose(pose)
+        # getting matrix with potential positions for oject
+        end_x, end_y = None, None
+        if x_pos is not None:
+            end_x = False if x_pos < 0 else True
+        if y_pos is not None:
+            end_y = False if y_pos < 0 else True
+        restriction_matrix = self.occ_matrix.get_restriction_matrix(width=max_obj_width, end_x=end_x, end_y=end_y)
 
+        # finding possible position in occupancy matrix
+        position = self.occ_matrix.find_free_spot(obj=obj, restriction=restriction_matrix)
+        if position is None:
+            self.remove_object_from_scene(obj)
+        else:
+            # Adjusting object pose by translating and applying corresponding rotation
+            x_pos, y_pos = position
+            pose = obj.pose()
+            pose[0, -1] = pose[0, -1] + x_pos + obj_bbox.max[0] if x_pos < 0 else \
+                          pose[0, -1] + x_pos + obj_bbox.min[0]
+            pose[1, -1] = pose[1, -1] + y_pos + obj_bbox.max[1] if y_pos < 0 else \
+                          pose[1, -1] + y_pos + obj_bbox.min[1]
+            pose[:3, :3] = pose[:3, :3] @ rot_matrix  # TODO: adapt for rotations
+            obj.set_pose(pose)
+
+        self.occ_matrix.update_occupancy_matrix(obj)
+        self.occ_matrix.add_object_margings()
         return
 
     def add_object_to_scene(self, obj_info_mesh, pose=None):
@@ -122,6 +148,12 @@ class RoomAssembler:
         pose = self.adjust_z_coord(obj=obj, pose=pose)
         obj.set_pose(pose)
         return obj
+
+    def remove_object_from_scene(self, obj):
+        """ Removing an object from the scene """
+        self.scene.remove_object(obj)
+        self.object_loader.remove_object(obj.instance_index)
+        return
 
     def adjust_z_coord(self, obj, pose):
         """ Adjusting the object z coordinate"""

@@ -154,24 +154,6 @@ class DecoratorLoader:
 
         return
 
-    def find_free_spot(self, obj):
-        """ Finding a position in the occupancy matrix where the object wont collide with anything """
-        position = None
-        max = ceil((obj.mesh.bbox.max[:2].max().item() + self.bounds["dist"]) / self.bounds["res"] + 1)
-        max = max if max % 2 != 0 else max + 1
-        aux_matrix = F.conv2d(
-                self.occ_matrix.occ_matrix.unsqueeze(0).unsqueeze(0),
-                torch.ones(1, 1, max, max),
-                padding=max//2
-            )[0, 0]
-        free_positions = torch.where(aux_matrix == 0)
-        if(len(free_positions[0]) > 0):
-            id = torch.randint(0, len(free_positions[0]), (1,))
-            pos_y, pos_x = free_positions[0][id], free_positions[1][id]
-            position = torch.cat([self.x_vect[pos_x], self.y_vect[pos_y]])
-
-        return position
-
     def add_object(self, object_loader, object_id):
         """ Loading an object and adding to the loader """
         obj_info, obj_mesh = self.meshes[object_id]
@@ -181,7 +163,7 @@ class DecoratorLoader:
         self.scene.add_object(obj)
 
         # shifting object to a free position and adjusting z-coord to be aligned with the table
-        position = self.find_free_spot(obj=obj)
+        position = self.occ_matrix.find_free_spot(obj=obj)
         pose[:2, -1] = position if position is not None else torch.ones(2)
         pose[2, -1] += obj.mesh.bbox.max[-1]
 
@@ -202,10 +184,10 @@ class DecoratorLoader:
         self.occ_matrix = OccupancyMatrix(bounds=self.bounds, objects=self.scene.objects)
 
         # For displaying the occupancy matrix before filling the room
-        plt.figure()
-        plt.imshow(self.occ_matrix.occ_matrix)
-        plt.title("Occupancy Matrix prior to Decoration")
-        plt.colorbar()
+        # plt.figure()
+        # plt.imshow(self.occ_matrix.occ_matrix)
+        # plt.title("Occupancy Matrix prior to Decoration")
+        # plt.colorbar()
 
         N = torch.randint(low=self.config["min_objs"], high=self.config["max_objs"], size=(1,))
         for i in range(N):
@@ -213,11 +195,11 @@ class DecoratorLoader:
             self.add_object(object_loader, object_id=id)
 
         # For displaying the occupancy matrix after filling the room
-        plt.figure()
-        plt.imshow(self.occ_matrix.occ_matrix)
-        plt.title(f"Occupacy Matrix after Decoration #{i+1}")
-        plt.colorbar()
-        plt.show()
+        # plt.figure()
+        # plt.imshow(self.occ_matrix.occ_matrix)
+        # plt.title(f"Occupacy Matrix after Decoration #{i+1}")
+        # plt.colorbar()
+        # plt.show()
 
         return
 
@@ -233,10 +215,7 @@ class OccupancyMatrix:
         self.x_vect = torch.arange(bounds["min_x"], bounds["max_x"] + bounds["res"], bounds["res"])
         self.y_vect = torch.arange(bounds["min_y"], bounds["max_y"] + bounds["res"], bounds["res"])
         self.grid_y, self.grid_x = torch.meshgrid(self.x_vect, self.y_vect)
-        self.occ_matrix = torch.zeros(
-                int((bounds["max_x"] + bounds["res"] - bounds["min_x"]) / bounds["res"]),
-                int((bounds["max_y"] + bounds["res"] - bounds["min_y"]) / bounds["res"])
-            )
+        self.occ_matrix = self.get_empty_occ_matrix()
 
         n_cells = int(bounds["dist"] / bounds["res"]) + 1
         self.margin_kernel = torch.ones(1, 1, n_cells, n_cells) / (n_cells ** 2)
@@ -254,6 +233,30 @@ class OccupancyMatrix:
             self.update_occupancy_matrix(obj)
         self.add_object_margings()
         return
+
+    def get_empty_occ_matrix(self):
+        """ """
+        matrix = torch.zeros(
+                int((self.bounds["max_x"] + self.bounds["res"] - self.bounds["min_x"]) / self.bounds["res"]),
+                int((self.bounds["max_y"] + self.bounds["res"] - self.bounds["min_y"]) / self.bounds["res"])
+            )
+        return matrix
+
+    def get_restriction_matrix(self, width=1., end_x=None, end_y=None):
+        """
+        Obtaining a restriction matrix to place an object. The restriction matrix is a ones-matrix, with
+        zeros in the areas where an object can be place.
+        Useful to place objects only next to walls.
+        """
+        matrix = self.get_empty_occ_matrix() + 1
+        scaled_width = int(ceil((width + self.bounds["dist"]) / self.bounds["res"]) + 1)  # physical to matrix coords
+        if(end_x is not None):
+            matrix[:, :scaled_width] = 0 if end_x is False else 1
+            matrix[:, -scaled_width:] = 0 if end_x else 1
+        if(end_y is not None):
+            matrix[:scaled_width, :] = 0 if end_y is False else 1
+            matrix[-scaled_width:, :] = 0 if end_y else 1
+        return matrix
 
     def update_occupancy_matrix(self, obj):
         """ Updating occupancy matrix given object """
@@ -275,5 +278,50 @@ class OccupancyMatrix:
         self.occ_matrix[self.occ_matrix > 0] = 0.5
         self.occ_matrix[orig_pos] = 1
         return
+
+    def find_free_spot(self, obj, restriction=None):
+        """
+        Finding a position in the non-restricted area of the occupancy matrix where the object
+        does not collide with anything
+
+        Args:
+        -----
+        obj: Stillleben Object
+            Already loaded object that we want to add to the room
+        restriction: Binary Tensor or None
+            Indicates additional parts of the occupancy matrix where object cannot be placed.
+
+        Returns:
+        --------
+        position: torch Tensor
+            Location [x, y] where the object can be safely placed
+        """
+        # obtaining restricted occupancy matrix
+        cur_occ_matrix = self.occ_matrix.clone()
+        H, W = cur_occ_matrix.shape
+        if restriction is not None:
+            cur_occ_matrix[restriction > 0] = 1
+
+        # filtering matrix to account for min-distance parameter
+        max = ceil((obj.mesh.bbox.max[:2].max().item() + self.bounds["dist"]) / self.bounds["res"] + 1)
+        max = max if max % 2 != 0 else max + 1
+        aux_matrix = F.conv2d(
+                cur_occ_matrix.view(1, 1, H, W),
+                torch.ones(1, 1, max, max),
+                padding=max//2
+            )[0, 0]
+
+        # finding free position, if any
+        position = None
+        free_positions = torch.where(aux_matrix == 0)
+        if(len(free_positions[0]) > 0):
+            id = torch.randint(0, len(free_positions[0]), (1,))
+            pos_y, pos_x = free_positions[0][id], free_positions[1][id]
+            position = torch.cat([self.x_vect[pos_x], self.y_vect[pos_y]])
+        else:
+            print("No free positions...")
+            pass
+
+        return position
 
 #
