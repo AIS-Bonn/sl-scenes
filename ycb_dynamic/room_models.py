@@ -81,11 +81,9 @@ class RoomAssembler:
                     bounds=CONFIG["decorator"]["bounds"],
                     objects=self.scene.objects
                 )
-
             n_objs = random.randint(a=3, b=6)  # TODO: get param from CONFIG
             for i in range(n_objs):
                 self.add_furniture_element(floor=self.floor, walls=self.walls)
-
         return
 
     def add_furniture_element(self, floor, walls):
@@ -94,16 +92,17 @@ class RoomAssembler:
         # sampling random wall and random object
         wall_id = random.randint(0, 3)
         wall = walls[wall_id]
+
         self.mesh_loader.load_meshes([random.choice(CONSTANTS.FURNITURES)])
         furniture_info_mesh = self.mesh_loader.get_meshes()[-1]
         obj = self.add_object_to_scene(furniture_info_mesh)
 
         # obtaining rotation and location to place object
-        wall_pose, obj_bbox = wall.pose(), obj.mesh.bbox
+        wall_pose, max_obj_width = wall.pose(), obj.mesh.bbox.max[1]
+        obj_rotated = wall_id in [1, 3]
         x_pos = wall_pose[0, -1] if wall_pose[0, -1] != 0 else None
         y_pos = wall_pose[1, -1] if wall_pose[1, -1] != 0 else None
-        max_obj_width = obj.mesh.bbox.max[0] if wall_id in [0, 2] else obj.mesh.bbox.max[1]
-        rot_matrix = utils.get_rot_matrix(angles=torch.cat([wall_id * self.pi, torch.zeros(2)]))
+        rot_matrix = utils.get_rot_matrix(angles=torch.cat([wall_id * -1 * self.pi, torch.zeros(2)]))
 
         # getting matrix with potential positions for oject
         end_x, end_y = None, None
@@ -114,18 +113,16 @@ class RoomAssembler:
         restriction_matrix = self.occ_matrix.get_restriction_matrix(width=max_obj_width, end_x=end_x, end_y=end_y)
 
         # finding possible position in occupancy matrix
-        position = self.occ_matrix.find_free_spot(obj=obj, restriction=restriction_matrix)
+        position = self.occ_matrix.find_free_spot(obj=obj, restriction=restriction_matrix, rotated=obj_rotated)
         if position is None:
             self.remove_object_from_scene(obj)
         else:
             # Adjusting object pose by translating and applying corresponding rotation
             x_pos, y_pos = position
             pose = obj.pose()
-            pose[0, -1] = pose[0, -1] + x_pos + obj_bbox.max[0] if x_pos < 0 else \
-                          pose[0, -1] + x_pos + obj_bbox.min[0]
-            pose[1, -1] = pose[1, -1] + y_pos + obj_bbox.max[1] if y_pos < 0 else \
-                          pose[1, -1] + y_pos + obj_bbox.min[1]
-            pose[:3, :3] = pose[:3, :3] @ rot_matrix  # TODO: adapt for rotations
+            pose[:3, :3] = pose[:3, :3] @ rot_matrix
+            pose[0, -1] = pose[0, -1] + x_pos
+            pose[1, -1] = pose[1, -1] + y_pos
             obj.set_pose(pose)
 
         self.occ_matrix.update_occupancy_matrix(obj)

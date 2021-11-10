@@ -27,7 +27,7 @@ CONFIG = {
             "max_x": 3,
             "min_y": -3,
             "max_y": 3,
-            "res": 0.25,  # resolution of the matrix (in meters)
+            "res": 0.12,  # resolution of the matrix (in meters)
             "dist": 0.0   # minimum distance between objects
         }
     },

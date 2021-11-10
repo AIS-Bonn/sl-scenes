@@ -237,7 +237,7 @@ class OccupancyMatrix:
         Useful to place objects only next to walls.
         """
         matrix = self.get_empty_occ_matrix() + 1
-        scaled_width = int(ceil((width + self.bounds["dist"] + self.bounds["res"]) / self.bounds["res"]) + 1)
+        scaled_width = int(ceil((width * 2 + self.bounds["dist"] + self.bounds["res"]) / self.bounds["res"]) + 1)
 
         if(end_x is not None):
             matrix[:, :scaled_width] = 0 if end_x is False else 1
@@ -260,10 +260,9 @@ class OccupancyMatrix:
             bbox_x_min, bbox_y_min = bbox_y_min, bbox_x_min
             bbox_x_max, bbox_y_max = bbox_y_max, bbox_x_max
 
-        # min_x, min_y = min(bbox_x_min, -1e-3) + pos_x, min(bbox_y_min, -1e-3) + pos_y
-        # max_x, max_y = max(bbox_x_max, 1e-3) + pos_x, max(bbox_y_max, 1e-3) + pos_y
-        min_x, min_y = bbox_x_min + pos_x, bbox_y_min + pos_y
-        max_x, max_y = bbox_x_max + pos_x, bbox_y_max + pos_y
+        # using the 1e-3 to add some volume to walls
+        min_x, min_y = min(bbox_x_min, -1e-3) + pos_x, min(bbox_y_min, -1e-3) + pos_y
+        max_x, max_y = max(bbox_x_max, 1e-3) + pos_x, max(bbox_y_max, 1e-3) + pos_y
         y_coords = (self.grid_y >= min_y) & (self.grid_y < max_y)
         x_coords = (self.grid_x >= min_x) & (self.grid_x < max_x)
         occ_coords = y_coords & x_coords
@@ -281,7 +280,7 @@ class OccupancyMatrix:
         self.occ_matrix[orig_pos] = 1
         return
 
-    def find_free_spot(self, obj, restriction=None):
+    def find_free_spot(self, obj, restriction=None, rotated=False):
         """
         Finding a position in the non-restricted area of the occupancy matrix where the object
         does not collide with anything
@@ -306,13 +305,16 @@ class OccupancyMatrix:
             cur_occ_matrix[restriction > 0] = 1
 
         # filtering matrix to account for min-distance parameter
-        max = ceil((obj.mesh.bbox.max[:2].max().item() + self.bounds["dist"]) / self.bounds["res"] + 1)
-        max = max if max % 2 != 0 else max + 1
-        kernel = [max, max]
+        kernel = torch.ceil((obj.mesh.bbox.max[:2] + self.bounds["dist"] + self.bounds["res"]) / self.bounds["res"])
+        kernel = kernel.tolist()
+        kernel[0] = kernel[0] * 2
+        kernel = kernel if not rotated else kernel[::-1]
+        for i, k in enumerate(kernel):
+            kernel[i] = int(k + 1) if k % 2 == 0 else int(k)
         aux_matrix = F.conv2d(
                 cur_occ_matrix.view(1, 1, H, W),
                 torch.ones(1, 1, int(kernel[1]), int(kernel[0])),
-                padding=(int(kernel[1])//2, int(kernel[0])//2)
+                padding=(int(kernel[1])//2, int(kernel[0])//2),
             )[0, 0]
 
         # finding free position, if any
@@ -322,6 +324,8 @@ class OccupancyMatrix:
             id = torch.randint(0, len(free_positions[0]), (1,))
             pos_y, pos_x = free_positions[0][id], free_positions[1][id]
             position = torch.cat([self.x_vect[pos_x], self.y_vect[pos_y]])
+        else:
+            print(f"No free positions...")
 
         return position
 
