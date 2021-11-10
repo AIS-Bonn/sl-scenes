@@ -11,7 +11,7 @@ while obj_name in obj_info_dict.keys() or len(obj_name) < 1:
                      "path to object's .obj file: ")
 
 obj_mesh_fp = input("object's mesh filepath: ")
-while not os.path.isfile(obj_mesh_fp):
+while not os.path.isfile(os.path.join("external_data/object_models", obj_mesh_fp)):
     obj_mesh_fp = input("That mesh filepath is not valid!\n"
                      "path to object's .obj file: ")
 
