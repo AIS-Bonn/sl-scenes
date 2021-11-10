@@ -13,6 +13,7 @@ import random
 import torch
 from ycb_dynamic.OBJECT_INFO import OBJECT_INFO
 
+PI = torch.acos(torch.tensor(-1))
 
 # Paths and Directories
 MESH_BASE_DIR = Path(".") / "external_data" / "object_models"

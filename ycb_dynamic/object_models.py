@@ -1,5 +1,6 @@
 import stillleben as sl
 import os
+import random
 import torch
 import torch.nn.functional as F
 from math import ceil, floor
@@ -167,7 +168,7 @@ class DecoratorLoader:
         pose[2, -1] += obj.mesh.bbox.max[-1]
 
         # Rotating object in yaw direction
-        yaw_angle = (torch.rand((1,)) - 0.5) * self.pi  # [-pi / 2, pi / 2]
+        yaw_angle = random.choice([torch.tensor([i* CONSTANTS.PI / 2]) for i in range(4)])
         angles = torch.cat([yaw_angle, torch.zeros(2)])
         rot_matrix = utils.get_rot_matrix(angles=angles)
         pose[:3, :3] = pose[:3, :3] @ rot_matrix
