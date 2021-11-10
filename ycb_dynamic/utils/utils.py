@@ -3,9 +3,12 @@ Utils methods
 """
 
 import os
+import random
 import datetime
 import torch
 import argparse
+
+import ycb_dynamic.CONSTANTS as CONSTANTS
 
 
 def clear_cmd():
@@ -72,3 +75,14 @@ def positive_integer(var):
     if var < 1:
         raise argparse.ArgumentTypeError(f"invalid parameter: {var}")
     return var
+
+
+def randomize():
+    """ Re-randomizing the objects in the room to avoid always having the same textures/objs """
+    CONSTANTS.TABLE = [random.choice(CONSTANTS.TABLES)]
+    CONSTANTS.BOWL = [random.choice(CONSTANTS.BOWLS)]
+    CONSTANTS.ROOM = [random.choice(CONSTANTS.ROOMS)]
+    CONSTANTS.FLOOR = [random.choice(CONSTANTS.FLOORS)]
+    CONSTANTS.WALL = [random.choice(CONSTANTS.WALLS)]
+    CONSTANTS.FURNITURE = [random.choice(CONSTANTS.FURNITURES)]
+    return

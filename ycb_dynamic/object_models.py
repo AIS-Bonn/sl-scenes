@@ -154,24 +154,6 @@ class DecoratorLoader:
 
         return
 
-    def init_occupancy_matrix(self):
-        """ Obtaining an occupancy matrix with empty and occupied positions"""
-        objects = self.scene.objects
-        self.occ_matrix = OccupancyMatrix(bounds=self.bounds)
-        for obj in objects:
-            if(os.path.basename(obj.mesh.filename) in CONSTANTS.FLOOR_NAMES):
-                continue
-            self.occ_matrix.update_occupancy_matrix(obj)
-        self.occ_matrix.add_object_margings()
-
-        # For displaying the occupancy matrix after filling the room
-        # plt.figure()
-        # plt.imshow(self.occ_matrix.occ_matrix)
-        # plt.title(f"Occupacy Matrix after initiaization")
-        # plt.colorbar()
-
-        return
-
     def find_free_spot(self, obj):
         """ Finding a position in the occupancy matrix where the object wont collide with anything """
         position = None
@@ -216,7 +198,14 @@ class DecoratorLoader:
 
     def decorate_scene(self, object_loader):
         """ Randomly adding some decoderation to a scene """
-        self.init_occupancy_matrix()
+        # initializing occupancy matrix
+        self.occ_matrix = OccupancyMatrix(bounds=self.bounds, objects=self.scene.objects)
+
+        # For displaying the occupancy matrix before filling the room
+        plt.figure()
+        plt.imshow(self.occ_matrix.occ_matrix)
+        plt.title("Occupancy Matrix prior to Decoration")
+        plt.colorbar()
 
         N = torch.randint(low=self.config["min_objs"], high=self.config["max_objs"], size=(1,))
         for i in range(N):
@@ -224,11 +213,11 @@ class DecoratorLoader:
             self.add_object(object_loader, object_id=id)
 
         # For displaying the occupancy matrix after filling the room
-        # plt.figure()
-        # plt.imshow(self.occ_matrix.occ_matrix)
-        # plt.title(f"Occupacy Matrix after Decoration #{i+1}")
-        # plt.colorbar()
-        # plt.show()
+        plt.figure()
+        plt.imshow(self.occ_matrix.occ_matrix)
+        plt.title(f"Occupacy Matrix after Decoration #{i+1}")
+        plt.colorbar()
+        plt.show()
 
         return
 
@@ -238,7 +227,7 @@ class OccupancyMatrix:
     Module that computes and updates an occupancy matrix of the room
     """
 
-    def __init__(self, bounds):
+    def __init__(self, bounds, objects=None):
         """ Initializer of the occupancy matrix """
         self.bounds = bounds
         self.x_vect = torch.arange(bounds["min_x"], bounds["max_x"] + bounds["res"], bounds["res"])
@@ -252,6 +241,18 @@ class OccupancyMatrix:
         n_cells = int(bounds["dist"] / bounds["res"]) + 1
         self.margin_kernel = torch.ones(1, 1, n_cells, n_cells) / (n_cells ** 2)
         self.pad = (n_cells // 2, n_cells // 2, n_cells // 2, n_cells // 2)
+
+        if objects is not None:
+            self.init_occupancy_matrix(objects=objects)
+        return
+
+    def init_occupancy_matrix(self, objects):
+        """ Obtaining an occupancy matrix with empty and occupied positions"""
+        for obj in objects:
+            if(os.path.basename(obj.mesh.filename) in CONSTANTS.FLOOR_NAMES):
+                continue
+            self.update_occupancy_matrix(obj)
+        self.add_object_margings()
         return
 
     def update_occupancy_matrix(self, obj):

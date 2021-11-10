@@ -111,7 +111,6 @@ FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and
                                             "chair" not in obj.name]
 # FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and obj.name == "kitchen_wood_m"]
 
-
 # Surfaces and Rooms
 FLOORS = [obj for obj in OBJECT_INFO if obj.name.endswith("_floor")]
 # FLOORS = [obj for obj in OBJECT_INFO if obj.name.endswith("_floor") and "carpet" in obj.name]
@@ -121,13 +120,14 @@ WALLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_wall")]
 ROOMS = [obj for obj in OBJECT_INFO if "complete_rooms" in obj.mesh_fp]
 
 
-# For accessing
+# for accessing
 TABLE = [random.choice(TABLES)]
 BOWL = [random.choice(BOWLS)]
 ROOM = [random.choice(ROOMS)]
 FLOOR = [random.choice(FLOORS)]
 WALL = [random.choice(WALLS)]
 FURNITURE = [random.choice(FURNITURES)]
+
 
 YCBV_OBJECTS = [  # Only considering the YCB-Video subset of objects
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in YCBV_OBJS

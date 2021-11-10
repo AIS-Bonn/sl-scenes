@@ -10,7 +10,6 @@ import ycb_dynamic.utils.utils as utils
 from ycb_dynamic.object_models import MeshLoader, ObjectLoader
 import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.CONFIG import CONFIG
-import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
 
 
 class RoomAssembler:
@@ -28,31 +27,38 @@ class RoomAssembler:
         self.mesh_loader = MeshLoader()
         self.object_loader = ObjectLoader()
 
+        self.use_assembled = None
         return
 
     def make_room(self):
         """ Main logic for obtaining a room for the scene """
-        use_assembled = random.random() < self.config["prob_assembled"]
-        if(use_assembled):
-            room = self.get_existing_room()
+        # use_assembled = random.random() < self.config["prob_assembled"]
+        self.use_assembled = random.random() < 0
+        if(self.use_assembled):
+            self.get_existing_room()
         else:
-            room = self.assemble_room()
-        return room
+            self.assemble_room()
+        return
 
     def get_existing_room(self):
         """ Fetching one of the preexisting rooms """
         self.mesh_loader.load_meshes(CONSTANTS.ROOM)
         room_info_mesh = self.mesh_loader.get_meshes()[0]
-        room = self.add_object_to_scene(room_info_mesh)
-        return room
+        _ = self.add_object_to_scene(room_info_mesh)
+        return
 
     def assemble_room(self):
         """ Assembling a custom room """
-        floor, walls = self.assemble_structure()
-        n_objs = random.randint(a=3, b=6)
-        for i in range(n_objs):
-            self.add_wall_furniture(floor, walls)
-        return None
+        self.floor, self.walls = self.assemble_structure()
+        return
+
+    def add_wall_furniture(self):
+        """ Adding furniture to the walls, e.g., cabinets and kitchen stuff"""
+        if not self.use_assembled:
+            n_objs = random.randint(a=3, b=6)
+            for i in range(n_objs):
+                self.add_furniture_element(floor=self.floor, walls=self.walls)
+        return
 
     def assemble_structure(self):
         """ Assembling the main structure of the room, including floor and walls """
@@ -78,7 +84,7 @@ class RoomAssembler:
 
         return floor, walls
 
-    def add_wall_furniture(self, floor, walls):
+    def add_furniture_element(self, floor, walls):
         """ Adding some pieces of furniture next to the walls"""
 
         # sampling random wall and random object
@@ -91,10 +97,8 @@ class RoomAssembler:
         # obtaining rotation and location to place object
         floor_bbox, wall_bbox, obj_bbox = floor.mesh.bbox, wall.mesh.bbox, obj.mesh.bbox
         wall_pose = wall.pose()
-        x_pos = wall_pose[0, -1] if wall_pose[0, -1] != 0 else \
-                random.uniform(floor_bbox.min[0], floor_bbox.max[0])
-        y_pos = wall_pose[1, -1] if wall_pose[1, -1] != 0 else \
-                random.uniform(floor_bbox.min[1], floor_bbox.max[1])
+        x_pos = wall_pose[0, -1] if wall_pose[0, -1] != 0 else random.uniform(floor_bbox.min[0], floor_bbox.max[0])
+        y_pos = wall_pose[1, -1] if wall_pose[1, -1] != 0 else random.uniform(floor_bbox.min[1], floor_bbox.max[1])
         rot_matrix = utils.get_rot_matrix(angles=torch.cat([wall_id * self.pi, torch.zeros(2)]))
 
         # Adjusting object pose by translating to wall and applying corresponding rotation

@@ -12,6 +12,7 @@ from ycb_dynamic.room_models import RoomAssembler
 from ycb_dynamic.object_models import MeshLoader, ObjectLoader, DecoratorLoader
 from ycb_dynamic.lighting import get_lightmap
 from ycb_dynamic.camera import Camera
+import ycb_dynamic.utils.utils as utils
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
 
 
@@ -20,8 +21,10 @@ class Scenario(object):
 
     config = dict()
 
-    def __init__(self, cfg, scene: sl.Scene):
+    def __init__(self, cfg, scene: sl.Scene, randomize=True):
         self.scene = scene
+        if randomize:
+            utils.randomize()
         self.mesh_loader = MeshLoader()
         self.room_assembler = RoomAssembler(scene=self.scene)
         self.object_loader = ObjectLoader()
@@ -44,7 +47,7 @@ class Scenario(object):
         self.setup_objects()
         self.setup_cameras()
         self.decorate_scene()
-
+        return
 
     @property
     def static_objects(self):
@@ -68,7 +71,7 @@ class Scenario(object):
         """ Default setup_scene lighting and camera. Can be overriden from specific scenes """
         self.scene.ambient_light = torch.tensor([0.7, 0.7, 0.7])
         _ = self.room_assembler.make_room()
-        # self.scene.light_map = get_lightmap(self.lightmap)
+        # self.scene.light_map = get_lightmap(self.liglhtmap)
         # self.scene.choose_random_light_position()
         return
 
@@ -105,7 +108,9 @@ class Scenario(object):
         if not self.meshes_loaded:
             self.load_meshes()  # if objects have not been loaded yet, load them
         self.setup_objects_()
+        self.room_assembler.add_wall_furniture()
         self.objects_loaded = True
+        return
 
     def setup_objects_(self):
         """
