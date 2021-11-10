@@ -4,6 +4,9 @@
 *.zip
 dna.txt
 test.py
+*.png
+*.jpg
+*.jpeg
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
