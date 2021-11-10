@@ -39,10 +39,10 @@ CONFIG = {
                 "elevation_angle_max": 15,
                 "orientation_angle_min": 0,
                 "orientation_angle_max": 360,
-                "orientation_angle_default": 90,
+                "orientation_angle_default": 114,
                 "distance_min": 2.00,
                 "distance_max": 2.00,
-                "lookat": torch.Tensor([0, 0, 0])
+                "base_lookat": torch.Tensor([0, 0, 0.1])
             },
             "pos": {  # bowling ball position
                 "x_min": -0.9,
@@ -66,10 +66,10 @@ CONFIG = {
                 "elevation_angle_max": 40,
                 "orientation_angle_min": 0,
                 "orientation_angle_max": 360,
-                "orientation_angle_default": 0,
-                "distance_min": 1.2,
-                "distance_max": 1.2,
-                "lookat": torch.Tensor([0, 0, 0])
+                "orientation_angle_default": 72,
+                "distance_min": 1.5,
+                "distance_max": 1.5,
+                "base_lookat": torch.Tensor([0, 0, 0.2])
             },
             "pos": {
                 "x_min": 0.,
@@ -88,14 +88,14 @@ CONFIG = {
         # BOWLING SCENE
         "bowling": {
             "camera": {
-                "elevation_angle_min": 7,
-                "elevation_angle_max": 7,
+                "elevation_angle_min": 10,
+                "elevation_angle_max": 10,
                 "orientation_angle_min": 0,
                 "orientation_angle_max": 360,
-                "orientation_angle_default": 100,
+                "orientation_angle_default": 114,
                 "distance_min": 2.00,
                 "distance_max": 2.00,
-                "lookat": torch.Tensor([0, 0, 0])
+                "base_lookat": torch.Tensor([0, 0, 0.2])
             },
             "pos": {  # bowling ball position
                 "x_min": -0.9,
@@ -122,7 +122,7 @@ CONFIG = {
                 "orientation_angle_default": 90,
                 "distance_min": 2.00,
                 "distance_max": 2.00,
-                "lookat": torch.Tensor([0, 0, 0])
+                "base_lookat": torch.Tensor([0, 0, 0.2])
             },
             "pos": {
                 "x_min": -1,
@@ -148,7 +148,7 @@ CONFIG = {
                 "orientation_angle_default": 76,
                 "distance_min": 2.00,
                 "distance_max": 2.00,
-                "lookat": torch.Tensor([0, 0, 0])
+                "base_lookat": torch.Tensor([0, 0, .2])
             },
             "pos": {
                 "x_min": -0.8,
@@ -171,7 +171,7 @@ CONFIG = {
                 "orientation_angle_default": 76,
                 "distance_min": 2.00,
                 "distance_max": 2.00,
-                "lookat": torch.Tensor([0, 0, 0])
+                "base_lookat": torch.Tensor([0, 0, .2])
             },
             "pos": {
                 "x_min": -0.6,
@@ -204,7 +204,7 @@ CONFIG = {
                 "orientation_angle_default": 60,
                 "distance_min": 3.00,
                 "distance_max": 3.00,
-                "lookat": torch.Tensor([0, 0, 0.5])
+                "base_lookat": torch.Tensor([0, 0, 0.5])
             },
             "pos": {
                 "x_min": -1.2,

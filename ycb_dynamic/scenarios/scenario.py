@@ -119,7 +119,7 @@ class Scenario(object):
         print("camera setup...")
         self.cameras = []
         cam_config = self.config["camera"]
-        conf_cam_lookat = cam_config["lookat"]
+        base_lookat = cam_config["base_lookat"]
 
         # pick default ori. angle and (n_cameras-1) other angles from a linspace of angles that are 5 degrees apart
         default_ori_angle = cam_config["orientation_angle_default"]
@@ -130,7 +130,7 @@ class Scenario(object):
         for i, cam_ori_angle in enumerate(cam_ori_angles):
             cam_elev_angle = random.uniform(cam_config["elevation_angle_min"], cam_config["elevation_angle_max"])
             cam_dist = random.uniform(cam_config["distance_min"], cam_config["distance_max"])
-            cam_lookat = deepcopy(conf_cam_lookat)
+            cam_lookat = deepcopy(base_lookat)
             cam_name = f"cam_{str(i).zfill(2)}"
             cam_stereo_positions = ["left", "right"] if self.coplanar_stereo else ["mono"]
             self.cameras.append(Camera(cam_name, cam_elev_angle, cam_ori_angle, cam_dist, cam_lookat,
@@ -157,25 +157,26 @@ class Scenario(object):
         self.scene.remove_object(obj)
         self.object_loader.remove_object(obj.instance_index, decrement_ins_idx=decrement_ins_idx)
 
-    def update_object_height(self, cur_obj, objs=[]):
+    def update_object_height(self, cur_obj, objs=[], scales=None):
         """ Updating an object z-position given a list of supporting objects"""
+        scales = [1.0] * len(objs) if scales == None else scales
+        assert len(objs) == len(scales), "provided non-matching scales for update_camera_height"
         cur_obj_pose = cur_obj.pose()
         z_pose = self.get_obj_z_offset(cur_obj)
-        for obj in objs:
-            z_pose = z_pose + self.get_obj_z_offset(obj)
+        for obj, scale in zip(objs, scales):
+            z_pose += self.get_obj_z_offset(obj) * scale
         cur_obj_pose[2, -1] = z_pose
         cur_obj.set_pose(cur_obj_pose)
         return cur_obj
 
-    def update_camera_height(self, camera, objs=[]):
+    def update_camera_height(self, camera, objs=[], scales=None):
         """ Updating the camera position and the look-at parameter"""
-        pos = camera.start_base_pos
-        z_lookat = camera.start_base_lookat[-1]
-        for obj in objs:
-            pos += self.get_obj_offset(obj)
-            pos[-1] += 0.2  # NOTE: dirty hack. Should be a param
-            z_lookat += self.get_obj_z_offset(obj)
-        camera.start_base_pos = pos
+        scales = [1.0] * len(objs) if scales == None else scales
+        assert len(objs) == len(scales), "provided non-matching scales for update_camera_height"
+        z_lookat = deepcopy(camera.start_base_lookat[-1])
+
+        for obj, scale in zip(objs, scales):
+            z_lookat += self.get_obj_z_offset(obj) * scale
         camera.start_base_lookat[-1] = z_lookat
         return camera
 

@@ -60,7 +60,7 @@ class BowlScenario(Scenario):
             fruit_pose[:2, -1] = 0.33 * torch.tensor([np.sin(angle), np.cos(angle)])  # assign x and y coordiantes
             fruit_mod = {"mod_pose": fruit_pose}
             fruit = self.add_object_to_scene(fruit_info_mesh, False, **fruit_mod)
-            fruit = self.update_object_height(cur_obj=fruit, objs=[self.table, self.bowl])
+            fruit = self.update_object_height(cur_obj=fruit, objs=[self.table, self.bowl], scales=[1.0, 0.35])
             if self.is_there_collision():
                 self.remove_obj_from_scene(fruit)
 
@@ -69,7 +69,8 @@ class BowlScenario(Scenario):
         SCENARIO-SPECIFIC
         """
         self.cameras = [
-            self.update_camera_height(camera=cam, objs=[self.table, self.bowl]) for cam in self.cameras
+            self.update_camera_height(camera=cam, objs=[self.table, self.bowl], scales=[1.0, 0.0])
+            for cam in self.cameras
         ]
 
     def simulate(self, dt):

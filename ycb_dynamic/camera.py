@@ -38,8 +38,6 @@ class Camera(object):
         self.start_ori_angle = ori_angle
         self.start_distance = distance
         self.start_base_lookat = lookat
-        self.start_base_pos = cam_pos_from_config(self.start_base_lookat, self.start_elev_angle,
-                                                  self.start_ori_angle, self.start_distance)
 
         self.reset_cam()
         self.setup_cam_pos_func()
@@ -122,8 +120,7 @@ class Camera(object):
 
     @property
     def base_pos(self):
-        return self.start_base_pos if not self.moving else \
-            cam_pos_from_config(self.base_lookat, self.elev_angle, self.ori_angle, self.distance)
+        return cam_pos_from_config(self.base_lookat, self.elev_angle, self.ori_angle, self.distance)
 
     def get_pos(self, stereo_position="mono"):
         pos = self.base_pos
