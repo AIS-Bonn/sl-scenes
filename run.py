@@ -68,8 +68,8 @@ def main(cfg):
                     print(f"Scene successfully populated on iteration #{res['n_errors']}....")
                     try:
                         run_and_render_scenario(cfg, renderer, res["scenario"], it)
-                    except:
-                        print(f"Upse, something has gone wrong...")
+                    except Exception as e:  # TODO better exception handling!
+                        print(f"Something has gone wrong: {e}")
                 else:
                     print(f"""Iteration {it}, Scene ID {scenario_id} :Number of trials exceeded.
                               Scene could not be rendered....""")
