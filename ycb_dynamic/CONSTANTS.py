@@ -112,7 +112,6 @@ FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and
 # FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and obj.name == "kitchen_wood_m"]
 
 
-
 # Surfaces and Rooms
 FLOORS = [obj for obj in OBJECT_INFO if obj.name.endswith("_floor")]
 # FLOORS = [obj for obj in OBJECT_INFO if obj.name.endswith("_floor") and "carpet" in obj.name]

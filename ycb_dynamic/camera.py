@@ -25,10 +25,11 @@ camera_movement_constraints = {
     }
 }
 
+
 class Camera(object):
     def __init__(self, name: str, elev_angle: float, ori_angle: float, distance: float, lookat: torch.Tensor,
                  stereo_pair_dist: float, stereo_positions: List[str], movement_complexity: int):
-        self.name = name # can be used e.g. to name the corresponding output directories
+        self.name = name  # can be used e.g. to name the corresponding output directories
         self.movement_complexity = movement_complexity
         self.moving = self.movement_complexity > 0
         self.stereo_pair_dist = stereo_pair_dist
@@ -93,6 +94,7 @@ class Camera(object):
             distance_func = np.random.choice([SinFunc, LinFuncOnce, TanhFunc])
             self.distance_func = distance_func(start_val, end_val, start_t, end_t)
 
+    # TODO: use config
     def cmc_random_uniform(self, parameter):
         assert self.movement_complexity > 0
         return np.random.uniform(
@@ -149,7 +151,6 @@ def cam_pos_from_config(cam_lookat: torch.Tensor, elevation_angle: float, orient
     cam_xyz = torch.tensor([cam_x, cam_y, cam_z])
     cam_pos = cam_lookat + cam_xyz * distance
     return cam_pos
-
 
 
 class TimeDependentCamParamFunc(object):
