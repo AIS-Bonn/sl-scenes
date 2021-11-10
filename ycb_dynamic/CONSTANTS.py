@@ -22,15 +22,14 @@ TEXT_BASE_DIR = Path(".") / "external_data" / "textures"
 # Lighting
 IBL_BASE_PATH = Path(".") / "external_data" / "light_maps"
 ALL_LIGHTMAPS = {
-    "default": IBL_BASE_PATH / "Chiricahua_Plaza" / "Chiricahua_Plaza.ibl",  # DEPRECATED
     "Alexs_Apartment": IBL_BASE_PATH / "Alexs_Apartment" / "Alexs_Apartment.ibl",
-    "Barcelona_Rooftops": IBL_BASE_PATH / "Barcelona_Rooftops" / "Barcelona_Rooftops.ibl",
-    "Chiricahua_Plaza": IBL_BASE_PATH / "Chiricahua_Plaza" / "Chiricahua_Plaza.ibl",
     "Circus_Backstage": IBL_BASE_PATH / "Circus_Backstage" / "Circus_Backstage.ibl",
-    "Helipad_GoldenHour": IBL_BASE_PATH / "Helipad_GoldenHour" / "Helipad_GoldenHour.ibl",
-    # "Old_Industrial_Hall": IBL_BASE_PATH / "Old_Industrial_Hall" / "Old_Industrial_Hall.ibl",  # Path issue?
+    "Milkyway": IBL_BASE_PATH / "Milkyway" / "Milkyway.ibl",
     "Popcorn_Lobby": IBL_BASE_PATH / "Popcorn_Lobby" / "Popcorn_Lobby.ibl",
-    "Wooden_Door": IBL_BASE_PATH / "Wooden_Door" / "Wooden_Door.ibl",
+    "Siggraph2007_UpperFloor": IBL_BASE_PATH / "Siggraph2007_UpperFloor" / "Siggraph2007_UpperFloor.ibl",
+    "Subway_Lights": IBL_BASE_PATH / "Subway_Lights" / "Subway_Lights.ibl",
+    "Theatre_Seating": IBL_BASE_PATH / "Theatre_Seating" / "Theatre_Seating.ibl",
+    "Ueno-Shrine": IBL_BASE_PATH / "Ueno-Shrine" / "Ueno-Shrine.ibl",
 }
 
 #########################
@@ -44,6 +43,10 @@ TABLE_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.0], [0, 0, 0,
 WOODEN_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.], [0, 0, 0, 1]])
 BOWL_FRUIT_INIT_POS = torch.tensor([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0.], [0, 0, 0, 1]])
 RED_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.], [0, 0, 0, 1]])
+
+# BALL BOX
+BALL_BOX_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.], [0, 0, 0, 1]])
+BALL_BOX_BALL_INIT_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.], [0, 0, 0, 1]])
 
 # BOWLING
 WOOD_BLOCK_POSES = [
@@ -94,6 +97,7 @@ FRUIT_OBJS = [str(i).zfill(3) for i in range(11, 19)]
 CLEANING_OBJS = [str(i).zfill(3) for i in range(19, 22)]
 KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
 DICE_OBJS = [str(i).zfill(3) for i in [5, 7, 8, 9]]
+YCB_SMALL_BALL_OBJS = [str(i).zfill(3) for i in [55, 56, 57, 58]]
 YCBV_OBJS = [str(i).zfill(3) for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 21, 24, 25, 35, 36, 37, 40, 51, 52, 61]]
 
 # Meta-Subsets
@@ -101,12 +105,14 @@ YCB_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
 OTHER_OBJECTS = [obj for obj in OBJECT_INFO if not obj.name[0].isdigit()]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
+WOODEN_BOX = [obj for obj in OBJECT_INFO if obj.name == "wooden_box"]
 
 # Decoration Objects
 CHAIRS = [obj for obj in OBJECT_INFO if obj.name.endswith("_chair")]
 CUPBOARDS = [obj for obj in OBJECT_INFO if obj.name.endswith("_cupboard")]
 TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table")]
 BOWLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_bowl") and obj.name != "024_bowl"]
+BALL_BOXES = [obj for obj in OBJECT_INFO if obj.name in ["laundry_basket", "wooden_box"]]
 FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and
                                             "table" not in obj.name and
                                             "chair" not in obj.name]
@@ -124,6 +130,7 @@ ROOMS = [obj for obj in OBJECT_INFO if "complete_rooms" in obj.mesh_fp]
 # for accessing
 TABLE = [random.choice(TABLES)]
 BOWL = [random.choice(BOWLS)]
+BALL_BOX = [random.choice(BALL_BOXES)]
 ROOM = [random.choice(ROOMS)]
 FLOOR = [random.choice(FLOORS)]
 WALL = [random.choice(WALLS)]
@@ -144,4 +151,7 @@ DICE_OBJECTS = [  # Considering objects that do roll, e.g. small and regular sha
 ]
 FRUIT_OBJECTS = [  # Considering fruits
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FRUIT_OBJS
+]
+YCB_SMALL_BALLS = [  # Small YCB balls
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in YCB_SMALL_BALL_OBJS
 ]

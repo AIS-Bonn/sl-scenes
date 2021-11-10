@@ -1,10 +1,11 @@
+# YCB-Dynamic
+
 ### Installation
 
-- Install Stillleben and its requirements according to [this manual](https://git.ais.uni-bonn.de/schwarzm/stillleben/-/blob/master/doc/installation.rst).
+- Install `stillleben` and its requirements according to [this manual](https://git.ais.uni-bonn.de/schwarzm/stillleben/-/blob/master/doc/installation.rst).
+- Install additional packages via pip: `matplotlib`, `scipy`, `pandas`, `tqdm`, `moviepy`, `urllib3`.
 - Clone this repo.
-- Download the required and/or optional iBL files from [this webpage](http://www.hdrlabs.com/sibl/archive.html) and place them into the folder "external_data/light_maps"
-- Download the required mesh files from [here](https://uni-bonn.sciebo.de/s/PsEd2HWUsIfvHte) and place the unpacked folders into "external_data/object_models"
-
+- Download the required external data from [here](https://uni-bonn.sciebo.de/s/2E7OjZtT7PvBefW) (password: `ycb-dynamic`) and place the folders into the folder "external_data" of this repo.
 
 ### Basic Usage
 
@@ -12,7 +13,7 @@
 python run.py --scenario <scenario>
 ```
 
-- **Choosing a scenario** Replace `<scenario>` with the scenario you'd like to render (also try `all`!)
+- **Choosing a scenario** Replace `<scenario>` with the scenario you'd like to render (also try out `all`!)
 
 - **Rendering an RGB video of the scenarios:** add `--assemble-rgb`
 - **Open the stillleben viewer instead of generating data:** add `--view`

@@ -1,3 +1,4 @@
+from .ball_box import BallBoxScenario
 from .bowl import BowlScenario
 from .billiards import BillardsScenario
 from .bowling import BowlingScenario

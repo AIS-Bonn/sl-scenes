@@ -1,29 +1,10 @@
 import numpy as np
 import torch
 from typing import List
+from ycb_dynamic.CONFIG import CONFIG
+from ycb_dynamic.utils.camera_utils import ConstFunc, LinFunc, LinFuncOnce, SinFunc, TanhFunc
 
-camera_movement_constraints = {
-    "delta_elev": {
-        "min": [-5, -10, -30],
-        "max": [10, 20, 30]
-    },
-    "delta_ori": {
-        "min": [-20, -40, -80],
-        "max": [20, 40, 80]
-    },
-    "delta_dist": {
-        "min": [-0.2, -0.5, -1.0],
-        "max": [0.2, 0.5, 1.0]
-    },
-    "t_duration": {
-        "min": [2, 1, 0.5],
-        "max": [3, 3, 3]
-    },
-    "t_start": {
-        "min": [0, 0, 0],
-        "max": [1, 1, 1]
-    }
-}
+camera_movement_constraints = CONFIG["camera_movement"]
 
 
 class Camera(object):
@@ -38,6 +19,7 @@ class Camera(object):
         self.start_ori_angle = ori_angle
         self.start_distance = distance
         self.start_base_lookat = lookat
+        self.start_up_vec = torch.tensor([0.0, 0.0, 1.0])  # TODO adjustable up vector instead of [0, 0, 1]
 
         self.reset_cam()
         self.setup_cam_pos_func()
@@ -111,16 +93,24 @@ class Camera(object):
 
     def stereo_deviation(self, vec, stereo_position):
 
-        # TODO use cam's up vector instead of [0, 0, 1]. This is OK as long as camera is not rolled
         deviation_vec = torch.cross(
-            (self.base_lookat - self.base_pos).double(), torch.tensor([0.0, 0.0, 1.0]).double()
+            (self.base_lookat - self.base_pos).double(), self.start_up_vec.double()
         ).float()
         deviation_vec *= self.stereo_pair_dist / (2 * torch.linalg.norm(deviation_vec))
         return vec - deviation_vec if stereo_position == "left" else vec + deviation_vec
 
     @property
     def base_pos(self):
-        return cam_pos_from_config(self.base_lookat, self.elev_angle, self.ori_angle, self.distance)
+        """
+        Calculate the camera position from given lookat position, camera distance
+        and elevation/orientation angle (in degrees)
+        """
+        cam_x = np.cos(self.ori_angle * np.pi / 180.) * np.cos(self.elev_angle * np.pi / 180.)
+        cam_y = np.sin(self.ori_angle * np.pi / 180.) * np.cos(self.elev_angle * np.pi / 180.)
+        cam_z = np.sin(self.elev_angle * np.pi / 180.)
+        cam_xyz = torch.tensor([cam_x, cam_y, cam_z])
+        cam_pos = self.base_lookat + cam_xyz * self.distance
+        return cam_pos
 
     def get_pos(self, stereo_position="mono"):
         pos = self.base_pos
@@ -135,80 +125,3 @@ class Camera(object):
 
     def step(self, dt):
         self.t += dt
-
-
-def cam_pos_from_config(cam_lookat: torch.Tensor, elevation_angle: float, orientation_angle: float, distance: float):
-    """
-    Calculate the camera position from given lookat position, camera distance
-    and elevation/orientation angle (in degrees)
-    """
-    cam_x = np.cos(orientation_angle * np.pi / 180.) * np.cos(elevation_angle * np.pi / 180.)
-    cam_y = np.sin(orientation_angle * np.pi / 180.) * np.cos(elevation_angle * np.pi / 180.)
-    cam_z = np.sin(elevation_angle * np.pi / 180.)
-    cam_xyz = torch.tensor([cam_x, cam_y, cam_z])
-    cam_pos = cam_lookat + cam_xyz * distance
-    return cam_pos
-
-
-class TimeDependentCamParamFunc(object):
-    def __init__(self, start_val, end_val, start_t, end_t):
-        self.start_val = start_val
-        self.end_val = end_val
-        self.start_t = start_t
-        self.end_t = end_t
-
-    def get_value(self, t):
-        raise NotImplementedError
-
-
-class ConstFunc(TimeDependentCamParamFunc):
-    def __init__(self, start_val, end_val, start_t, end_t):
-        super(ConstFunc, self).__init__(start_val, end_val, start_t, end_t)
-
-    def get_value(self, t):
-        return self.start_val
-
-
-class LinFunc(TimeDependentCamParamFunc):
-    def __init__(self, start_val, end_val, start_t, end_t):
-        super(LinFunc, self).__init__(start_val, end_val, start_t, end_t)
-        self.slope = (self.end_val - self.start_val) / (self.end_t - self.start_t)
-
-    def get_value(self, t):
-        return self.slope * t + self.start_val
-
-
-class SinFunc(TimeDependentCamParamFunc):
-    def __init__(self, start_val, end_val, start_t, end_t):
-        super(SinFunc, self).__init__(start_val, end_val, start_t, end_t)
-        self.amp = self.end_val - self.start_val
-        self.freq_mod = np.random.uniform(0.3, 0.6)
-
-    def sin(self, x):
-        return np.sin(self.freq_mod * (self.end_t - self.start_t) * x)
-
-    def get_value(self, t):
-        return self.start_val + self.amp * self.sin(t)
-
-
-class LinFuncOnce(TimeDependentCamParamFunc):
-    def __init__(self, start_val, end_val, start_t, end_t):
-        super(LinFuncOnce, self).__init__(start_val, end_val, start_t, end_t)
-
-    def get_value(self, t):
-        t_rel = (t - self.start_t) / (self.end_t - self.start_t)
-        t_rel = min(1, max(0, t_rel))
-        return t_rel * self.end_val + (1 - t_rel) * self.start_val
-
-
-class TanhFunc(TimeDependentCamParamFunc):
-    def __init__(self, start_val, end_val, start_t, end_t):
-        super(TanhFunc, self).__init__(start_val, end_val, start_t, end_t)
-        self.freq_mod = np.random.uniform(4, 8)
-
-    def tanh(self, x):
-        return np.tanh(self.freq_mod * x - (self.freq_mod / 2))
-
-    def get_value(self, t):
-        t_rel = (t - self.start_t) / (self.end_t - self.start_t)
-        return self.start_val + (self.end_val - self.start_val) * (1 + self.tanh(t_rel))

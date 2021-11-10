@@ -31,7 +31,55 @@ CONFIG = {
             "dist": 0.0   # minimum distance between objects
         }
     },
+    "camera_movement": {
+        "delta_elev": {
+            "min": [-5, -10, -30],
+            "max": [10, 20, 30]
+        },
+        "delta_ori": {
+            "min": [-20, -40, -80],
+            "max": [20, 40, 80]
+        },
+        "delta_dist": {
+            "min": [-0.2, -0.5, -1.0],
+            "max": [0.2, 0.5, 1.0]
+        },
+        "t_duration": {
+            "min": [2, 1, 0.5],
+            "max": [3, 3, 3]
+        },
+        "t_start": {
+            "min": [0, 0, 0],
+            "max": [1, 1, 1]
+        }
+    },
     "scenes": {
+        # BALL BOX SCENE
+        "ball_box": {
+            "camera": {
+                "elevation_angle_min": 55,
+                "elevation_angle_max": 55,
+                "orientation_angle_min": 0,
+                "orientation_angle_max": 360,
+                "orientation_angle_default": 24,
+                "distance_min": 1.2,
+                "distance_max": 1.2,
+                "base_lookat": torch.Tensor([0, 0, 0.1])
+            },
+            "pos": {
+                "x_min": 0.,
+                "x_max": 0,
+                "y_min": 0.,
+                "y_max": 0.,
+                "z_min": 0.1,
+                "z_max": 0.3,
+            },
+            "velocity": {},
+            "other": {
+                "min_objs": 1,
+                "max_objs": 7
+            },
+        },
         # BILLARDS SCENE
         "billards": {
             "camera": {

@@ -107,6 +107,8 @@ class ObjectLoader:
         obj.metallic = object_info.metallic
         obj.roughness = object_info.roughness
         obj.restitution = object_info.restitution
+        obj.static_friction = object_info.static_friction
+        obj.dynamic_friction = object_info.dynamic_friction
         pose = obj_mod.get("mod_pose", torch.eye(4))
         mod_R = obj_mod.get("mod_R", torch.eye(3))
         pose[:3, :3] = torch.mm(mod_R, pose[:3, :3])
