@@ -54,6 +54,32 @@ CONFIG = {
         }
     },
     "scenes": {
+        # BALL BOX SCENE
+        "ball_box": {
+            "camera": {
+                "elevation_angle_min": 55,
+                "elevation_angle_max": 55,
+                "orientation_angle_min": 0,
+                "orientation_angle_max": 360,
+                "orientation_angle_default": 24,
+                "distance_min": 1.2,
+                "distance_max": 1.2,
+                "base_lookat": torch.Tensor([0, 0, 0.1])
+            },
+            "pos": {
+                "x_min": 0.,
+                "x_max": 0,
+                "y_min": 0.,
+                "y_max": 0.,
+                "z_min": 0.1,
+                "z_max": 0.3,
+            },
+            "velocity": {},
+            "other": {
+                "min_objs": 1,
+                "max_objs": 7
+            },
+        },
         # BILLARDS SCENE
         "billards": {
             "camera": {

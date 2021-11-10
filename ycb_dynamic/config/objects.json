@@ -411,7 +411,7 @@
         "weight": 0.138,
         "flags": 0,
         "metallic": 0.1,
-        "roughness": 0.5,
+        "roughness": 0.7,
         "restitution": 0.4,
         "scale": 1.0,
         "static_friction": 0.4,
@@ -422,8 +422,8 @@
         "weight": 0.058,
         "flags": 0,
         "metallic": 0.0,
-        "roughness": 0.9,
-        "restitution": 0.8,
+        "roughness": 1.0,
+        "restitution": 0.9,
         "scale": 1.0,
         "static_friction": 0.4,
         "dynamic_friction": 0.2
@@ -433,8 +433,8 @@
         "weight": 0.041,
         "flags": 0,
         "metallic": 0.1,
-        "roughness": 0.6,
-        "restitution": 1.0,
+        "roughness": 0.8,
+        "restitution": 0.9,
         "scale": 1.0,
         "static_friction": 0.4,
         "dynamic_friction": 0.1
@@ -643,7 +643,7 @@
         "flags": 1,
         "metallic": 0.7,
         "roughness": 0.5,
-        "restitution": 0.1,
+        "restitution": 0.4,
         "scale": 0.01,
         "static_friction": 0.4,
         "dynamic_friction": 0.3
@@ -654,7 +654,7 @@
         "flags": 1,
         "metallic": 0.1,
         "roughness": 0.5,
-        "restitution": 0.1,
+        "restitution": 0.5,
         "scale": 0.01,
         "static_friction": 0.3,
         "dynamic_friction": 0.2
@@ -720,7 +720,7 @@
         "flags": 1,
         "metallic": 0.3,
         "roughness": 0.7,
-        "restitution": 0.0,
+        "restitution": 0.4,
         "scale": 0.01,
         "static_friction": 0.6,
         "dynamic_friction": 0.4
@@ -753,7 +753,7 @@
         "flags": 1,
         "metallic": 0.3,
         "roughness": 0.7,
-        "restitution": 0.0,
+        "restitution": 0.3,
         "scale": 0.01,
         "static_friction": 0.7,
         "dynamic_friction": 0.2
@@ -764,7 +764,7 @@
         "flags": 1,
         "metallic": 0.5,
         "roughness": 0.3,
-        "restitution": 0.0,
+        "restitution": 0.4,
         "scale": 0.01,
         "static_friction": 0.2,
         "dynamic_friction": 0.1
@@ -808,7 +808,7 @@
         "flags": 1,
         "metallic": 0.1,
         "roughness": 0.7,
-        "restitution": 0.1,
+        "restitution": 0.4,
         "scale": 0.01,
         "static_friction": 0.2,
         "dynamic_friction": 0.1
@@ -1208,5 +1208,16 @@
         "scale": 0.01,
         "static_friction": 0.4,
         "dynamic_friction": 0.3
+    },
+    "wooden_box": {
+        "mesh_fp": "misc/wooden_box/wooden_box.obj",
+        "weight": 1.5,
+        "flags": 1,
+        "metallic": 0.1,
+        "roughness": 0.7,
+        "restitution": 0.6,
+        "scale": 0.01,
+        "static_friction": 0.6,
+        "dynamic_friction": 0.4
     }
 }

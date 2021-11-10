@@ -13,6 +13,7 @@ import ycb_dynamic.utils.utils as utils
 import ycb_dynamic.CONSTANTS as CONSTANTS
 
 from ycb_dynamic.scenarios import (
+    BallBoxScenario,
     BillardsScenario,
     BowlScenario,
     BowlingScenario,
@@ -26,6 +27,7 @@ from ycb_dynamic.output import Writer
 
 
 SCENARIOS = {
+    "ball_box": BallBoxScenario,
     "billards": BillardsScenario,
     "bowl": BowlScenario,
     "bowling": BowlingScenario,
@@ -196,7 +198,7 @@ if __name__ == "__main__":
         type=str,
         default="random",
         choices=list(CONSTANTS.ALL_LIGHTMAPS.keys()) + ["random", "default"],
-        help="specify the lightmap and background to apply in the scene",
+        help="specify the lightmap to apply in the scene",
     )
     parser.add_argument(
         "--assemble-rgb",

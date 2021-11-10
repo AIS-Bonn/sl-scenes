@@ -43,6 +43,10 @@ WOODEN_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.], [0, 
 BOWL_FRUIT_INIT_POS = torch.tensor([[1, 0, 0, 0], [0, 0, -1, 0], [0, 1, 0, 0.], [0, 0, 0, 1]])
 RED_BOWL_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.], [0, 0, 0, 1]])
 
+# BALL BOX
+BALL_BOX_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.], [0, 0, 0, 1]])
+BALL_BOX_BALL_INIT_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.], [0, 0, 0, 1]])
+
 # BOWLING
 WOOD_BLOCK_POSES = [
     torch.tensor([[1, 0, 0, 0.400], [0, 1, 0, -0.20], [0,  0, 1, 0.0], [0, 0, 0, 1]]),
@@ -92,6 +96,7 @@ FRUIT_OBJS = [str(i).zfill(3) for i in range(11, 19)]
 CLEANING_OBJS = [str(i).zfill(3) for i in range(19, 22)]
 KITCHEN_OBJS = [str(i).zfill(3) for i in range(22, 35)]
 DICE_OBJS = [str(i).zfill(3) for i in [5, 7, 8, 9]]
+YCB_SMALL_BALL_OBJS = [str(i).zfill(3) for i in [55, 56, 57, 58]]
 YCBV_OBJS = [str(i).zfill(3) for i in [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 19, 21, 24, 25, 35, 36, 37, 40, 51, 52, 61]]
 
 # Meta-Subsets
@@ -99,12 +104,14 @@ YCB_OBJECTS = [obj for obj in OBJECT_INFO if obj.name[0].isdigit()]
 OTHER_OBJECTS = [obj for obj in OBJECT_INFO if not obj.name[0].isdigit()]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
+WOODEN_BOX = [obj for obj in OBJECT_INFO if obj.name == "wooden_box"]
 
 # Decoration Objects
 CHAIRS = [obj for obj in OBJECT_INFO if obj.name.endswith("_chair")]
 CUPBOARDS = [obj for obj in OBJECT_INFO if obj.name.endswith("_cupboard")]
 TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table")]
 BOWLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_bowl") and obj.name != "024_bowl"]
+BALL_BOXES = [obj for obj in OBJECT_INFO if obj.name in ["laundry_basket", "wooden_box"]]
 FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and
                                             "table" not in obj.name and
                                             "chair" not in obj.name]
@@ -124,6 +131,7 @@ ROOMS = [obj for obj in OBJECT_INFO if "complete_rooms" in obj.mesh_fp]
 # For accessing
 TABLE = [random.choice(TABLES)]
 BOWL = [random.choice(BOWLS)]
+BALL_BOX = [random.choice(BALL_BOXES)]
 ROOM = [random.choice(ROOMS)]
 FLOOR = [random.choice(FLOORS)]
 WALL = [random.choice(WALLS)]
@@ -143,4 +151,7 @@ DICE_OBJECTS = [  # Considering objects that do roll, e.g. small and regular sha
 ]
 FRUIT_OBJECTS = [  # Considering fruits
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in FRUIT_OBJS
+]
+YCB_SMALL_BALLS = [  # Small YCB balls
+    obj for obj in OBJECT_INFO if obj.name.split("_")[0] in YCB_SMALL_BALL_OBJS
 ]
