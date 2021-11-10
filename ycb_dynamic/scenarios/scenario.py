@@ -66,9 +66,9 @@ class Scenario(object):
 
     def setup_scene(self):
         """ Default setup_scene lighting and camera. Can be overriden from specific scenes """
-        self.scene.ambient_light = torch.tensor([0.7, 0.7, 0.7])
+        self.scene.ambient_light = torch.tensor([0.1, 0.1, 0.1])
         _ = self.room_assembler.make_room()
-        # self.scene.light_map = get_lightmap(self.lightmap)
+        self.scene.light_map = get_lightmap(self.lightmap)
         # self.scene.choose_random_light_position()
         return
 
