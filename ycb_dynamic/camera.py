@@ -1,8 +1,8 @@
 import numpy as np
 import torch
 from typing import List
-from CONFIG import CONFIG
-from utils.camera_utils import ConstFunc, LinFunc, LinFuncOnce, SinFunc, TanhFunc
+from ycb_dynamic.CONFIG import CONFIG
+from ycb_dynamic.utils.camera_utils import ConstFunc, LinFunc, LinFuncOnce, SinFunc, TanhFunc
 
 camera_movement_constraints = CONFIG["camera_movement"]
 
