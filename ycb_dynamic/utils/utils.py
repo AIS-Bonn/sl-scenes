@@ -5,6 +5,8 @@ Utils methods
 import os
 import random
 import datetime
+import shutil
+
 import torch
 import argparse
 
@@ -99,3 +101,9 @@ def randomize():
     CONSTANTS.WALL = [random.choice(CONSTANTS.WALLS)]
     CONSTANTS.FURNITURE = [random.choice(CONSTANTS.FURNITURES)]
     return
+
+
+def copy_overwrite(src, dst):
+    if os.path.exists(dst):
+        os.remove(dst)
+    shutil.copy(src, dst)

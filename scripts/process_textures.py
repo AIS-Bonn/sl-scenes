@@ -1,6 +1,7 @@
 import os, glob, re
-import shutil
 from pathlib import Path
+
+from ycb_dynamic.utils.utils import copy_overwrite
 
 BASE_DIR = Path('external_data') / 'textures'
 
@@ -24,11 +25,6 @@ def elaborate(input):
     elif input == "n": return "normal"
     elif input == "h": return "height"
     return input
-
-def copy_overwrite(src, dst):
-    if os.path.exists(dst):
-        os.remove(dst)
-    shutil.copy(src, dst)
 
 
 if __name__ == '__main__':
