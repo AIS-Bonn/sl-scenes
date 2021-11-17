@@ -202,7 +202,9 @@ class Writer(object):
         if self.idx != 0:
             self.camera_file.write(',\n')
         self.camera_file.write(f'  "{self.idx}": {{"cam_K": {cam_K.view(-1).tolist()}, '
+                               f'"cam_P": {P.flatten().tolist()}, "cam_viewport": {[W, H]}, '
                                f'"depth_scale": {1.0 / (self.depth_scale / 1000.0)}, '
+                               f'"cam_pose": {scene.camera_pose().flatten().tolist()}, '
                                f'"cam_R_w2c": {cam_R_w2c.view(-1).tolist()}, "cam_t_w2c": {cam_t_w2c.tolist()}}}')
 
         # Write scene_gt.json
