@@ -8,7 +8,8 @@
         "restitution": 0.3,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 1
     },
     "003_cracker_box": {
         "mesh_fp": "ycbv_models/models_fine/obj_000002.ply",
@@ -19,7 +20,8 @@
         "restitution": 0.1,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 2
     },
     "004_sugar_box": {
         "mesh_fp": "ycbv_models/models_fine/obj_000003.ply",
@@ -30,7 +32,8 @@
         "restitution": 0.1,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 3
     },
     "005_tomato_soup_can": {
         "mesh_fp": "ycbv_models/models_fine/obj_000004.ply",
@@ -41,7 +44,8 @@
         "restitution": 0.2,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 4
     },
     "006_mustard_bottle": {
         "mesh_fp": "ycbv_models/models_fine/obj_000005.ply",
@@ -52,7 +56,8 @@
         "restitution": 0.3,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 5
     },
     "007_tuna_fish_can": {
         "mesh_fp": "ycbv_models/models_fine/obj_000006.ply",
@@ -63,7 +68,8 @@
         "restitution": 0.3,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 6
     },
     "008_pudding_box": {
         "mesh_fp": "ycbv_models/models_fine/obj_000007.ply",
@@ -74,7 +80,8 @@
         "restitution": 0.1,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 7
     },
     "009_gelatin_box": {
         "mesh_fp": "ycbv_models/models_fine/obj_000008.ply",
@@ -85,7 +92,8 @@
         "restitution": 0.1,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 8
     },
     "010_potted_meat_can": {
         "mesh_fp": "ycbv_models/models_fine/obj_000009.ply",
@@ -96,7 +104,8 @@
         "restitution": 0.2,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 9
     },
     "011_banana": {
         "mesh_fp": "ycbv_models/models_fine/obj_000010.ply",
@@ -107,7 +116,8 @@
         "restitution": 0.3,
         "scale": 0.001,
         "static_friction": 0.8,
-        "dynamic_friction": 0.6
+        "dynamic_friction": 0.6,
+        "class_id": 10
     },
     "012_strawberry": {
         "mesh_fp": "ycb_models/012_strawberry/google_512k/textured.obj",
@@ -118,7 +128,8 @@
         "restitution": 0.2,
         "scale": 1.0,
         "static_friction": 0.5,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 11
     },
     "013_apple": {
         "mesh_fp": "ycb_models/013_apple/google_512k/textured.obj",
@@ -129,7 +140,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.4,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 12
     },
     "014_lemon": {
         "mesh_fp": "ycb_models/014_lemon/google_512k/textured.obj",
@@ -140,7 +152,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.5,
-        "dynamic_friction": 0.4
+        "dynamic_friction": 0.4,
+        "class_id": 13
     },
     "015_peach": {
         "mesh_fp": "ycb_models/015_peach/google_512k/textured.obj",
@@ -151,7 +164,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.6,
-        "dynamic_friction": 0.4
+        "dynamic_friction": 0.4,
+        "class_id": 14
     },
     "016_pear": {
         "mesh_fp": "ycb_models/016_pear/google_512k/textured.obj",
@@ -162,7 +176,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.5,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 15
     },
     "017_orange": {
         "mesh_fp": "ycb_models/017_orange/google_512k/textured.obj",
@@ -173,7 +188,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.6,
-        "dynamic_friction": 0.4
+        "dynamic_friction": 0.4,
+        "class_id": 16
     },
     "018_plum": {
         "mesh_fp": "ycb_models/018_plum/google_512k/textured.obj",
@@ -184,7 +200,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.4,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 17
     },
     "019_pitcher_base": {
         "mesh_fp": "ycbv_models/models_fine/obj_000011.ply",
@@ -195,7 +212,8 @@
         "restitution": 0.3,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 18
     },
     "021_bleach_cleanser": {
         "mesh_fp": "ycbv_models/models_fine/obj_000012.ply",
@@ -206,7 +224,8 @@
         "restitution": 0.2,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 19
     },
     "024_bowl": {
         "mesh_fp": "ycbv_models/models_fine/obj_000013.ply",
@@ -217,7 +236,8 @@
         "restitution": 0.3,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 20
     },
     "025_mug": {
         "mesh_fp": "ycbv_models/models_fine/obj_000014.ply",
@@ -228,7 +248,8 @@
         "restitution": 0.3,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 21
     },
     "026_sponge": {
         "mesh_fp": "ycb_models/026_sponge/google_512k/textured.obj",
@@ -239,7 +260,8 @@
         "restitution": 0.5,
         "scale": 1.0,
         "static_friction": 0.8,
-        "dynamic_friction": 0.5
+        "dynamic_friction": 0.5,
+        "class_id": 22
     },
     "029_plate": {
         "mesh_fp": "ycb_models/029_plate/google_512k/textured.obj",
@@ -250,7 +272,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 23
     },
     "033_spatula": {
         "mesh_fp": "ycb_models/033_spatula/google_512k/textured.obj",
@@ -261,7 +284,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 24
     },
     "035_power_drill": {
         "mesh_fp": "ycbv_models/models_fine/obj_000015.ply",
@@ -272,7 +296,8 @@
         "restitution": 0.0,
         "scale": 0.001,
         "static_friction": 0.5,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 25
     },
     "036_wood_block": {
         "mesh_fp": "ycbv_models/models_fine/obj_000016_rotated.ply",
@@ -283,7 +308,8 @@
         "restitution": 0.3,
         "scale": 0.001,
         "static_friction": 0.6,
-        "dynamic_friction": 0.4
+        "dynamic_friction": 0.4,
+        "class_id": 26
     },
     "037_scissors": {
         "mesh_fp": "ycbv_models/models_fine/obj_000017.ply",
@@ -294,7 +320,8 @@
         "restitution": 0.1,
         "scale": 0.001,
         "static_friction": 0.6,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 27
     },
     "040_large_marker": {
         "mesh_fp": "ycbv_models/models_fine/obj_000018.ply",
@@ -305,7 +332,8 @@
         "restitution": 0.3,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 28
     },
     "042_adjustable_wrench": {
         "mesh_fp": "ycb_models/042_adjustable_wrench/google_512k/textured.obj",
@@ -316,7 +344,8 @@
         "restitution": 0.2,
         "scale": 1.0,
         "static_friction": 0.4,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 29
     },
     "043_phillips_screwdriver": {
         "mesh_fp": "ycb_models/043_phillips_screwdriver/google_512k/textured.obj",
@@ -327,7 +356,8 @@
         "restitution": 0.2,
         "scale": 1.0,
         "static_friction": 0.4,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 30
     },
     "044_flat_screwdriver": {
         "mesh_fp": "ycb_models/044_flat_screwdriver/google_512k/textured.obj",
@@ -338,7 +368,8 @@
         "restitution": 0.2,
         "scale": 1.0,
         "static_friction": 0.4,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 31
     },
     "048_hammer": {
         "mesh_fp": "ycb_models/048_hammer/google_512k/textured.obj",
@@ -349,7 +380,8 @@
         "restitution": 0.2,
         "scale": 1.0,
         "static_friction": 0.6,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 32
     },
     "050_medium_clamp": {
         "mesh_fp": "ycb_models/050_medium_clamp/google_512k/textured.obj",
@@ -360,7 +392,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 33
     },
     "051_large_clamp": {
         "mesh_fp": "ycbv_models/models_fine/obj_000019.ply",
@@ -371,7 +404,8 @@
         "restitution": 0.3,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 34
     },
     "052_extra_large_clamp": {
         "mesh_fp": "ycbv_models/models_fine/obj_000020.ply",
@@ -382,7 +416,8 @@
         "restitution": 0.3,
         "scale": 0.001,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 35
     },
     "053_mini_soccer_ball": {
         "mesh_fp": "ycb_models/053_mini_soccer_ball/google_512k/textured.obj",
@@ -393,7 +428,8 @@
         "restitution": 0.7,
         "scale": 1.0,
         "static_friction": 0.3,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 36
     },
     "054_softball": {
         "mesh_fp": "ycb_models/054_softball/google_512k/textured.obj",
@@ -404,7 +440,8 @@
         "restitution": 0.7,
         "scale": 1.0,
         "static_friction": 0.3,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 37
     },
     "055_baseball": {
         "mesh_fp": "ycb_models/055_baseball/google_512k/textured.obj",
@@ -415,7 +452,8 @@
         "restitution": 0.4,
         "scale": 1.0,
         "static_friction": 0.4,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 38
     },
     "056_tennis_ball": {
         "mesh_fp": "ycb_models/056_tennis_ball/google_512k/textured.obj",
@@ -426,7 +464,8 @@
         "restitution": 0.9,
         "scale": 1.0,
         "static_friction": 0.4,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 39
     },
     "057_racquetball": {
         "mesh_fp": "ycb_models/057_racquetball/google_512k/textured.obj",
@@ -437,7 +476,8 @@
         "restitution": 0.9,
         "scale": 1.0,
         "static_friction": 0.4,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 40
     },
     "058_golf_ball": {
         "mesh_fp": "ycb_models/058_golf_ball/google_512k/textured.obj",
@@ -448,7 +488,8 @@
         "restitution": 0.5,
         "scale": 1.0,
         "static_friction": 0.4,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 41
     },
     "061_foam_brick": {
         "mesh_fp": "ycbv_models/models_fine/obj_000021.ply",
@@ -459,7 +500,8 @@
         "restitution": 0.5,
         "scale": 0.001,
         "static_friction": 0.6,
-        "dynamic_friction": 0.4
+        "dynamic_friction": 0.4,
+        "class_id": 42
     },
     "062_dice": {
         "mesh_fp": "ycb_models/062_dice/google_64k/textured.obj",
@@ -470,7 +512,8 @@
         "restitution": 0.5,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 43
     },
     "065-a_cups": {
         "mesh_fp": "ycb_models/065-a_cups/google_512k/textured.obj",
@@ -481,7 +524,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 44
     },
     "065-b_cups": {
         "mesh_fp": "ycb_models/065-b_cups/google_512k/textured.obj",
@@ -492,7 +536,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 45
     },
     "065-c_cups": {
         "mesh_fp": "ycb_models/065-c_cups/google_512k/textured.obj",
@@ -503,7 +548,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 46
     },
     "065-d_cups": {
         "mesh_fp": "ycb_models/065-d_cups/google_512k/textured.obj",
@@ -514,7 +560,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 47
     },
     "065-e_cups": {
         "mesh_fp": "ycb_models/065-e_cups/google_512k/textured.obj",
@@ -525,7 +572,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 48
     },
     "065-f_cups": {
         "mesh_fp": "ycb_models/065-f_cups/google_512k/textured.obj",
@@ -536,7 +584,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 49
     },
     "065-g_cups": {
         "mesh_fp": "ycb_models/065-g_cups/google_512k/textured.obj",
@@ -547,7 +596,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 50
     },
     "065-h_cups": {
         "mesh_fp": "ycb_models/065-h_cups/google_512k/textured.obj",
@@ -558,7 +608,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 51
     },
     "065-i_cups": {
         "mesh_fp": "ycb_models/065-i_cups/google_512k/textured.obj",
@@ -569,7 +620,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 52
     },
     "065-j_cups": {
         "mesh_fp": "ycb_models/065-j_cups/google_512k/textured.obj",
@@ -580,7 +632,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 53
     },
     "070-b_colored_wood_blocks": {
         "mesh_fp": "ycb_models/070-b_colored_wood_blocks/google_64k/textured.obj",
@@ -591,7 +644,8 @@
         "restitution": 0.3,
         "scale": 1.0,
         "static_friction": 0.4,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 54
     },
     "071_nine_hole_peg_test": {
         "mesh_fp": "ycb_models/071_nine_hole_peg_test/google_512k/textured.obj",
@@ -602,7 +656,8 @@
         "restitution": 0.1,
         "scale": 1.0,
         "static_friction": 0.5,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 55
     },
     "072-a_toy_airplane": {
         "mesh_fp": "ycb_models/072-a_toy_airplane/google_512k/textured.obj",
@@ -613,7 +668,8 @@
         "restitution": 0.2,
         "scale": 1.0,
         "static_friction": 0.4,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 56
     },
     "077_rubiks_cube": {
         "mesh_fp": "ycb_models/077_rubiks_cube/google_512k/textured.obj",
@@ -624,7 +680,8 @@
         "restitution": 0.1,
         "scale": 1.0,
         "static_friction": 0.1,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 57
     },
     "bowling_ball": {
         "mesh_fp": "misc/bowling_ball/bowling_ball.obj",
@@ -635,7 +692,8 @@
         "restitution": 0.3,
         "scale": 0.01,
         "static_friction": 0.0,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 58
     },
     "folding_table": {
         "mesh_fp": "furniture/folding_table/folding_table.obj",
@@ -646,7 +704,8 @@
         "restitution": 0.4,
         "scale": 0.01,
         "static_friction": 0.4,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 59
     },
     "laundry_basket": {
         "mesh_fp": "misc/laundry_basket/laundry_basket.obj",
@@ -657,7 +716,8 @@
         "restitution": 0.5,
         "scale": 0.01,
         "static_friction": 0.3,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 60
     },
     "red_bowl": {
         "mesh_fp": "misc/red_bowl/red_bowl.obj",
@@ -668,7 +728,8 @@
         "restitution": 0.3,
         "scale": 0.01,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 61
     },
     "shopping_cart": {
         "mesh_fp": "misc/shopping_cart/shopping_cart.obj",
@@ -679,7 +740,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.3,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 62
     },
     "wicker_basket": {
         "mesh_fp": "misc/wicker_basket/wicker_basket.obj",
@@ -690,7 +752,8 @@
         "restitution": 0.4,
         "scale": 0.01,
         "static_friction": 0.7,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 63
     },
     "wooden_bowl": {
         "mesh_fp": "misc/wooden_bowl/wooden_bowl.obj",
@@ -701,7 +764,8 @@
         "restitution": 0.3,
         "scale": 0.01,
         "static_friction": 0.4,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 64
     },
     "wooden_chair": {
         "mesh_fp": "furniture/wooden_chair/wooden_chair.obj",
@@ -712,7 +776,8 @@
         "restitution": 0.1,
         "scale": 0.01,
         "static_friction": 0.5,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 65
     },
     "wooden_table": {
         "mesh_fp": "furniture/wooden_table/wooden_table.obj",
@@ -723,7 +788,8 @@
         "restitution": 0.4,
         "scale": 0.01,
         "static_friction": 0.6,
-        "dynamic_friction": 0.4
+        "dynamic_friction": 0.4,
+        "class_id": 66
     },
     "metal_chair": {
         "mesh_fp": "furniture/metal_chair/metal_chair.obj",
@@ -734,7 +800,8 @@
         "restitution": 0.1,
         "scale": 0.01,
         "static_friction": 0.3,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 67
     },
     "plastic_chair": {
         "mesh_fp": "furniture/plastic_chair/plastic_chair.obj",
@@ -745,7 +812,8 @@
         "restitution": 0.1,
         "scale": 0.01,
         "static_friction": 0.3,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 68
     },
     "pool_table": {
         "mesh_fp": "furniture/pool_table/pool_table.obj",
@@ -756,7 +824,8 @@
         "restitution": 0.3,
         "scale": 0.01,
         "static_friction": 0.7,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 69
     },
     "art_deco_table": {
         "mesh_fp": "furniture/art_deco_table/art_deco_table.obj",
@@ -767,7 +836,8 @@
         "restitution": 0.4,
         "scale": 0.01,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 70
     },
     "wooden_cupboard": {
         "mesh_fp": "furniture/wooden_cupboard/wooden_cupboard.obj",
@@ -778,7 +848,8 @@
         "restitution": 0.1,
         "scale": 0.01,
         "static_friction": 0.5,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 71
     },
     "old_cupboard": {
         "mesh_fp": "furniture/old_cupboard/old_cupboard.obj",
@@ -789,7 +860,8 @@
         "restitution": 0.1,
         "scale": 0.01,
         "static_friction": 0.6,
-        "dynamic_friction": 0.4
+        "dynamic_friction": 0.4,
+        "class_id": 72
     },
     "alex_drawer": {
         "mesh_fp": "furniture/alex_drawer/alex_drawer.obj",
@@ -800,7 +872,8 @@
         "restitution": 0.1,
         "scale": 0.01,
         "static_friction": 0.3,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 73
     },
     "art_deco_tab": {
         "mesh_fp": "furniture/art_deco_table/art_deco_table.obj",
@@ -811,7 +884,8 @@
         "restitution": 0.4,
         "scale": 0.01,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 74
     },
     "kitchen_white_s": {
         "mesh_fp": "furniture/kitchen_white_s/kitchen_white_s.obj",
@@ -822,7 +896,8 @@
         "restitution": 0.1,
         "scale": 0.01,
         "static_friction": 0.3,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 75
     },
     "kitchen_wood_m": {
         "mesh_fp": "furniture/kitchen_wood_m/kitchen_wood_m.obj",
@@ -833,7 +908,8 @@
         "restitution": 0.1,
         "scale": 0.01,
         "static_friction": 0.4,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 76
     },
     "tall_dresser": {
         "mesh_fp": "furniture/tall_dresser/tall_dresser.obj",
@@ -844,7 +920,8 @@
         "restitution": 0.1,
         "scale": 0.01,
         "static_friction": 0.4,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 77
     },
     "television_wall_mounted": {
         "mesh_fp": "furniture/television_wall_mounted/television_wall_mounted.obj",
@@ -855,7 +932,8 @@
         "restitution": 0.1,
         "scale": 0.01,
         "static_friction": 0.4,
-        "dynamic_friction": 0.2
+        "dynamic_friction": 0.2,
+        "class_id": 78
     },
     "tv_cabinet": {
         "mesh_fp": "furniture/tv_cabinet/tv_cabinet.obj",
@@ -866,7 +944,8 @@
         "restitution": 0.1,
         "scale": 0.01,
         "static_friction": 0.3,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 79
     },
     "wooden_drawer": {
         "mesh_fp": "furniture/wooden_drawer/wooden_drawer.obj",
@@ -877,7 +956,8 @@
         "restitution": 0.1,
         "scale": 0.01,
         "static_friction": 0.3,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 80
     },
     "bamboo_floor": {
         "mesh_fp": "bamboo_wall_2-4K/floor.obj",
@@ -888,7 +968,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 81
     },
     "bamboo_wall": {
         "mesh_fp": "bamboo_wall_2-4K/wall.obj",
@@ -899,7 +980,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 82
     },
     "black_tiling_floor": {
         "mesh_fp": "black_tiling_36-4K/floor.obj",
@@ -910,7 +992,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.1,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 83
     },
     "black_tiling_wall": {
         "mesh_fp": "black_tiling_36-4K/wall.obj",
@@ -921,7 +1004,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.1,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 84
     },
     "black_marble_floor": {
         "mesh_fp": "blackmarble_2-4K/floor.obj",
@@ -932,7 +1016,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.0,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 85
     },
     "black_marble_wall": {
         "mesh_fp": "blackmarble_2-4K/wall.obj",
@@ -943,7 +1028,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.0,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 86
     },
     "blackwood_azerocare_marble-4K_floor": {
         "mesh_fp": "blackwood_azerocare_marble-4K/floor.obj",
@@ -954,7 +1040,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.0,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 87
     },
     "blackwood_azerocare_marble-4K_wall": {
         "mesh_fp": "blackwood_azerocare_marble-4K/wall.obj",
@@ -965,7 +1052,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.0,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 88
     },
     "blue_agathe_marble-4K_floor": {
         "mesh_fp": "blue_agathe_marble-4K/floor.obj",
@@ -976,7 +1064,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.0,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 89
     },
     "blue_agathe_marble-4K_wall": {
         "mesh_fp": "blue_agathe_marble-4K/wall.obj",
@@ -987,7 +1076,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.0,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 90
     },
     "bluemarble_2-4K_floor": {
         "mesh_fp": "bluemarble_2-4K/floor.obj",
@@ -998,7 +1088,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.0,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 91
     },
     "bluemarble_2-4K_wall": {
         "mesh_fp": "bluemarble_2-4K/wall.obj",
@@ -1009,7 +1100,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.0,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 92
     },
     "brick_wall_4-4K_floor": {
         "mesh_fp": "brick_wall_4-4K/floor.obj",
@@ -1020,7 +1112,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 93
     },
     "brick_wall_4-4K_wall": {
         "mesh_fp": "brick_wall_4-4K/wall.obj",
@@ -1031,7 +1124,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 94
     },
     "brick_wall_11-4K_floor": {
         "mesh_fp": "brick_wall_11-4K/floor.obj",
@@ -1042,7 +1136,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 95
     },
     "brick_wall_11-4K_wall": {
         "mesh_fp": "brick_wall_11-4K/wall.obj",
@@ -1053,7 +1148,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.2,
-        "dynamic_friction": 0.1
+        "dynamic_friction": 0.1,
+        "class_id": 96
     },
     "bronzemarble_1-4K_wall": {
         "mesh_fp": "bronzemarble_1-4K/wall.obj",
@@ -1064,7 +1160,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.0,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 97
     },
     "bronzemarble_1_floor": {
         "mesh_fp": "bronzemarble_1-4K/floor.obj",
@@ -1075,7 +1172,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.0,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 98
     },
     "cafe_caledonia_granite_floor": {
         "mesh_fp": "cafe_caledonia_granite-4K/floor.obj",
@@ -1086,7 +1184,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.1,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 99
     },
     "cafe_caledonia_granite_wall": {
         "mesh_fp": "cafe_caledonia_granite-4K/wall.obj",
@@ -1097,7 +1196,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.1,
-        "dynamic_friction": 0.0
+        "dynamic_friction": 0.0,
+        "class_id": 100
     },
     "carpet_floor_5_floor": {
         "mesh_fp": "carpet_floor_5-4K/floor.obj",
@@ -1108,7 +1208,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.8,
-        "dynamic_friction": 0.8
+        "dynamic_friction": 0.8,
+        "class_id": 101
     },
     "carpet_floor_5_wall": {
         "mesh_fp": "carpet_floor_5-4K/wall.obj",
@@ -1119,7 +1220,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.8,
-        "dynamic_friction": 0.8
+        "dynamic_friction": 0.8,
+        "class_id": 102
     },
     "carpet_floor_6_floor": {
         "mesh_fp": "carpet_floor_6-4K/floor.obj",
@@ -1130,7 +1232,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.8,
-        "dynamic_friction": 0.8
+        "dynamic_friction": 0.8,
+        "class_id": 103
     },
     "carpet_floor_6_wall": {
         "mesh_fp": "carpet_floor_6-4K/wall.obj",
@@ -1141,7 +1244,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.8,
-        "dynamic_friction": 0.8
+        "dynamic_friction": 0.8,
+        "class_id": 104
     },
     "carpet_floor_7_floor": {
         "mesh_fp": "carpet_floor_6-4K/floor.obj",
@@ -1152,7 +1256,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.8,
-        "dynamic_friction": 0.8
+        "dynamic_friction": 0.8,
+        "class_id": 105
     },
     "carpet_floor_7_wall": {
         "mesh_fp": "carpet_floor_6-4K/wall.obj",
@@ -1163,7 +1268,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.8,
-        "dynamic_friction": 0.8
+        "dynamic_friction": 0.8,
+        "class_id": 106
     },
     "casino_carpet_3_floor": {
         "mesh_fp": "casino_carpet_3-4K/floor.obj",
@@ -1174,7 +1280,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.8,
-        "dynamic_friction": 0.8
+        "dynamic_friction": 0.8,
+        "class_id": 107
     },
     "casino_carpet_3_wall": {
         "mesh_fp": "casino_carpet_3-4K/wall.obj",
@@ -1185,7 +1292,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.8,
-        "dynamic_friction": 0.8
+        "dynamic_friction": 0.8,
+        "class_id": 108
     },
     "bedroom": {
         "mesh_fp": "complete_room_s/bedroom/bedroom.obj",
@@ -1196,7 +1304,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.4,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 109
     },
     "kings_room": {
         "mesh_fp": "complete_rooms/kings_room/kings_room.obj",
@@ -1207,7 +1316,8 @@
         "restitution": 0.0,
         "scale": 0.01,
         "static_friction": 0.4,
-        "dynamic_friction": 0.3
+        "dynamic_friction": 0.3,
+        "class_id": 110
     },
     "wooden_box": {
         "mesh_fp": "misc/wooden_box/wooden_box.obj",
@@ -1218,6 +1328,7 @@
         "restitution": 0.6,
         "scale": 0.01,
         "static_friction": 0.6,
-        "dynamic_friction": 0.4
+        "dynamic_friction": 0.4,
+        "class_id": 111
     }
 }

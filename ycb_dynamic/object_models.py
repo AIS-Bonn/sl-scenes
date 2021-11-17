@@ -24,7 +24,6 @@ class MeshLoader:
         self.reset()
 
     def reset(self):
-        self.class_idx = 0
         self.loaded_meshes = []
 
     def get_meshes(self):
@@ -44,18 +43,18 @@ class MeshLoader:
             path = self.text_dir if obj.name.endswith("_floor") or obj.name.endswith("_wall") else self.base_dir
             paths.append((path / obj.mesh_fp).resolve())
         scales = [obj.scale for obj in obj_info]
+        class_ids = [obj.class_id for obj in obj_info]
         mod_scales = kwargs.get("mod_scale", [1.0] * len(scales))
         scales = [s * ms for (s, ms) in zip(scales, mod_scales)]
         flags = [mesh_flags(obj) for obj in obj_info]
         meshes = sl.Mesh.load_threaded(filenames=paths, flags=flags)
 
         # Setup class IDs
-        for _, (mesh, scale) in enumerate(zip(meshes, scales)):
+        for _, (mesh, scale, class_id) in enumerate(zip(meshes, scales, class_ids)):
             pt = torch.eye(4)
             pt[:3, :3] *= scale
             mesh.pretransform = pt
-            mesh.class_index = self.class_idx + 1
-            self.class_idx += 1
+            mesh.class_index = class_id
 
         info_mesh_tuples = list(zip(obj_info, meshes))
         self.loaded_meshes.append(info_mesh_tuples)

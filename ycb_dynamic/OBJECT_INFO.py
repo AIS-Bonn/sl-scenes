@@ -8,7 +8,7 @@ FLAG_CONCAVE = 1 << 0
 ObjectInfo = namedtuple(
     "ObjectInfo",
     ["name", "mesh_fp", "weight", "flags", "metallic", "roughness",
-     "restitution", "scale", "static_friction", "dynamic_friction"],
+     "restitution", "scale", "static_friction", "dynamic_friction", "class_id"],
 )
 
 with open('ycb_dynamic/config/objects.json') as json_file:
