@@ -125,6 +125,17 @@ class Writer(object):
         with open(self.path / 'scene.sl', 'w') as f:
             f.write(scene.serialize())
 
+    def write_rgb(self, result : sl.RenderPassResult, out_file: str):
+        rgb = result.rgb()[:,:,:3].cpu().contiguous()
+        self.saver.save(rgb, out_file)
+        return rgb
+
+    def write_obj_mask(self, result : sl.RenderPassResult, out_file: str):
+        instance_segmentation = result.instance_index()[:,:,0]
+        instance_segmentation[instance_segmentation > 0] = 1.0
+        instance_segmentation = instance_segmentation.byte().cpu()
+        self.saver.save(instance_segmentation, out_file)
+        return instance_segmentation
 
     def write_frame(self, scenario : Scenario, result : sl.RenderPassResult):
 
