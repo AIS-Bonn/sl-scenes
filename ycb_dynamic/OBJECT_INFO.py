@@ -1,5 +1,6 @@
 from collections import namedtuple
 import json
+from typing import List
 
 #########################
 # Object Information
@@ -14,8 +15,6 @@ ObjectInfo = namedtuple(
 with open('ycb_dynamic/config/objects.json') as json_file:
     obj_info_dict = json.load(json_file)
 
-OBJECT_INFO = [ObjectInfo(name=name, **other_properties) for name, other_properties in obj_info_dict.items()]
-
 """
 YCB object weight sources: http://www.ycbbenchmarks.com/wp-content/uploads/2015/09/object-list-Sheet1.pdf
 A few notes on the 'scale' parameter: stillleben is completely metric, so non-metric meshes need to be scaled:
@@ -24,3 +23,10 @@ A few notes on the 'scale' parameter: stillleben is completely metric, so non-me
  - Other objects in centimeters -> scale = 0.01
  - However: you can scale all objects according to your needs (don't forget the weight)!
 """
+OBJECT_INFO = [ObjectInfo(name=name, **other_properties) for name, other_properties in obj_info_dict.items()]
+
+def get_objects_by_class_id(class_ids : List[int]):
+    obj_infos = []
+    for class_id in class_ids:
+        obj_infos += [obj_info for obj_info in OBJECT_INFO if obj_info.class_id == class_id]
+    return obj_infos

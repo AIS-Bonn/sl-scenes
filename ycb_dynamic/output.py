@@ -115,11 +115,9 @@ class Writer(object):
         else:
             return 0, 0, 0, 0
 
-
     def write_log(self, *args, **kwargs):
         self.log_file.write(f'{self.idx:06}: ')
         print(*args, **kwargs, file=self.log_file)
-
 
     def write_scene_data(self, scene : sl.Scene):
         with open(self.path / 'scene.sl', 'w') as f:
