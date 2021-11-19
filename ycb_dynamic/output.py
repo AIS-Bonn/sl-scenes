@@ -10,7 +10,7 @@ import time
 from pathlib import Path
 from ycb_dynamic.scenarios.scenario import Scenario
 
-class Writer(object):
+class BOPWriter(object):
     def __init__(self, path : Path):
         self.path = path
         self.idx = 0
@@ -123,18 +123,6 @@ class Writer(object):
         with open(self.path / 'scene.sl', 'w') as f:
             f.write(scene.serialize())
 
-    def write_rgb(self, result : sl.RenderPassResult, out_file: str):
-        rgb = result.rgb()[:,:,:3].cpu().contiguous()
-        self.saver.save(rgb, out_file)
-        return rgb
-
-    def write_obj_mask(self, result : sl.RenderPassResult, out_file: str):
-        instance_segmentation = result.instance_index()[:,:,0]
-        instance_segmentation[instance_segmentation > 0] = 1.0
-        instance_segmentation = instance_segmentation.byte().cpu()
-        self.saver.save(instance_segmentation, out_file)
-        return instance_segmentation
-
     def write_frame(self, scenario : Scenario, result : sl.RenderPassResult):
 
         scene = scenario.scene
@@ -172,13 +160,13 @@ class Writer(object):
             instance_index_masks.append(mask * obj.instance_index)
 
             visib_num_pixels = mask.sum()
-            visib_bbox = Writer.bbox_from_mask(mask)
+            visib_bbox = BOPWriter.bbox_from_mask(mask)
 
             # Render this object alone
             silhouette = self.mask_renderer.render(scene, predicate=lambda o: o == obj)
             sil_mask = (silhouette.class_index()[:,:,0] != 0).byte().cpu()
             sil_num_pixels = sil_mask.sum()
-            sil_bbox = Writer.bbox_from_mask(sil_mask)
+            sil_bbox = BOPWriter.bbox_from_mask(sil_mask)
             visib_fract = float(visib_num_pixels) / float(sil_num_pixels) if sil_num_pixels > 0 else 0
 
             if i != 0:
@@ -201,7 +189,7 @@ class Writer(object):
         P = scene.projection_matrix()
         W,H = scene.viewport
 
-        cam_K = Writer.intrinsicMatrixFromProjection(P, W, H)
+        cam_K = BOPWriter.intrinsicMatrixFromProjection(P, W, H)
 
         world_in_camera = torch.inverse(scene.camera_pose())
         cam_R_w2c = world_in_camera[:3,:3].contiguous()
@@ -251,3 +239,31 @@ class Writer(object):
         rgb_clip = rgb_clip.fx(vfx.speedx, out_fps / in_fps)  # both speedup and set_fps needed for re-setting FPS
         rgb_clip.write_videofile(str(self.path / "rgb_video.mp4"))
         rgb_clip.close()
+
+
+class OverlayWriter(object):
+    def __init__(self, path : Path):
+        self.path = path
+        self.saver = sl.ImageSaver()
+
+        # Create output directory
+        path.mkdir(parents=True, exist_ok=True)
+
+    def __enter__(self):
+        self.saver.__enter__()
+        return self
+
+    def __exit__(self, type, value, traceback):
+        self.saver.__exit__(type, value, traceback)
+
+    def write_rgb(self, result : sl.RenderPassResult, out_file: str):
+        rgb = result.rgb()[:,:,:3].cpu().contiguous()
+        self.saver.save(rgb, out_file)
+        return rgb
+
+    def write_obj_mask(self, result : sl.RenderPassResult, out_file: str):
+        instance_segmentation = result.instance_index()[:,:,0]
+        instance_segmentation[instance_segmentation > 0] = 1.0
+        instance_segmentation = instance_segmentation.byte().cpu()
+        self.saver.save(instance_segmentation, out_file)
+        return instance_segmentation

@@ -23,7 +23,7 @@ from ycb_dynamic.scenarios import (
     ThrowScenario,
     TestScenario
 )
-from ycb_dynamic.output import Writer
+from ycb_dynamic.output import BOPWriter
 
 
 SCENARIOS = {
@@ -111,7 +111,7 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
 
     # a list of tuples (camera, writers), where each 'writers' itself is a list of tuples (stereo_position, writer)
     writers_per_cam = [(cam, [
-            (stereo_pos, Writer(Path(cfg.out_path) / f"{it:06}_{scenario.name}_{cam.get_posed_name(stereo_pos)}"))
+            (stereo_pos, BOPWriter(Path(cfg.out_path) / f"{it:06}_{scenario.name}_{cam.get_posed_name(stereo_pos)}"))
                   for stereo_pos in cam.stereo_positions
         ]) for cam in scenario.cameras
     ]
@@ -257,6 +257,6 @@ if __name__ == "__main__":
 
     cfg.sim_fps = (
         cfg.sim_steps_per_sec / cfg.sim_steps_per_frame
-    )  # TODO 60 or even 120 for dynamic movement?
+    )
     print(f"Generating {cfg.frames} frames at {cfg.sim_fps} fps")
     main(cfg)
