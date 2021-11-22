@@ -27,8 +27,11 @@ def elaborate(input):
     return input
 
 
-if __name__ == '__main__':
-
+def process_textures():
+    '''
+    Skims through BASE_DIR, creating several obj files for each found texture information directory
+    by creating and filling the corresponding .obj and .mtl files
+    '''
     dirs = [dir for dir in os.listdir(str(BASE_DIR)) if os.path.isdir(str(BASE_DIR / dir))]
     for dir in sorted(dirs):
 
@@ -70,3 +73,5 @@ if __name__ == '__main__':
             mtl_file.writelines(mtl_file_lines)
 
 
+if __name__ == '__main__':
+    process_textures()

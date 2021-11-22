@@ -1,4 +1,3 @@
-
 """
 Methods for writing an output frame
 Taken from SynPick and modified
@@ -11,6 +10,9 @@ from pathlib import Path
 from ycb_dynamic.scenarios.scenario import Scenario
 
 class BOPWriter(object):
+    '''
+    'Full' writer, logging all availiable renderings of a scene in the BOP format (https://bop.felk.cvut.cz/datasets)
+    '''
     def __init__(self, path : Path):
         self.path = path
         self.idx = 0
@@ -242,6 +244,9 @@ class BOPWriter(object):
 
 
 class OverlayWriter(object):
+    '''
+    Simplified writer for overlay images generated e.g. as result of a pose prediction visualization.
+    '''
     def __init__(self, path : Path):
         self.path = path
         self.saver = sl.ImageSaver()

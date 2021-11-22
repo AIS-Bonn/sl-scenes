@@ -6,4 +6,6 @@ from .dice_roll import DiceRollScenario
 from .stack import StackScenario
 from .tabletop import TabletopScenario
 from .throw import ThrowScenario
-from .test import TestScenario
+# from .test import TestScenario
+
+class TestScenario(object): pass

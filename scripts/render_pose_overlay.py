@@ -16,6 +16,12 @@ from ycb_dynamic.output import OverlayWriter
 from ycb_dynamic.OBJECT_INFO import get_objects_by_class_id
 
 def main(cfg):
+    '''
+    Given an output path and some information concerning video length etc., re-creates the found sequences'
+    original scene setups in stillleben but only for the active objects. Assigns the predicted poses,
+    re-renders the scene and blends the resulting RGB images with the original rendered scenes to visualize the
+    relation between ground truth and predicted poses per object per frame.
+    '''
 
     # preparation
     pred_path = Path(cfg.pred_path)
@@ -88,7 +94,7 @@ def main(cfg):
             # set, render and save for each frame
             for t, (obj_poses_all_objs, (_, cam_info)) in enumerate(zip(obj_poses_all_frames, scene_camera_info)):
 
-                # predicted objects are highlighted in green in context frames and in red in predicted frames
+                # predicted objects are highlighted in green in the context frames and in red in predicted frames
                 if t >= (cfg.input_frames + cfg.pred_frames): break
                 overlay_color = torch.tensor([[[1.0, 0.0, 0.0]]]) if t > cfg.input_frames \
                     else torch.tensor([[[0.0, 1.0, 0.0]]])  # shape [1, 1, 3]

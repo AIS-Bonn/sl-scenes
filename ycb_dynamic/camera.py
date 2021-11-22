@@ -8,6 +8,10 @@ camera_movement_constraints = CONFIG["camera_movement"]
 
 
 class Camera(object):
+    '''
+    The camera object provides a range of functionalities to better model real-world (stereo) cameras
+    that might move around or behave otherwise as time passes.
+    '''
     def __init__(self, name: str, elev_angle: float, ori_angle: float, distance: float, lookat: torch.Tensor,
                  stereo_pair_dist: float, stereo_positions: List[str], movement_complexity: int):
         self.name = name  # can be used e.g. to name the corresponding output directories

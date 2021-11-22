@@ -2,6 +2,10 @@ import numpy as np
 
 
 class TimeDependentCamParamFunc(object):
+    '''
+    Base class for all time-dependent camera functions.
+    These functions move the camera according to a specific pattern, depending on the input t.
+    '''
     def __init__(self, start_val, end_val, start_t, end_t):
         self.start_val = start_val
         self.end_val = end_val
@@ -13,6 +17,9 @@ class TimeDependentCamParamFunc(object):
 
 
 class ConstFunc(TimeDependentCamParamFunc):
+    '''
+    Constant function (no movement)
+    '''
     def __init__(self, start_val, end_val, start_t, end_t):
         super(ConstFunc, self).__init__(start_val, end_val, start_t, end_t)
 
@@ -21,6 +28,9 @@ class ConstFunc(TimeDependentCamParamFunc):
 
 
 class LinFunc(TimeDependentCamParamFunc):
+    '''
+    Movement as a linear function in time
+    '''
     def __init__(self, start_val, end_val, start_t, end_t):
         super(LinFunc, self).__init__(start_val, end_val, start_t, end_t)
         self.slope = (self.end_val - self.start_val) / (self.end_t - self.start_t)
@@ -30,6 +40,9 @@ class LinFunc(TimeDependentCamParamFunc):
 
 
 class SinFunc(TimeDependentCamParamFunc):
+    '''
+    Movement as a sine-wave function in time
+    '''
     def __init__(self, start_val, end_val, start_t, end_t):
         super(SinFunc, self).__init__(start_val, end_val, start_t, end_t)
         self.amp = self.end_val - self.start_val
@@ -43,6 +56,10 @@ class SinFunc(TimeDependentCamParamFunc):
 
 
 class LinFuncOnce(TimeDependentCamParamFunc):
+    '''
+    One-time linear movement from start_val to end_val during [start_t, end_t].
+    Outside this time interval, no movement.
+    '''
     def __init__(self, start_val, end_val, start_t, end_t):
         super(LinFuncOnce, self).__init__(start_val, end_val, start_t, end_t)
 
@@ -53,6 +70,9 @@ class LinFuncOnce(TimeDependentCamParamFunc):
 
 
 class TanhFunc(TimeDependentCamParamFunc):
+    '''
+    Similar to the LinFunc movement, but a "smoothed" version with tanh.
+    '''
     def __init__(self, start_val, end_val, start_t, end_t):
         super(TanhFunc, self).__init__(start_val, end_val, start_t, end_t)
         self.freq_mod = np.random.uniform(4, 8)

@@ -35,7 +35,7 @@ SCENARIOS = {
     "stack": StackScenario,
     "tabletop": TabletopScenario,
     "throw": ThrowScenario,
-    "test": TestScenario,
+    #"test": TestScenario,
 }
 
 
