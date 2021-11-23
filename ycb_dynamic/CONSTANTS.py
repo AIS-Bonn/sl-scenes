@@ -36,6 +36,9 @@ ALL_LIGHTMAPS = {
 # Scene global configurations
 #########################
 
+# ROBOTS
+END_EFFECTOR_POSE = torch.tensor([[0, 0, 1, 0], [0, 1, 0, 0], [-1, 0, 0, 0.0], [0, 0, 0, 1]])
+
 # TABLE
 TABLE_POSE = torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.0], [0, 0, 0, 1]])
 
@@ -114,6 +117,7 @@ WOODEN_BOX = [obj for obj in OBJECT_INFO if obj.name == "wooden_box"]
 CHAIRS = [obj for obj in OBJECT_INFO if obj.name.endswith("_chair")]
 CUPBOARDS = [obj for obj in OBJECT_INFO if obj.name.endswith("_cupboard")]
 TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table")]
+NO_POOL_TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table") and not obj.name.endswith("pool_table")]
 BOWLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_bowl") and obj.name != "024_bowl"]
 BALL_BOXES = [obj for obj in OBJECT_INFO if obj.name in ["laundry_basket", "wooden_box"]]
 FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and
@@ -131,6 +135,7 @@ ROOMS = [obj for obj in OBJECT_INFO if "complete_rooms" in obj.mesh_fp]
 
 # for accessing
 TABLE = [random.choice(TABLES)]
+NO_POOL_TABLE = [random.choice(NO_POOL_TABLES)]
 BOWL = [random.choice(BOWLS)]
 BALL_BOX = [random.choice(BALL_BOXES)]
 ROOM = [random.choice(ROOMS)]

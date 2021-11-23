@@ -70,10 +70,7 @@ def main(cfg):
                 res = init_populate_scene(cfg, scenario_id=scenario_id)
                 if(res["render"]):
                     print(f"Scene successfully populated on iteration #{res['n_errors']}....")
-                    try:
-                        run_and_render_scenario(cfg, renderer, res["scenario"], it)
-                    except Exception as e:  # TODO better exception handling!
-                        print(f"Something has gone wrong: {e}")
+                    run_and_render_scenario(cfg, renderer, res["scenario"], it)
                 else:
                     print(f"""Iteration {it}, Scene ID {scenario_id} :Number of trials exceeded.
                               Scene could not be rendered....""")

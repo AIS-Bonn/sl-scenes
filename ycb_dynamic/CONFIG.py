@@ -262,6 +262,19 @@ CONFIG = {
                 "z_min": 0.05,
                 "z_max": 0.05,
             },
+            "endeffector_pos": {
+                "x": 1.2,
+                "y_1": -0.3,
+                "y_2": 0.3,
+                "z_min": 0.05,
+                "z_max": 0.1,
+            },
+            "waypoint_pos": {
+                "x_min": 0.7,
+                "x_max": 0.9,
+                "z_min": 0.03,
+                "z_max": 0.0,
+            },
             "velocity": {},
             "other": {}
         },
