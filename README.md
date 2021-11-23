@@ -3,7 +3,7 @@
 ### Installation
 
 - Install `stillleben` and its requirements according to [this manual](https://git.ais.uni-bonn.de/schwarzm/stillleben/-/blob/master/doc/installation.rst).
-- Install additional packages via pip: `matplotlib`, `scipy`, `pandas`, `tqdm`, `moviepy`, `urllib3`.
+- Install additional packages via pip: `pip install matplotlib scipy pandas tqdm moviepy urllib3`.
 - Clone this repo.
 - Download the required external data from [here](https://uni-bonn.sciebo.de/s/2E7OjZtT7PvBefW) (password: `ycb-dynamic`) and place the folders into the folder "external_data" of this repo.
 
