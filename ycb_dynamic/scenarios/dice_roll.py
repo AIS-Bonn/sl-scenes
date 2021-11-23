@@ -14,7 +14,7 @@ from ycb_dynamic.scenarios.scenario import Scenario
 class DiceRollScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "DiceRoll"
-        self.config = CONFIG["scenes"].get("dice_roll", {})
+        self.config = CONFIG["scenes"]["dice_roll"]
         self.prep_time = 0.002  # during this time (in s), the scene will not be rendered
         super(DiceRollScenario, self).__init__(cfg, scene)
 
@@ -28,8 +28,8 @@ class DiceRollScenario(Scenario):
         """
         SCENARIO-SPECIFIC
         """
-        self.mesh_loader.load_meshes(CONSTANTS.TABLE),
-        self.mesh_loader.load_meshes(CONSTANTS.DICE_OBJECTS),
+        self.mesh_loader.load_meshes(CONSTANTS.TABLE)
+        self.mesh_loader.load_meshes(CONSTANTS.DICE_OBJECTS)
 
     def setup_objects_(self):
         """

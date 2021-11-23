@@ -28,9 +28,9 @@ class BowlingScenario(Scenario):
         """
         SCENARIO-SPECIFIC
         """
-        self.mesh_loader.load_meshes(CONSTANTS.TABLE),
-        self.mesh_loader.load_meshes(CONSTANTS.BOWLING_BALL),
-        self.mesh_loader.load_meshes(CONSTANTS.WOOD_BLOCK),
+        self.mesh_loader.load_meshes(CONSTANTS.TABLE)
+        self.mesh_loader.load_meshes(CONSTANTS.BOWLING_BALL)
+        self.mesh_loader.load_meshes(CONSTANTS.WOOD_BLOCK)
 
     def setup_objects_(self):
         """

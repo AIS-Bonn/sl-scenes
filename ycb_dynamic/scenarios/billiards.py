@@ -28,9 +28,9 @@ class BillardsScenario(Scenario):
         """
         SCENARIO-SPECIFIC
         """
-        self.mesh_loader.load_meshes(CONSTANTS.TABLE),
-        self.mesh_loader.load_meshes(CONSTANTS.BOWLING_BALL),
-        self.mesh_loader.load_meshes(CONSTANTS.BILLIARDS_OBJECTS),
+        self.mesh_loader.load_meshes(CONSTANTS.TABLE)
+        self.mesh_loader.load_meshes(CONSTANTS.BOWLING_BALL)
+        self.mesh_loader.load_meshes(CONSTANTS.BILLIARDS_OBJECTS)
 
     def setup_objects_(self):
         """

@@ -91,6 +91,9 @@ STACK_PYRAMID_POSES = [
 # Pre-defined object sets
 #########################
 
+# Robots etc.
+SUCTION_GRIPPER = [obj for obj in OBJECT_INFO if obj.name == "suction_gripper"]
+
 # YCB Objects
 FLAT_OBJS = [str(i).zfill(3) for i in range(0, 11)]
 FRUIT_OBJS = [str(i).zfill(3) for i in range(11, 19)]
@@ -126,7 +129,6 @@ WALLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_wall")]
 # WALLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_wall") and "black_tiling" in obj.name]
 ROOMS = [obj for obj in OBJECT_INFO if "complete_rooms" in obj.mesh_fp]
 
-
 # for accessing
 TABLE = [random.choice(TABLES)]
 BOWL = [random.choice(BOWLS)]
@@ -136,7 +138,7 @@ FLOOR = [random.choice(FLOORS)]
 WALL = [random.choice(WALLS)]
 FURNITURE = [random.choice(FURNITURES)]
 
-
+# other collections
 YCBV_OBJECTS = [  # Only considering the YCB-Video subset of objects
     obj for obj in OBJECT_INFO if obj.name.split("_")[0] in YCBV_OBJS
 ]

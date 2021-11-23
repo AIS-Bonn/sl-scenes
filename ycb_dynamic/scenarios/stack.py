@@ -27,8 +27,8 @@ class StackScenario(Scenario):
         """
         SCENARIO-SPECIFIC
         """
-        self.mesh_loader.load_meshes(CONSTANTS.TABLE),
-        self.mesh_loader.load_meshes(CONSTANTS.STACK_OBJECTS),
+        self.mesh_loader.load_meshes(CONSTANTS.TABLE)
+        self.mesh_loader.load_meshes(CONSTANTS.STACK_OBJECTS)
 
     def setup_objects_(self):
         """

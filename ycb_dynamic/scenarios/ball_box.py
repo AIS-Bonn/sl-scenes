@@ -28,7 +28,7 @@ class BallBoxScenario(Scenario):
         """
         SCENARIO-SPECIFIC
         """
-        self.mesh_loader.load_meshes(CONSTANTS.TABLE),
+        self.mesh_loader.load_meshes(CONSTANTS.TABLE)
         self.mesh_loader.load_meshes(CONSTANTS.BALL_BOX)
         self.mesh_loader.load_meshes(CONSTANTS.YCB_SMALL_BALLS)
 

@@ -1330,5 +1330,17 @@
         "static_friction": 0.6,
         "dynamic_friction": 0.4,
         "class_id": 111
+    },
+    "suction_gripper": {
+        "mesh_fp": "robot/suction_gripper.glb",
+        "weight": 5,
+        "flags": 1,
+        "metallic": 0.01,
+        "roughness": 0.9,
+        "restitution": 0.3,
+        "scale": 1.0,
+        "static_friction": 0.6,
+        "dynamic_friction": 0.4,
+        "class_id": 112
     }
 }

@@ -30,8 +30,8 @@ class ThrowScenario(Scenario):
         """
         SCENARIO-SPECIFIC
         """
-        self.mesh_loader.load_meshes(CONSTANTS.TABLE),
-        self.mesh_loader.load_meshes(CONSTANTS.YCBV_OBJECTS),
+        self.mesh_loader.load_meshes(CONSTANTS.TABLE)
+        self.mesh_loader.load_meshes(CONSTANTS.YCBV_OBJECTS)
 
     def setup_objects_(self):
         """

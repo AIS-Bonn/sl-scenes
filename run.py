@@ -21,6 +21,7 @@ from ycb_dynamic.scenarios import (
     StackScenario,
     TabletopScenario,
     ThrowScenario,
+    TidyScenario,
     TestScenario
 )
 from ycb_dynamic.output import BOPWriter
@@ -35,6 +36,7 @@ SCENARIOS = {
     "stack": StackScenario,
     "tabletop": TabletopScenario,
     "throw": ThrowScenario,
+    "tidy": TidyScenario,
     #"test": TestScenario,
 }
 
