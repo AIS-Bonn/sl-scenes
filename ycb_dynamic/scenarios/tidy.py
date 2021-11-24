@@ -112,8 +112,8 @@ class TidyScenario(Scenario):
         ]
 
         # set up the robot simulation
-        #self.robot_sim = sl.ManipulationSim(self.scene, self.ee, self.ee_pose)
-        #self.robot_sim.set_spring_parameters(1000.0, 1.0, 30.0)  # stiffness, damping, force_limit
+        self.robot_sim = sl.ManipulationSim(self.scene, self.ee, self.ee_pose)
+        self.robot_sim.set_spring_parameters(1000.0, 1.0, 30.0)  # stiffness, damping, force_limit
 
     def setup_cameras_(self):
         """
@@ -131,27 +131,25 @@ class TidyScenario(Scenario):
         if self.sim_t > self.prep_time and self.ee is None:
             self.setup_robot_sim()
 
-        #print(self.remaining_pause)
-
-        # simulate pbject physics without gripper
+        # if paused or gripper is not set up or no waypoints remaining -> simulate object physics without gripper
         if self.ee is None or self.remaining_pause > 0 or len(self.waypoints) < 1:
             self.scene.simulate(dt)
             if self.remaining_pause > 0:
                 self.remaining_pause -= dt
 
-        # move gripper to next waypoint of there is
+        # if gripper is loaded and there is another unreached waypoint for it: move the robot
         else:
             cur_waypoint = self.waypoints[0]
             pose_delta = cur_waypoint - self.ee_t
             pose_delta_norm = torch.linalg.norm(pose_delta)
             pose_delta_normalized = pose_delta / pose_delta_norm
 
-            # reached current waypoint -> pop it and stop briefly
+            # reached current waypoint -> pop it and pause briefly
             if pose_delta_norm < self.max_waypoint_deviation:
-                #print("reached a waypoint")
                 _ = self.waypoints.pop(0)
                 self.ee_velocity = 0.0
                 self.remaining_pause += 0.300  # pause for a bit
+
             # else: adjust movement velocity according to distance to waypoint
             else:
                 ideal_velocity = pose_delta_norm * 2.0
@@ -166,6 +164,6 @@ class TidyScenario(Scenario):
             ee_pose = self.ee_pose
             ee_pose[:3, 3] += self.ee_velocity * dt * pose_delta_normalized
             #print(f"new pos: {ee_pose[:3, 3]}")
-            #self.robot_sim.step(ee_pose, dt)  # TODO doesn't work!
-            self.ee.set_pose(ee_pose)
+            self.robot_sim.step(ee_pose, dt)  # TODO doesn't work!
+            #self.ee.set_pose(ee_pose)
             # print(f"after sim: {self.ee_pose[:3, 3]}")
