@@ -31,7 +31,7 @@ class MeshLoader:
         extract_singular = lambda x: x[0] if len(x) == 1 else x
         return [extract_singular(item) for item in self.loaded_meshes]
 
-    def load_meshes(self, obj_info : List[OBJECT_INFO.ObjectInfo], **kwargs):
+    def load_meshes(self, obj_info: List[OBJECT_INFO.ObjectInfo], **kwargs):
         """
         Loads the meshes whose information is given in parameter 'obj_info.
         Each call of this method APPENDS a list to the loaded_meshes attribute.
@@ -169,7 +169,7 @@ class DecoratorLoader:
         pose[2, -1] += obj.mesh.bbox.max[-1]
 
         # Rotating object in yaw direction
-        yaw_angle = random.choice([torch.tensor([i* CONSTANTS.PI / 2]) for i in range(4)])
+        yaw_angle = random.choice([torch.tensor([i * CONSTANTS.PI / 2]) for i in range(4)])
         angles = torch.cat([yaw_angle, torch.zeros(2)])
         rot_matrix = utils.get_rot_matrix(angles=angles)
         pose[:3, :3] = pose[:3, :3] @ rot_matrix
@@ -217,6 +217,7 @@ class OccupancyMatrix:
     def init_occupancy_matrix(self, objects):
         """ Obtaining an occupancy matrix with empty and occupied positions"""
         for obj in objects:
+            # print(os.path.basename(obj.mesh.filename))
             if(os.path.basename(obj.mesh.filename) in CONSTANTS.FLOOR_NAMES):
                 continue
             self.update_occupancy_matrix(obj)
@@ -262,10 +263,11 @@ class OccupancyMatrix:
             bbox_x_max, bbox_y_max = bbox_y_max, bbox_x_max
 
         # using the 1e-3 to add some volume to walls
-        min_x, min_y = min(bbox_x_min, -1e-3) + pos_x, min(bbox_y_min, -1e-3) + pos_y
-        max_x, max_y = max(bbox_x_max, 1e-3) + pos_x, max(bbox_y_max, 1e-3) + pos_y
-        y_coords = (self.grid_y >= min_y) & (self.grid_y < max_y)
-        x_coords = (self.grid_x >= min_x) & (self.grid_x < max_x)
+        min_size = self.bounds["res"] / 2
+        min_x, min_y = min(bbox_x_min, -min_size) + pos_x, min(bbox_y_min, -min_size) + pos_y
+        max_x, max_y = max(bbox_x_max, min_size) + pos_x, max(bbox_y_max, min_size) + pos_y
+        y_coords = (self.grid_y >= min_y) & (self.grid_y <= max_y)
+        x_coords = (self.grid_x >= min_x) & (self.grid_x <= max_x)
         occ_coords = y_coords & x_coords
 
         self.occ_matrix[occ_coords] = 1
@@ -326,7 +328,7 @@ class OccupancyMatrix:
             pos_y, pos_x = free_positions[0][id], free_positions[1][id]
             position = torch.cat([self.x_vect[pos_x], self.y_vect[pos_y]])
         else:
-            print(f"No free positions...")
+            print("No free positions...")
 
         return position
 

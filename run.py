@@ -37,7 +37,7 @@ SCENARIOS = {
     "tabletop": TabletopScenario,
     "throw": ThrowScenario,
     "tidy": TidyScenario,
-    #"test": TestScenario,
+    # "test": TestScenario,
 }
 
 

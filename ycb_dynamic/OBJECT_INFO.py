@@ -25,6 +25,7 @@ A few notes on the 'scale' parameter: stillleben is completely metric, so non-me
 """
 OBJECT_INFO = [ObjectInfo(name=name, **other_properties) for name, other_properties in obj_info_dict.items()]
 
+
 def get_objects_by_class_id(class_ids : List[int]):
     obj_infos = []
     for class_id in class_ids:

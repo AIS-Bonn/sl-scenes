@@ -13,6 +13,7 @@ from ycb_dynamic.object_models import MeshLoader, ObjectLoader, DecoratorLoader
 from ycb_dynamic.lighting import get_lightmap
 from ycb_dynamic.camera import Camera
 import ycb_dynamic.utils.utils as utils
+import ycb_dynamic.CONSTANTS as CONSTANTS
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
 
 
@@ -64,6 +65,7 @@ class Scenario(object):
         raise NotImplementedError
 
     def decorate_scene(self):
+        self.room_assembler.add_wall_furniture()
         self.decorator_loader.decorate_scene(object_loader=self.object_loader)
         return
 
@@ -108,7 +110,6 @@ class Scenario(object):
         if not self.meshes_loaded:
             self.load_meshes()  # if objects have not been loaded yet, load them
         self.setup_objects_()
-        self.room_assembler.add_wall_furniture()
         self.objects_loaded = True
         return
 
@@ -140,6 +141,16 @@ class Scenario(object):
             cam_stereo_positions = ["left", "right"] if self.coplanar_stereo else ["mono"]
             self.cameras.append(Camera(cam_name, cam_elev_angle, cam_ori_angle, cam_dist, cam_lookat,
                                        self.coplanar_stereo_dist, cam_stereo_positions, self.cam_movement_complexity))
+            # adding a dummy tiny object so that camera uses one cell of the occupancy matrix
+            self.mesh_loader.load_meshes(CONSTANTS.CAMERA_OBJ)
+            camera_pos = self.cameras[-1].get_pos()
+            pose = torch.eye(4)
+            pose[:3, -1] = camera_pos
+            camera_info_mesh = self.mesh_loader.get_meshes()[-1]
+            obj = self.add_object_to_scene(camera_info_mesh, is_static=True)
+            obj.set_pose(pose)
+            self.scene.add_object(obj)
+
         self.setup_cameras_()  # e.g. scenario-specific height adjustment
         self.cameras_loaded = True
 
