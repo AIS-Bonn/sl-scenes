@@ -160,6 +160,39 @@ CONFIG = {
             },
             "other": {},
         },
+        # DICE ROLL SCENE
+        "dice_roll": {
+            "camera": {
+                "elevation_angle_min": 15,
+                "elevation_angle_max": 15,
+                "orientation_angle_min": 0,
+                "orientation_angle_max": 360,
+                "orientation_angle_default": 60,
+                "distance_min": 3.00,
+                "distance_max": 3.00,
+                "base_lookat": torch.Tensor([0, 0, 0.5])
+            },
+            "pos": {
+                "x_min": -1.2,
+                "x_max": -1.2,
+                "y_min": -0.4,
+                "y_max": 0.4,
+                "z_min": 0.2,
+                "z_max": 0.6,
+            },
+            "velocity": {
+                "lin_velocity": torch.Tensor([2, 0, 0]),
+                "lin_noise_mean": 0,
+                "lin_noise_std": 0.3,
+                "ang_velocity": torch.Tensor([0, 30, 0]),
+                "ang_noise_mean": 0,
+                "ang_noise_std": 1,
+            },
+            "other": {
+                "min_objs": 2,
+                "max_objs": 7
+            },
+        },
         # STACK SCENE
         "stack": {
             "camera": {
@@ -259,57 +292,24 @@ CONFIG = {
                 "x_max": 1.0,
                 "y_min": -0.2,
                 "y_max": 0.2,
-                "z_min": 0.05,
-                "z_max": 0.05,
+                "z_min": 0.1,
+                "z_max": 0.15,
             },
             "endeffector_pos": {
                 "x": 1.2,
                 "y_1": -0.3,
                 "y_2": 0.3,
-                "z_min": 0.05,
-                "z_max": 0.1,
+                "z_min": -0.15,
+                "z_max": -0.1,
             },
             "waypoint_pos": {
-                "x_min": 0.7,
-                "x_max": 0.9,
-                "z_min": 0.03,
-                "z_max": 0.0,
+                "x_min": 0.55,
+                "x_max": 0.65,
+                "z_min": -0.15,
+                "z_max": -0.1,
             },
             "velocity": {},
             "other": {}
         },
-        # DICE ROLL SCENE
-        "dice_roll": {
-            "camera": {
-                "elevation_angle_min": 15,
-                "elevation_angle_max": 15,
-                "orientation_angle_min": 0,
-                "orientation_angle_max": 360,
-                "orientation_angle_default": 60,
-                "distance_min": 3.00,
-                "distance_max": 3.00,
-                "base_lookat": torch.Tensor([0, 0, 0.5])
-            },
-            "pos": {
-                "x_min": -1.2,
-                "x_max": -1.2,
-                "y_min": -0.4,
-                "y_max": 0.4,
-                "z_min": 0.2,
-                "z_max": 0.6,
-            },
-            "velocity": {
-                "lin_velocity": torch.Tensor([2, 0, 0]),
-                "lin_noise_mean": 0,
-                "lin_noise_std": 0.3,
-                "ang_velocity": torch.Tensor([0, 30, 0]),
-                "ang_noise_mean": 0,
-                "ang_noise_std": 1,
-            },
-            "other": {
-                "min_objs": 2,
-                "max_objs": 7
-            },
-        }
     }
 }

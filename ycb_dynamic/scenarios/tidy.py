@@ -20,8 +20,8 @@ class TidyScenario(Scenario):
         self.prep_time = 1.000  # during this time (in s), the scene will not be rendered
         self.remaining_pause = 0.000  # pause time remaining for the gripper
         self.max_waypoint_deviation = 0.02  # in m
-        self.max_velocity = 1.2  # in m/s
-        self.acceleration = 1.2  # in m/s²
+        self.max_velocity = 0.6  # in m/s
+        self.acceleration = 1.5  # in m/s²
         self.ee = None
         self.robot_sim = None
         super(TidyScenario, self).__init__(cfg, scene)   # also calls reset_sim()
@@ -79,6 +79,7 @@ class TidyScenario(Scenario):
         if not self.objects_loaded:
             self.setup_objects()
 
+        # set up end effector (ee)
         ee_pose = CONSTANTS.END_EFFECTOR_POSE
         init_z = random.uniform(self.config["endeffector_pos"]["z_min"], self.config["endeffector_pos"]["z_max"])
         ee_t = torch.tensor([
@@ -94,6 +95,7 @@ class TidyScenario(Scenario):
         self.table_height = self.ee.pose()[2, 3] - init_z
         self.ee_velocity = 0.0
 
+        # set up the waypoints the ee has to reach
         self.waypoints = [
             torch.tensor([
                 random.uniform(self.config["waypoint_pos"]["x_min"], self.config["waypoint_pos"]["x_max"]),
@@ -109,6 +111,7 @@ class TidyScenario(Scenario):
             ]),
         ]
 
+        # set up the robot simulation
         #self.robot_sim = sl.ManipulationSim(self.scene, self.ee, self.ee_pose)
         #self.robot_sim.set_spring_parameters(1000.0, 1.0, 30.0)  # stiffness, damping, force_limit
 
