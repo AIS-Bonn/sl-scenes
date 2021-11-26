@@ -1333,7 +1333,7 @@
     },
     "suction_gripper": {
         "mesh_fp": "robot/suction_gripper.glb",
-        "weight": 5,
+        "weight": 2,
         "flags": 1,
         "metallic": 0.01,
         "roughness": 0.9,

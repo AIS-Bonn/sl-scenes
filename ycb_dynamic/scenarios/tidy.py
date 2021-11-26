@@ -89,8 +89,10 @@ class TidyScenario(Scenario):
             init_z
         ])
         ee_pose[:3, 3] = ee_t
+        print(f"ee_pose: {ee_pose}")
         ee_mod = {"mod_pose": ee_pose}
-        self.ee = self.add_object_to_scene(self.ee_mesh, is_static=True, **ee_mod)
+        self.start_ee_pose_ = ee_pose
+        self.ee = self.add_object_to_scene(self.ee_mesh, is_static=False, **ee_mod)
         self.ee = self.update_object_height(cur_obj=self.ee, objs=[self.table])
         self.table_height = self.ee.pose()[2, 3] - init_z
         self.ee_velocity = 0.0
@@ -112,8 +114,8 @@ class TidyScenario(Scenario):
         ]
 
         # set up the robot simulation
-        self.robot_sim = sl.ManipulationSim(self.scene, self.ee, self.ee_pose)
-        self.robot_sim.set_spring_parameters(1000.0, 1.0, 30.0)  # stiffness, damping, force_limit
+        self.robot_sim = sl.ManipulationSim(self.scene, self.ee, self.start_ee_pose_)
+        self.robot_sim.set_spring_parameters(700.0, 5.0, 300.0)  # stiffness, damping, force_limit
 
     def setup_cameras_(self):
         """
@@ -140,7 +142,7 @@ class TidyScenario(Scenario):
         # if gripper is loaded and there is another unreached waypoint for it: move the robot
         else:
             cur_waypoint = self.waypoints[0]
-            pose_delta = cur_waypoint - self.ee_t
+            pose_delta = cur_waypoint - self.start_ee_pose_[:3, 3]
             pose_delta_norm = torch.linalg.norm(pose_delta)
             pose_delta_normalized = pose_delta / pose_delta_norm
 
@@ -161,9 +163,10 @@ class TidyScenario(Scenario):
                 #print(self.ee_velocity)
 
             # calculate new gripper pose with calculated delta vector and velocity
-            ee_pose = self.ee_pose
+            ee_pose = self.start_ee_pose_
             ee_pose[:3, 3] += self.ee_velocity * dt * pose_delta_normalized
             #print(f"new pos: {ee_pose[:3, 3]}")
             self.robot_sim.step(ee_pose, dt)  # TODO doesn't work!
+            self.start_ee_pose_ = ee_pose
             #self.ee.set_pose(ee_pose)
             # print(f"after sim: {self.ee_pose[:3, 3]}")
