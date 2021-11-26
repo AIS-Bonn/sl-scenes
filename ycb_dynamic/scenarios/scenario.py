@@ -33,7 +33,12 @@ class Scenario(object):
         self.meshes_loaded, self.objects_loaded = False, False
         self.z_offset = 0.
         self.lightmap = cfg.lightmap
-        self.n_cameras = cfg.cameras
+
+        if getattr(self, "allow_multiple_cameras", True):
+            self.n_cameras = cfg.cameras
+        else:
+            print(f"scenario '{self.name}' supports only 1 camera -> ignoring n_cameras...")
+            self.n_cameras = 1
         self.coplanar_stereo = cfg.coplanar_stereo
         self.coplanar_stereo_dist = cfg.coplanar_stereo_dist
         self.cam_movement_complexity = cfg.cam_movement_complexity

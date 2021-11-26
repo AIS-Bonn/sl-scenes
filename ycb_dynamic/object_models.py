@@ -91,9 +91,6 @@ class ObjectLoader:
     def create_object(self, object_info: OBJECT_INFO.ObjectInfo, mesh: sl.Mesh, is_static: bool, **obj_mod):
         """
         Proper object setup
-        :param mesh:
-        :param object_info:
-        :param is_static:
         :param obj_mod: Optional object modifiers, specified with a leading 'mod_'.
             IMPORTANT: scaling is done during mesh loading!!!
         :return:

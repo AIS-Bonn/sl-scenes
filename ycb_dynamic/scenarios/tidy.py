@@ -19,9 +19,10 @@ class TidyScenario(Scenario):
         self.config = CONFIG["scenes"]["tidy"]
         self.prep_time = 1.000  # during this time (in s), the scene will not be rendered
         self.remaining_pause = 0.000  # pause time remaining for the gripper
+        self.allow_multiple_cameras = False
         self.max_waypoint_deviation = 0.02  # in m
-        self.max_velocity = 0.6  # in m/s
-        self.acceleration = 1.5  # in m/s²
+        self.max_velocity = 0.5  # in m/s
+        self.acceleration = 1.0  # in m/s²
         self.ee = None
         self.robot_sim = None
         super(TidyScenario, self).__init__(cfg, scene)   # also calls reset_sim()
@@ -62,6 +63,7 @@ class TidyScenario(Scenario):
 
         # drop 10 random YCB-Video objects onto the table
         for obj_info_mesh in random.choices(ycbv_info_meshes, k=3):
+            print(" >>> trying to add object")
             mod_t = torch.tensor([
                 random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"]),
                 random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"]),
@@ -73,6 +75,7 @@ class TidyScenario(Scenario):
 
             # removing last object if colliding with anything else
             if self.is_there_collision():
+                print(" >>> object colliding!")
                 self.remove_obj_from_scene(obj)
 
     def setup_robot_sim(self):
@@ -89,7 +92,6 @@ class TidyScenario(Scenario):
             init_z
         ])
         ee_pose[:3, 3] = ee_t
-        print(f"ee_pose: {ee_pose}")
         ee_mod = {"mod_pose": ee_pose}
         self.start_ee_pose_ = ee_pose
         self.ee = self.add_object_to_scene(self.ee_mesh, is_static=False, **ee_mod)
@@ -115,7 +117,7 @@ class TidyScenario(Scenario):
 
         # set up the robot simulation
         self.robot_sim = sl.ManipulationSim(self.scene, self.ee, self.start_ee_pose_)
-        self.robot_sim.set_spring_parameters(700.0, 5.0, 300.0)  # stiffness, damping, force_limit
+        self.robot_sim.set_spring_parameters(3000.0, 10.0, 100.0)  # stiffness, damping, force_limit
 
     def setup_cameras_(self):
         """

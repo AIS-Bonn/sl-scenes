@@ -57,7 +57,7 @@ def main(cfg):
     if cfg.scenario != "all" and cfg.viewer:  # load scenario and view
         res = init_populate_scene(cfg, scenario_id=cfg.scenario)
         if(res["render"]):
-            print(f"Scene successfully populated on iteration #{res['n_errors']}....")
+            print(f"Scene successfully populated on take #{res['n_errors']}....")
             view_scenario(cfg, renderer, res["scenario"])
         else:
             print("Number of trials exceeded. Scene could not be rendered....")
