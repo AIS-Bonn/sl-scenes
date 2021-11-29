@@ -162,13 +162,9 @@ class TidyScenario(Scenario):
                     self.ee_velocity = min(self.ee_velocity + acceleration, self.max_velocity)
                 elif self.ee_velocity >= ideal_velocity:
                     self.ee_velocity = max(self.ee_velocity - acceleration, 0.0)
-                #print(self.ee_velocity)
 
             # calculate new gripper pose with calculated delta vector and velocity
             ee_pose = self.start_ee_pose_
             ee_pose[:3, 3] += self.ee_velocity * dt * pose_delta_normalized
-            #print(f"new pos: {ee_pose[:3, 3]}")
-            self.robot_sim.step(ee_pose, dt)  # TODO doesn't work!
+            self.robot_sim.step(ee_pose, dt)
             self.start_ee_pose_ = ee_pose
-            #self.ee.set_pose(ee_pose)
-            # print(f"after sim: {self.ee_pose[:3, 3]}")
