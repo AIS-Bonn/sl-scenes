@@ -128,8 +128,6 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
 
         sim_steps, written_frames = 0, 0
         pbar = tqdm.tqdm(total=cfg.frames)
-        sim_dt = 1.0 / cfg.sim_steps_per_sec
-        cam_dt = sim_dt * cfg.sim_steps_per_frame
 
         while written_frames < cfg.frames:
             # after sim's prep period, save visualizations every SIM_STEPS_PER_FRAME sim steps
@@ -141,13 +139,13 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
                         result = renderer.render(scenario.scene)
                         if not cfg.no_gen:
                             writer.write_frame(scenario, result)
-                    cam.step(cam_dt)  # advance camera for next step if it's a moving one
+                    cam.step()  # advance camera for next step if it's a moving one
                 written_frames += 1
                 pbar.update(1)
                 pbar.set_postfix(sim_steps=sim_steps)
 
             # sim step
-            scenario.simulate(sim_dt)
+            scenario.simulate()
             sim_steps += 1
             # time.sleep(10)
         pbar.close()
@@ -248,14 +246,22 @@ if __name__ == "__main__":
              "2 = slight or moderate movement across <=2 dim, 3 = slight, moderate or strong movement across <=3 dim."
              "Currently available dims: {elevation_angle, orientation_angle, distance_to_lookat}"
     )
+    parser.add_argument(
+        "--physics-engine",
+        type=str,
+        choices=["physx", "nimble"],
+        default="physx",
+        help="specifies whether to use the default PhysX simulator or nimblephysics, a differentiable DART fork"
+    )
     cfg = parser.parse_args()
 
     # config preparation
     if cfg.out_path == "":
         cfg.out_path = f"out/{utils.timestamp()}"
+    cfg.device = "cpu" if cfg.no_cuda else "cuda"
+    cfg.sim_dt = 1.0 / cfg.sim_steps_per_sec
+    cfg.cam_dt = cfg.sim_dt * cfg.sim_steps_per_frame
+    cfg.sim_fps = cfg.sim_steps_per_sec / cfg.sim_steps_per_frame
 
-    cfg.sim_fps = (
-        cfg.sim_steps_per_sec / cfg.sim_steps_per_frame
-    )
     print(f"Generating {cfg.frames} frames at {cfg.sim_fps} fps")
     main(cfg)

@@ -128,18 +128,18 @@ class TidyScenario(Scenario):
             self.update_camera_height(camera=cam, objs=[self.table]) for cam in self.cameras
         ]
 
-    def simulate(self, dt):
+    def simulate(self):
 
-        self.sim_t += dt
+        self.sim_t += self.sim_dt
         # add robot after preparation time to ensure that the objects are not falling anymore
         if self.sim_t > self.prep_time and self.ee is None:
             self.setup_robot_sim()
 
         # if paused or gripper is not set up or no waypoints remaining -> simulate object physics without gripper
         if self.ee is None or self.remaining_pause > 0 or len(self.waypoints) < 1:
-            self.scene.simulate(dt)
+            self.sim_step_()
             if self.remaining_pause > 0:
-                self.remaining_pause -= dt
+                self.remaining_pause -= self.sim_dt
 
         # if gripper is loaded and there is another unreached waypoint for it: move the robot
         else:
@@ -157,7 +157,7 @@ class TidyScenario(Scenario):
             # else: adjust movement velocity according to distance to waypoint
             else:
                 ideal_velocity = pose_delta_norm * 2.0
-                acceleration = self.acceleration * dt
+                acceleration = self.acceleration * self.sim_dt
                 if self.ee_velocity < ideal_velocity:
                     self.ee_velocity = min(self.ee_velocity + acceleration, self.max_velocity)
                 elif self.ee_velocity >= ideal_velocity:
@@ -165,6 +165,6 @@ class TidyScenario(Scenario):
 
             # calculate new gripper pose with calculated delta vector and velocity
             ee_pose = self.start_ee_pose_
-            ee_pose[:3, 3] += self.ee_velocity * dt * pose_delta_normalized
-            self.robot_sim.step(ee_pose, dt)
+            ee_pose[:3, 3] += self.ee_velocity * self.sim_dt * pose_delta_normalized
+            self.robot_sim.step(ee_pose, self.sim_dt)  # TODO move to sim_step()
             self.start_ee_pose_ = ee_pose

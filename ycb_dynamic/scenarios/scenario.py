@@ -4,9 +4,11 @@ Abstract class for defining scenarios
 import random
 from typing import Tuple
 import numpy as np
+from scipy.spatial.transform import Rotation as R
 from copy import deepcopy
 import torch
 import stillleben as sl
+import nimblephysics as nimble
 
 from ycb_dynamic.room_models import RoomAssembler
 from ycb_dynamic.object_models import MeshLoader, ObjectLoader, DecoratorLoader
@@ -22,6 +24,7 @@ class Scenario(object):
     config = dict()
 
     def __init__(self, cfg, scene: sl.Scene, randomize=True):
+        self.device = cfg.device
         self.scene = scene
         if randomize:
             utils.randomize()
@@ -42,6 +45,9 @@ class Scenario(object):
         self.coplanar_stereo = cfg.coplanar_stereo
         self.coplanar_stereo_dist = cfg.coplanar_stereo_dist
         self.cam_movement_complexity = cfg.cam_movement_complexity
+        self.sim_dt = cfg.sim_dt
+        self.cam_dt = cfg.cam_dt
+        self.physics_engine = cfg.physics_engine
         self.reset_sim()
         return
 
@@ -143,7 +149,7 @@ class Scenario(object):
             cam_lookat = deepcopy(base_lookat)
             cam_name = f"cam_{str(i).zfill(2)}"
             cam_stereo_positions = ["left", "right"] if self.coplanar_stereo else ["mono"]
-            self.cameras.append(Camera(cam_name, cam_elev_angle, cam_ori_angle, cam_dist, cam_lookat,
+            self.cameras.append(Camera(cam_name, self.cam_dt, cam_elev_angle, cam_ori_angle, cam_dist, cam_lookat,
                                        self.coplanar_stereo_dist, cam_stereo_positions, self.cam_movement_complexity))
         self.setup_cameras_()  # e.g. scenario-specific height adjustment
         self.cameras_loaded = True
@@ -154,8 +160,67 @@ class Scenario(object):
         """
         raise NotImplementedError
 
-    def simulate(self, dt):
-        raise NotImplementedError
+    def simulate(self):
+        '''
+        Can be overwritten by scenario-specific logic
+        '''
+        self.sim_t += self.sim_dt
+        self.sim_step_()
+
+    def sim_step_(self):
+        '''
+        Just calls the appropiate simulator; assumes that all other things have been taken care of.
+        '''
+        if self.physics_engine == "physx":
+            self.scene.simulate(self.sim_dt)
+        elif self.physics_engine == "physx_manipulation_sim":
+            raise NotImplementedError  # TODO implement for gripper sim
+        else:  # self.physics_engine == "nimble"
+            if getattr(self, "nimble_world", None) is None:
+                self.port_sl_scene_to_nimble_()
+            self.simulate_nimble_()
+
+    def port_sl_scene_to_nimble_(self):
+        '''
+        Creates a clone of the current stillleben scene for nimblephysics, enabling physics simulation there.
+        '''
+        print("initializing nimble scene from sl...")
+        self.nimble_world = nimble.simulation.World()
+        self.nimble_world.setGravity([0, -9.81, 0])
+        self.nimble_world.setTimeStep(self.sim_dt)
+        self.nimble_obj = self.scene.objects
+        obj_pos, obj_vel = [], []
+        for obj in self.nimble_obj:
+            obj = sl.Object(obj)
+            if obj.static:
+                pass  # TODO add obj to nimble without movable joints
+            else:
+                pass   # TODO add obj to nimble with freeJoint
+            obj_pose = obj.pose()
+            obj_t = obj_pose[:3, 3]
+            obj_rot = R.from_matrix(obj_pose[:3, :3]).as_rotvec()  # TODO is this correct?
+            obj_pos.extend([obj_t, obj_rot])
+            obj_vel.extend([obj.linear_velocity, obj.angular_velocity])
+        self.nimble_world.setState(torch.cat(obj_pos + obj_vel))
+
+    def simulate_nimble_(self, action=None):
+        '''
+        Simulates a timestep in nimblephysics.
+        '''
+        world_state = self.nimble_world.getState()
+        action = action or torch.zeros(self.nimble_world.getNumDofs(), device=self.device)
+        new_state = nimble.timestep(self.nimble_world, world_state, action)
+        self.nimble_world.setState(new_state)
+        obj_pos, obj_vel = torch.chunk(new_state, 2)
+        obj_pos = torch.chunk(obj_pos, obj_pos.shape[0] // 6)
+        obj_vel = torch.chunk(obj_vel, obj_vel.shape[0] // 6)
+        for obj, pos, vel in zip(self.nimble_obj, obj_pos, obj_vel):
+            obj_pose = obj.pose()
+            obj_t, obj_rot = pos.split([3, 3])
+            obj_pose[:3,  3] = obj_t
+            obj_pose[:3, :3] = R.from_rotvec(obj_rot).as_matrix()
+            obj.linear_velocity, obj.angular_velocity = vel.split([3, 3])
+        # TODO still differentiable (rot-conversion)?
 
     def add_object_to_scene(self, obj_info_mesh: Tuple[OBJECT_INFO.ObjectInfo, sl.Mesh], is_static: bool, **obj_mod):
         obj_info, obj_mesh = obj_info_mesh
