@@ -22,6 +22,7 @@ class Scenario(object):
     """ Abstract class for defining scenarios """
 
     config = dict()
+    name = 'scenario'
 
     def __init__(self, cfg, scene: sl.Scene, randomize=True):
         self.device = cfg.device
@@ -188,14 +189,17 @@ class Scenario(object):
         self.nimble_world = nimble.simulation.World()
         self.nimble_world.setGravity([0, -9.81, 0])
         self.nimble_world.setTimeStep(self.sim_dt)
-        self.nimble_obj = self.scene.objects
+        self.nimble_sl_obj = self.scene.objects
         obj_pos, obj_vel = [], []
-        for obj in self.nimble_obj:
-            obj = sl.Object(obj)
+        for obj in self.nimble_sl_obj:
+            obj_box = nimble.dynamics.Skeleton()
             if obj.static:
-                pass  # TODO add obj to nimble without movable joints
+                _, box_body = obj_box.createWeldJointAndBodyNodePair()
             else:
-                pass   # TODO add obj to nimble with freeJoint
+                _, box_body = obj_box.createFreeJointAndBodyNodePair()
+            _ = box_body.createShapeNode(nimble.dynamics.SoftMeshShape(NotImplemented))
+            self.nimble_world.addSkeleton(obj_box)
+
             obj_pose = obj.pose()
             obj_t = obj_pose[:3, 3]
             obj_rot = R.from_matrix(obj_pose[:3, :3]).as_rotvec()  # TODO is this correct?
@@ -214,7 +218,9 @@ class Scenario(object):
         obj_pos, obj_vel = torch.chunk(new_state, 2)
         obj_pos = torch.chunk(obj_pos, obj_pos.shape[0] // 6)
         obj_vel = torch.chunk(obj_vel, obj_vel.shape[0] // 6)
-        for obj, pos, vel in zip(self.nimble_obj, obj_pos, obj_vel):
+        for obj, pos, vel in zip(self.nimble_sl_obj, obj_pos, obj_vel):
+            if obj.static:
+                pass # continue  # static objects shouldn't change
             obj_pose = obj.pose()
             obj_t, obj_rot = pos.split([3, 3])
             obj_pose[:3,  3] = obj_t
