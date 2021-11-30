@@ -71,14 +71,19 @@ class ObjectLoader:
     """
     Class to load the objects in a scene
     """
+    # this 'global' variable determines the objects' instance idx.
+    # It's re-set by the scenario so that multiple object loaders don't lead to duplicates
+    # IMPORTANT: use as ObjectLoader.scenario_objects_loaded, NOT loader.scenario_objects_loaded!!!
+    scenario_objects_loaded = 0
 
-    def __init__(self):
+    def __init__(self, scenario_reset=False):
         """Module initializer"""
-        self.reset()
+        self.reset(scenario_reset)
 
-    def reset(self):
-        self.instance_idx = 0
+    def reset(self, new_scenario):
         self.loaded_objects = dict()
+        if new_scenario:
+            ObjectLoader.scenario_objects_loaded = 0
 
     @property
     def static_objects(self):
@@ -95,8 +100,8 @@ class ObjectLoader:
             IMPORTANT: scaling is done during mesh loading!!!
         :return:
         """
-        ins_idx = self.instance_idx + 1
-        self.instance_idx += 1
+        ObjectLoader.scenario_objects_loaded += 1
+        ins_idx = ObjectLoader.scenario_objects_loaded
         obj = sl.Object(mesh)
         mod_weight = obj_mod.get("mod_weight", obj_mod.get("mod_scale", 1.0) ** 3)
         obj.mass = object_info.weight * mod_weight
@@ -124,7 +129,7 @@ class ObjectLoader:
     def remove_object(self, instance_id, decrement_ins_idx=True):
         obj = self.loaded_objects.pop(instance_id, None)
         if decrement_ins_idx and obj is not None:
-            self.instance_idx -= 1
+            ObjectLoader.scenario_objects_loaded -= 1
         return obj
 
 

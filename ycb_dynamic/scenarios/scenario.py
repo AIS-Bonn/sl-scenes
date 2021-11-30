@@ -29,9 +29,10 @@ class Scenario(object):
         self.scene = scene
         if randomize:
             utils.randomize()
+
         self.mesh_loader = MeshLoader()
+        self.object_loader = ObjectLoader(scenario_reset=True)
         self.room_assembler = RoomAssembler(scene=self.scene)
-        self.object_loader = ObjectLoader()
         self.decorator_loader = DecoratorLoader(scene=self.scene)
 
         self.meshes_loaded, self.objects_loaded = False, False

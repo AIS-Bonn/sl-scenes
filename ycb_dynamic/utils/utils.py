@@ -124,8 +124,7 @@ def dump_sl_scene_to_urdf(scene: sl.Scene, out_fp : str):
     """ Dumps given stillleben scene to a urdf file that can be used by robotics simulators """
     # TODO handle robots here or just the 'environment'? If only env -> exclude robots from scene_objects!
     scene_objects = scene.objects
-    print([f"({obj.mesh.class_index}, {obj.mesh.filename}, {obj.instance_index})" for obj in scene_objects])
-    urdf_lines = ['<robot name= "scene">', TAB + '<link name="world"/>']
+    urdf_lines = ['<robot name="scene">', TAB + '<link name="world"/>']
     for obj in scene_objects:
         obj_name = str(obj.instance_index)
         obj_pose = obj.pose()
