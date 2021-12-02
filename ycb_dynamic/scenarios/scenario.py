@@ -171,7 +171,7 @@ class Scenario(object):
 
     def sim_step_(self):
         '''
-        Just calls the appropiate simulator; assumes that all other things have been taken care of.
+        Just calls the appropriate simulator; assumes that all other things have been taken care of.
         '''
         if self.physics_engine == "physx":
             self.scene.simulate(self.sim_dt)
@@ -187,7 +187,9 @@ class Scenario(object):
         Creates a clone of the current stillleben scene for nimblephysics, enabling physics simulation there.
         '''
         print("initializing nimble scene from sl...")
+        utils.dump_sl_scene_to_urdf(self.scene, "scene.urdf")
         self.nimble_world = nimble.simulation.World()
+        # TODO load that scene in nimble
         self.nimble_world.setGravity([0, -9.81, 0])
         self.nimble_world.setTimeStep(self.sim_dt)
         self.nimble_sl_obj = self.scene.objects
@@ -203,31 +205,35 @@ class Scenario(object):
 
             obj_pose = obj.pose()
             obj_t = obj_pose[:3, 3]
-            obj_rot = R.from_matrix(obj_pose[:3, :3]).as_rotvec()  # TODO is this correct?
+            obj_rot = R.from_matrix(obj_pose[:3, :3]).as_rotvec()  # TODO use differentiable rot-conversion (e.g. Pytorch3d?)
             obj_pos.extend([obj_t, obj_rot])
             obj_vel.extend([obj.linear_velocity, obj.angular_velocity])
-        self.nimble_world.setState(torch.cat(obj_pos + obj_vel))
+        world_state = torch.cat(obj_pos + obj_vel)
+        self.nimble_world.setState(world_state.cpu())
 
     def simulate_nimble_(self, action=None):
         '''
         Simulates a timestep in nimblephysics.
         '''
+        # simulate timestep in nimble
         world_state = self.nimble_world.getState()
-        action = action or torch.zeros(self.nimble_world.getNumDofs(), device=self.device)
-        new_state = nimble.timestep(self.nimble_world, world_state, action)
+        action = action or torch.zeros(self.nimble_world.getNumDofs())
+        new_state = nimble.timestep(self.nimble_world, world_state.cpu(), action.cpu())
         self.nimble_world.setState(new_state)
-        obj_pos, obj_vel = torch.chunk(new_state, 2)
+
+        # transfer object state back into the stillleben context
+        obj_pos, obj_vel = torch.chunk(new_state.cpu(), 2)
         obj_pos = torch.chunk(obj_pos, obj_pos.shape[0] // 6)
         obj_vel = torch.chunk(obj_vel, obj_vel.shape[0] // 6)
         for obj, pos, vel in zip(self.nimble_sl_obj, obj_pos, obj_vel):
             if obj.static:
-                pass # continue  # static objects shouldn't change
+                continue  # static objects are not included in the world state # TODO check whether they're really excluded from the world state
             obj_pose = obj.pose()
             obj_t, obj_rot = pos.split([3, 3])
             obj_pose[:3,  3] = obj_t
-            obj_pose[:3, :3] = R.from_rotvec(obj_rot).as_matrix()
+            obj_pose[:3, :3] = R.from_rotvec(obj_rot).as_matrix()  # TODO use differentiable rot-conversion (e.g. Pytorch3d?)  # todo which representation?
             obj.linear_velocity, obj.angular_velocity = vel.split([3, 3])
-        # TODO still differentiable (rot-conversion)?
+
 
     def add_object_to_scene(self, obj_info_mesh: Tuple[OBJECT_INFO.ObjectInfo, sl.Mesh], is_static: bool, **obj_mod):
         obj_info, obj_mesh = obj_info_mesh

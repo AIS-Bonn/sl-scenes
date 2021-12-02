@@ -137,27 +137,29 @@ def dump_sl_scene_to_urdf(scene: sl.Scene, out_fp : str):
         urdf_lines.append(2 * TAB + '<inertial>')
         urdf_lines.append(3 * TAB + f'<mass value="{str(obj.mass)}"/>')
         urdf_lines.append(3 * TAB + '<origin xyz="0 0 0" rpy="0 0 0"/>')
-        # TODO include inertia?
+        urdf_lines.append(3 * TAB + f'<inertia ixx="{0}" ixy="{0}" ixz="{0}" iyy="{0}" iyz="{0}" izz="{0}"/>')
         urdf_lines.append(2 * TAB + '</inertial>')
 
         urdf_lines.append(2 * TAB + '<visual>')
         urdf_lines.append(3 * TAB + f'<origin xyz="{obj_x} {obj_y} {obj_z}" rpy="{obj_r} {obj_p} {obj_y}"/>')
         urdf_lines.append(3 * TAB + '<geometry>')
-        urdf_lines.append(4 * TAB + f'<mesh filename="{obj.mesh.filename}">')
+        urdf_lines.append(4 * TAB + f'<mesh filename="{obj.mesh.filename}"/>')
         urdf_lines.append(3 * TAB + '</geometry>')
         urdf_lines.append(2 * TAB + '</visual>')
 
         urdf_lines.append(2 * TAB + '<collision>')
         urdf_lines.append(3 * TAB + f'<origin xyz="{obj_x} {obj_y} {obj_z}" rpy="{obj_r} {obj_p} {obj_y}"/>')
         urdf_lines.append(3 * TAB + '<geometry>')
-        urdf_lines.append(4 * TAB + f'<mesh filename="{obj.mesh.filename}">')
+        urdf_lines.append(4 * TAB + f'<mesh filename="{obj.mesh.filename}"/>')
         urdf_lines.append(3 * TAB + '</geometry>')
         urdf_lines.append(2 * TAB + '</collision>')
+
+        urdf_lines.append(2 * TAB + '<contact_coefficients>')
 
         urdf_lines.append(1 * TAB + '</link>')
 
         # joint
-        joint_type = "weld" if obj.static else "free"  # alt: "fixed"/"floating"?
+        joint_type = "fixed" if obj.static else "floating"  # alt: "fixed"/"floating"?
         urdf_lines.append(1 * TAB + f'<joint name="joint_{obj_name}" type="{joint_type}">')
         urdf_lines.append(2 * TAB + f'<origin xyz="{obj_x} {obj_y} {obj_z}" rpy="{obj_r} {obj_p} {obj_y}"/>')
         urdf_lines.append(2 * TAB + '<parent link="world"/>')
