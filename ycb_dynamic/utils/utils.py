@@ -162,12 +162,6 @@ def dump_sl_scene_to_urdf(scene: sl.Scene, out_fp : str):
     for obj in scene_objects:
         obj_name = str(obj.instance_index)
         obj_pose = obj.pose()
-        print(obj.mesh.filename)
-        print(obj_name)
-        print(obj.inertia)
-        print(obj.inertial_frame)
-        print(obj_pose)
-        continue
         obj_x, obj_y, obj_z = obj_pose[:3, 3]
         obj_r, obj_p, obj_y = get_rpy_from_mat(obj_pose[:3, :3])
 
@@ -205,7 +199,6 @@ def dump_sl_scene_to_urdf(scene: sl.Scene, out_fp : str):
         urdf_lines.append(2 * TAB + '<parent link="world"/>')
         urdf_lines.append(2 * TAB + f'<child link="{obj_name}"/>')
         urdf_lines.append(1 * TAB + '</joint>')
-    exit(0)
     urdf_lines.append('</robot>')
 
     # add linesep and write to file
