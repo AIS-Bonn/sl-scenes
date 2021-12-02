@@ -30,3 +30,6 @@ def get_objects_by_class_id(class_ids : List[int]):
     for class_id in class_ids:
         obj_infos += [obj_info for obj_info in OBJECT_INFO if obj_info.class_id == class_id]
     return obj_infos
+
+def get_object_by_class_id(class_id : int):
+    return get_objects_by_class_id([class_id])[0]

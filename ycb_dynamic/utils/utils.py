@@ -12,6 +12,9 @@ import argparse
 import stillleben as sl
 
 import ycb_dynamic.CONSTANTS as CONSTANTS
+import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
+import nimblephysics as nimble
+from pathlib import Path
 
 PI = torch.acos(torch.tensor(-1))
 TAB = "    "
@@ -71,6 +74,10 @@ def get_rpy_from_mat(mat : torch.Tensor):
     roll = torch.atan2(mat[2, 1], mat[2, 2])
     return roll, pitch, yaw
 
+def get_mat_from_rpy(rpy : torch.Tensor):
+    """Get rotation matrix from roll-pitch-yaw angle"""
+    raise NotImplementedError
+
 def get_rand_num(N=1, low=0, high=1):
     """ Get N random uniformly distributed numbers on the specified range"""
     nums = torch.rand(N,) * (high - low) + low
@@ -120,6 +127,33 @@ def copy_overwrite(src, dst):
     shutil.copy(src, dst)
 
 
+def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO):
+
+    skel = nimble.dynamics.Skeleton()
+    skel.setName(str(obj.instance_index))
+    if obj.static:
+        skel_joint, skel_body = skel.createWeldJointAndBodyNodePair()
+    else:
+        skel_joint, skel_body = skel.createFreeJointAndBodyNodePair()
+    if obj_info.flags % 1 == 1:  # object is concave -> initialize with sub-parts
+        convex_parts = getattr(obj.mesh, "convex_parts", [None])
+        raise NotImplementedError  # TODO deal with non-convex parts
+    else:
+        scale = obj_info.scale
+        skel_shape = skel_body.createShapeNode(nimble.dynamics.MeshShape(scale=torch.tensor([scale] * 3),
+                                                                       path=obj_info.mesh_fp))
+        inertia_moment = skel_shape.getShape().computeInertia(obj.mass)
+        skel_body.setInertia(nimble.dynamics.Inertia(obj.mass, obj.inertial_frame[:3, 3], inertia_moment))
+
+    pose = obj.pose()
+    t = pose[:3, 3]
+    rpy = get_rpy_from_mat(pose[:3, :3])
+    skel_state = torch.cat([t, rpy, obj.linear_velocity, obj.angular_velocity]).cpu()
+    # TODO do the angular velocities need to be converted as well?
+    skel.setState(skel_state)
+    return skel
+
+
 def dump_sl_scene_to_urdf(scene: sl.Scene, out_fp : str):
     """ Dumps given stillleben scene to a urdf file that can be used by robotics simulators """
     # TODO handle robots here or just the 'environment'? If only env -> exclude robots from scene_objects!
@@ -128,6 +162,12 @@ def dump_sl_scene_to_urdf(scene: sl.Scene, out_fp : str):
     for obj in scene_objects:
         obj_name = str(obj.instance_index)
         obj_pose = obj.pose()
+        print(obj.mesh.filename)
+        print(obj_name)
+        print(obj.inertia)
+        print(obj.inertial_frame)
+        print(obj_pose)
+        continue
         obj_x, obj_y, obj_z = obj_pose[:3, 3]
         obj_r, obj_p, obj_y = get_rpy_from_mat(obj_pose[:3, :3])
 
@@ -165,6 +205,7 @@ def dump_sl_scene_to_urdf(scene: sl.Scene, out_fp : str):
         urdf_lines.append(2 * TAB + '<parent link="world"/>')
         urdf_lines.append(2 * TAB + f'<child link="{obj_name}"/>')
         urdf_lines.append(1 * TAB + '</joint>')
+    exit(0)
     urdf_lines.append('</robot>')
 
     # add linesep and write to file

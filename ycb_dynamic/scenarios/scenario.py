@@ -2,16 +2,18 @@
 Abstract class for defining scenarios
 """
 import random
+from pathlib import Path
 from typing import Tuple
 import numpy as np
-from scipy.spatial.transform import Rotation as R
 from copy import deepcopy
 import torch
 import stillleben as sl
 import nimblephysics as nimble
 
 from ycb_dynamic.room_models import RoomAssembler
-from ycb_dynamic.object_models import MeshLoader, ObjectLoader, DecoratorLoader
+from ycb_dynamic.objects.mesh_loader import MeshLoader
+from ycb_dynamic.objects.object_loader import ObjectLoader
+from ycb_dynamic.objects.decorator_loader import DecoratorLoader
 from ycb_dynamic.lighting import get_lightmap
 from ycb_dynamic.camera import Camera
 import ycb_dynamic.utils.utils as utils
@@ -187,29 +189,13 @@ class Scenario(object):
         Creates a clone of the current stillleben scene for nimblephysics, enabling physics simulation there.
         '''
         print("initializing nimble scene from sl...")
-        utils.dump_sl_scene_to_urdf(self.scene, "scene.urdf")
+        # utils.dump_sl_scene_to_urdf(self.scene, "scene.urdf")
         self.nimble_world = nimble.simulation.World()
-        # TODO load that scene in nimble
         self.nimble_world.setGravity([0, -9.81, 0])
         self.nimble_world.setTimeStep(self.sim_dt)
-        self.nimble_sl_obj = self.scene.objects
-        obj_pos, obj_vel = [], []
-        for obj in self.nimble_sl_obj:
-            obj_box = nimble.dynamics.Skeleton()
-            if obj.static:
-                _, box_body = obj_box.createWeldJointAndBodyNodePair()
-            else:
-                _, box_body = obj_box.createFreeJointAndBodyNodePair()
-            _ = box_body.createShapeNode(nimble.dynamics.SoftMeshShape(NotImplemented))
-            self.nimble_world.addSkeleton(obj_box)
-
-            obj_pose = obj.pose()
-            obj_t = obj_pose[:3, 3]
-            obj_rot = R.from_matrix(obj_pose[:3, :3]).as_rotvec()  # TODO use differentiable rot-conversion (e.g. Pytorch3d?)
-            obj_pos.extend([obj_t, obj_rot])
-            obj_vel.extend([obj.linear_velocity, obj.angular_velocity])
-        world_state = torch.cat(obj_pos + obj_vel)
-        self.nimble_world.setState(world_state.cpu())
+        for obj in self.scene.objects:
+            obj_info = OBJECT_INFO.get_object_by_class_id(obj.mesh.class_index)
+            self.nimble_world.addSkeleton(utils.sl_object_to_nimble(obj, obj_info))
 
     def simulate_nimble_(self, action=None):
         '''
@@ -217,7 +203,8 @@ class Scenario(object):
         '''
         # simulate timestep in nimble
         world_state = self.nimble_world.getState()
-        action = action or torch.zeros(self.nimble_world.getNumDofs())
+        if action is None:
+            action = torch.zeros(self.nimble_world.getNumDofs())
         new_state = nimble.timestep(self.nimble_world, world_state.cpu(), action.cpu())
         self.nimble_world.setState(new_state)
 
@@ -225,15 +212,15 @@ class Scenario(object):
         obj_pos, obj_vel = torch.chunk(new_state.cpu(), 2)
         obj_pos = torch.chunk(obj_pos, obj_pos.shape[0] // 6)
         obj_vel = torch.chunk(obj_vel, obj_vel.shape[0] // 6)
-        for obj, pos, vel in zip(self.nimble_sl_obj, obj_pos, obj_vel):
+        for obj, pos, vel in zip(self.scene.objects, obj_pos, obj_vel):
             if obj.static:
-                continue  # static objects are not included in the world state # TODO check whether they're really excluded from the world state
+                continue  # static objects are not included in the world state
             obj_pose = obj.pose()
-            obj_t, obj_rot = pos.split([3, 3])
+            obj_t, obj_rpy = pos.split([3, 3])
+            obj_pose[:3, :3] = utils.get_mat_from_rpy(obj_rpy)
             obj_pose[:3,  3] = obj_t
-            obj_pose[:3, :3] = R.from_rotvec(obj_rot).as_matrix()  # TODO use differentiable rot-conversion (e.g. Pytorch3d?)  # todo which representation?
+            obj.set_pose(obj_pose)
             obj.linear_velocity, obj.angular_velocity = vel.split([3, 3])
-
 
     def add_object_to_scene(self, obj_info_mesh: Tuple[OBJECT_INFO.ObjectInfo, sl.Mesh], is_static: bool, **obj_mod):
         obj_info, obj_mesh = obj_info_mesh
