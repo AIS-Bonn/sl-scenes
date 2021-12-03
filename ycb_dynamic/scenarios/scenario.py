@@ -221,9 +221,8 @@ class Scenario(object):
         obj_pos, obj_vel = torch.chunk(self.nimble_state.clone(), 2)
         obj_pos = torch.chunk(obj_pos, obj_pos.shape[0] // 6)
         obj_vel = torch.chunk(obj_vel, obj_vel.shape[0] // 6)
-        for obj, pos, vel in zip(self.scene.objects, obj_pos, obj_vel):
-            if obj.static:
-                continue  # static objects are not included in the world state
+        dynamic_objects = [obj for obj in self.scene.objects if not obj.static]
+        for obj, pos, vel in zip(dynamic_objects, obj_pos, obj_vel):
             obj_pose = obj.pose()
             obj_t, obj_rpy = pos.split([3, 3])
             obj_pose[:3, :3] = utils.get_mat_from_rpy(obj_rpy)

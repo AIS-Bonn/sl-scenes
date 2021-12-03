@@ -81,13 +81,13 @@ def get_mat_from_rpy(rpy : torch.Tensor):
     roll, pitch, yaw = rpy
     Rz_y = torch.tensor([   torch.cos(yaw), -torch.sin(yaw),                0,
                             torch.sin(yaw),  torch.cos(yaw),                0,
-                                         0,               0,                1])
+                                         0,               0,                1]).view(3, 3)
     Ry_p = torch.tensor([ torch.cos(pitch),               0, torch.sin(pitch),
                                          0,               1,                0,
-                         -torch.sin(pitch),               0, torch.cos(pitch)])
+                         -torch.sin(pitch),               0, torch.cos(pitch)]).view(3, 3)
     Rx_r = torch.tensor([                1,               0,                0,
                                          0, torch.cos(roll), -torch.sin(roll),
-                                         0, torch.sin(roll),  torch.cos(roll)])
+                                         0, torch.sin(roll),  torch.cos(roll)]).view(3, 3)
     R = torch.mm(Rz_y, torch.mm(Ry_p, Rx_r))
     return R
 
