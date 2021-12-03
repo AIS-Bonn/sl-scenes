@@ -57,6 +57,8 @@ class Scenario(object):
 
     def reset_sim(self):
         self.meshes_loaded, self.objects_loaded, self.cameras_loaded = False, False, False
+        if self.physics_engine == "nimble":
+            self.nimble_loaded = False
         self.sim_t = 0
         self.setup_scene()
         self.setup_objects()
@@ -179,12 +181,14 @@ class Scenario(object):
             self.scene.simulate(self.sim_dt)
         elif self.physics_engine == "physx_manipulation_sim":
             raise NotImplementedError  # TODO implement for gripper sim
-        else:  # self.physics_engine == "nimble"
-            if getattr(self, "nimble_world", None) is None:
-                self.port_sl_scene_to_nimble_()
+        elif self.physics_engine == "nimble":
+            if not self.nimble_loaded:
+                self.setup_nimble_()
             self.simulate_nimble_()
+        else:
+            raise ValueError(f"invalid physics_engine parameter: {self.physics_engine}")
 
-    def port_sl_scene_to_nimble_(self):
+    def setup_nimble_(self):
         '''
         Creates a clone of the current stillleben scene for nimblephysics, enabling physics simulation there.
         '''
@@ -193,23 +197,28 @@ class Scenario(object):
         self.nimble_world = nimble.simulation.World()
         self.nimble_world.setGravity([0, -9.81, 0])
         self.nimble_world.setTimeStep(self.sim_dt)
+        positions, velocities = [], []
         for obj in self.scene.objects:
             obj_info = OBJECT_INFO.get_object_by_class_id(obj.mesh.class_index)
-            self.nimble_world.addSkeleton(utils.sl_object_to_nimble(obj, obj_info))
+            skel, pos, vel = utils.sl_object_to_nimble(obj, obj_info)
+            self.nimble_world.addSkeleton(skel)
+            positions.extend(pos)
+            velocities.extend(vel)
+        self.nimble_state = torch.cat(positions + velocities)
+        self.nimble_loaded = True
 
     def simulate_nimble_(self, action=None):
         '''
         Simulates a timestep in nimblephysics.
         '''
         # simulate timestep in nimble
-        world_state = self.nimble_world.getState()
         if action is None:
             action = torch.zeros(self.nimble_world.getNumDofs())
-        new_state = nimble.timestep(self.nimble_world, world_state.cpu(), action.cpu())
-        self.nimble_world.setState(new_state)
+        self.nimble_state = nimble.timestep(self.nimble_world, self.nimble_state, action)
+        self.nimble_world.setState(self.nimble_state)
 
         # transfer object state back into the stillleben context
-        obj_pos, obj_vel = torch.chunk(new_state.cpu(), 2)
+        obj_pos, obj_vel = torch.chunk(self.nimble_state.clone(), 2)
         obj_pos = torch.chunk(obj_pos, obj_pos.shape[0] // 6)
         obj_vel = torch.chunk(obj_vel, obj_vel.shape[0] // 6)
         for obj, pos, vel in zip(self.scene.objects, obj_pos, obj_vel):

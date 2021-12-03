@@ -67,16 +67,29 @@ def get_angle_from_mat(mat, deg=False):
     return ang
 
 def get_rpy_from_mat(mat : torch.Tensor):
-    """Get roll-pitch-yaw angle from rotation matrix"""
-    # TODO test this!
+    """Get roll-pitch-yaw angle (ZYX euler angle convention) from rotation matrix"""
+    # TODO test this! What about singularity handling?
+    sy = torch.sqrt(mat[2, 1] ** 2 + mat[2, 2] ** 2)
     yaw = torch.atan2(mat[1, 0], mat[0, 0])
-    pitch = torch.atan2(-mat[2, 0], torch.sqrt(mat[2, 1] ** 2 + mat[2, 2] ** 2))
-    roll = torch.atan2(mat[2, 1], mat[2, 2])
-    return roll, pitch, yaw
+    pitch = torch.atan2(-mat[2, 0], sy)
+    roll = 0 if sy < 1e-6 else torch.atan2(mat[2, 1], mat[2, 2])
+    return torch.stack([roll, pitch, yaw])
 
 def get_mat_from_rpy(rpy : torch.Tensor):
-    """Get rotation matrix from roll-pitch-yaw angle"""
-    raise NotImplementedError
+    """Get rotation matrix from roll-pitch-yaw angle (ZYX euler angle convention)"""
+    # TODO test this!
+    roll, pitch, yaw = rpy
+    Rz_y = torch.tensor([   torch.cos(yaw), -torch.sin(yaw),                0,
+                            torch.sin(yaw),  torch.cos(yaw),                0,
+                                         0,               0,                1])
+    Ry_p = torch.tensor([ torch.cos(pitch),               0, torch.sin(pitch),
+                                         0,               1,                0,
+                         -torch.sin(pitch),               0, torch.cos(pitch)])
+    Rx_r = torch.tensor([                1,               0,                0,
+                                         0, torch.cos(roll), -torch.sin(roll),
+                                         0, torch.sin(roll),  torch.cos(roll)])
+    R = torch.mm(Rz_y, torch.mm(Ry_p, Rx_r))
+    return R
 
 def get_rand_num(N=1, low=0, high=1):
     """ Get N random uniformly distributed numbers on the specified range"""
@@ -131,10 +144,20 @@ def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO):
 
     skel = nimble.dynamics.Skeleton()
     skel.setName(str(obj.instance_index))
+    position, velocity = [], []
     if obj.static:
         skel_joint, skel_body = skel.createWeldJointAndBodyNodePair()
     else:
         skel_joint, skel_body = skel.createFreeJointAndBodyNodePair()
+        pose = obj.pose()
+        t = pose[:3, 3]
+        rpy = get_rpy_from_mat(pose[:3, :3])
+        print(t, rpy, obj.linear_velocity, obj.angular_velocity)
+        # TODO do the angular velocities need to be converted as well?
+        print(skel.getPositions())
+        print(skel.getVelocities())
+        position.extend([t, rpy])
+        velocity.extend([obj.linear_velocity, obj.angular_velocity])
     if obj_info.flags % 1 == 1:  # object is concave -> initialize with sub-parts
         convex_parts = getattr(obj.mesh, "convex_parts", [None])
         raise NotImplementedError  # TODO deal with non-convex parts
@@ -144,14 +167,7 @@ def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO):
                                                                        path=obj_info.mesh_fp))
         inertia_moment = skel_shape.getShape().computeInertia(obj.mass)
         skel_body.setInertia(nimble.dynamics.Inertia(obj.mass, obj.inertial_frame[:3, 3], inertia_moment))
-
-    pose = obj.pose()
-    t = pose[:3, 3]
-    rpy = get_rpy_from_mat(pose[:3, :3])
-    skel_state = torch.cat([t, rpy, obj.linear_velocity, obj.angular_velocity]).cpu()
-    # TODO do the angular velocities need to be converted as well?
-    skel.setState(skel_state)
-    return skel
+    return skel, position, velocity
 
 
 def dump_sl_scene_to_urdf(scene: sl.Scene, out_fp : str):
