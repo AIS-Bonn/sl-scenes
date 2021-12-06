@@ -1,6 +1,6 @@
 {
     "camera_object": {
-        "mesh_fp": "ycbv_models/models_fine/obj_000001.ply",
+        "mesh_fp": "ycbv_models/models_fine/obj_000002.ply",
         "weight": 0.01,
         "flags": 0,
         "metallic": 0.0,
@@ -12,7 +12,7 @@
         "class_id": 0
     },
     "dummy_camera_object": {
-        "mesh_fp": "ycbv_models/models_fine/obj_000001.ply",
+        "mesh_fp": "ycbv_models/models_fine/obj_000002.ply",
         "weight": 0.01,
         "flags": 0,
         "metallic": 0.0,

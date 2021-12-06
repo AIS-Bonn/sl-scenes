@@ -2,7 +2,6 @@
 Abstract class for defining scenarios
 """
 import random
-from pathlib import Path
 from typing import Tuple
 import numpy as np
 from copy import deepcopy
@@ -179,6 +178,11 @@ class Scenario(object):
             pose = torch.eye(4)
             pose[:2, -1] = camera_pos[:2]
             pose[2, -1] = camera_pos[-1] + self.camera_objs[-1].mesh.bbox.min[-1]
+            pose[:3, :3] = utils.get_rot_matrix(
+                    yaw=torch.tensor(camera.ori_angle * np.pi / 180),
+                    pitch=torch.tensor(-1 * camera.elev_angle * np.pi / 180),
+                    roll=torch.tensor(0.)
+                )
             self.camera_objs[-1].set_pose(pose)
             self.scene.add_object(self.camera_objs[-1])
         return
