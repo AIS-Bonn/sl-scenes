@@ -2,14 +2,18 @@
 Abstract class for defining scenarios
 """
 import random
+from pathlib import Path
 from typing import Tuple
 import numpy as np
 from copy import deepcopy
 import torch
 import stillleben as sl
+import nimblephysics as nimble
 
 from ycb_dynamic.room_models import RoomAssembler
-from ycb_dynamic.object_models import MeshLoader, ObjectLoader, DecoratorLoader
+from ycb_dynamic.objects.mesh_loader import MeshLoader
+from ycb_dynamic.objects.object_loader import ObjectLoader
+from ycb_dynamic.objects.decorator_loader import DecoratorLoader
 from ycb_dynamic.lighting import get_lightmap
 from ycb_dynamic.camera import Camera
 import ycb_dynamic.utils.utils as utils
@@ -21,28 +25,41 @@ class Scenario(object):
     """ Abstract class for defining scenarios """
 
     config = dict()
+    name = 'scenario'
 
     def __init__(self, cfg, scene: sl.Scene, randomize=True):
+        self.device = cfg.device
         self.scene = scene
         if randomize:
             utils.randomize()
+
         self.mesh_loader = MeshLoader()
+        self.object_loader = ObjectLoader(scenario_reset=True)
         self.room_assembler = RoomAssembler(scene=self.scene)
-        self.object_loader = ObjectLoader()
         self.decorator_loader = DecoratorLoader(scene=self.scene)
 
         self.meshes_loaded, self.objects_loaded = False, False
         self.z_offset = 0.
         self.lightmap = cfg.lightmap
-        self.n_cameras = cfg.cameras
+
+        if getattr(self, "allow_multiple_cameras", True):
+            self.n_cameras = cfg.cameras
+        else:
+            print(f"scenario '{self.name}' supports only 1 camera -> ignoring n_cameras...")
+            self.n_cameras = 1
         self.coplanar_stereo = cfg.coplanar_stereo
         self.coplanar_stereo_dist = cfg.coplanar_stereo_dist
         self.cam_movement_complexity = cfg.cam_movement_complexity
+        self.sim_dt = cfg.sim_dt
+        self.cam_dt = cfg.cam_dt
+        self.physics_engine = cfg.physics_engine
         self.reset_sim()
         return
 
     def reset_sim(self):
         self.meshes_loaded, self.objects_loaded, self.cameras_loaded = False, False, False
+        if self.physics_engine == "nimble":
+            self.nimble_loaded = False
         self.sim_t = 0
         self.setup_scene()
         self.setup_objects()
@@ -139,7 +156,7 @@ class Scenario(object):
             cam_lookat = deepcopy(base_lookat)
             cam_name = f"cam_{str(i).zfill(2)}"
             cam_stereo_positions = ["left", "right"] if self.coplanar_stereo else ["mono"]
-            self.cameras.append(Camera(cam_name, cam_elev_angle, cam_ori_angle, cam_dist, cam_lookat,
+            self.cameras.append(Camera(cam_name, self.cam_dt, cam_elev_angle, cam_ori_angle, cam_dist, cam_lookat,
                                        self.coplanar_stereo_dist, cam_stereo_positions, self.cam_movement_complexity))
             # adding a dummy tiny object so that camera uses one cell of the occupancy matrix
             self.mesh_loader.load_meshes(CONSTANTS.CAMERA_OBJ)
@@ -160,8 +177,69 @@ class Scenario(object):
         """
         raise NotImplementedError
 
-    def simulate(self, dt):
-        raise NotImplementedError
+    def simulate(self):
+        '''
+        Can be overwritten by scenario-specific logic
+        '''
+        self.sim_t += self.sim_dt
+        self.sim_step_()
+
+    def sim_step_(self):
+        '''
+        Just calls the appropriate simulator; assumes that all other things have been taken care of.
+        '''
+        if self.physics_engine == "physx":
+            self.scene.simulate(self.sim_dt)
+        elif self.physics_engine == "physx_manipulation_sim":
+            raise NotImplementedError  # TODO implement for gripper sim
+        elif self.physics_engine == "nimble":
+            if not self.nimble_loaded:
+                self.setup_nimble_()
+            self.simulate_nimble_()
+        else:
+            raise ValueError(f"invalid physics_engine parameter: {self.physics_engine}")
+
+    def setup_nimble_(self):
+        '''
+        Creates a clone of the current stillleben scene for nimblephysics, enabling physics simulation there.
+        '''
+        print("initializing nimble scene from sl...")
+        # utils.dump_sl_scene_to_urdf(self.scene, "scene.urdf")
+        self.nimble_world = nimble.simulation.World()
+        self.nimble_world.setGravity([0, -9.81, 0])
+        self.nimble_world.setTimeStep(self.sim_dt)
+        positions, velocities = [], []
+        for obj in self.scene.objects:
+            obj_info = OBJECT_INFO.get_object_by_class_id(obj.mesh.class_index)
+            skel, pos, vel = utils.sl_object_to_nimble(obj, obj_info)
+            self.nimble_world.addSkeleton(skel)
+            positions.extend(pos)
+            velocities.extend(vel)
+        self.nimble_state = torch.cat(positions + velocities)
+        self.nimble_loaded = True
+
+    def simulate_nimble_(self, action=None):
+        '''
+        Simulates a timestep in nimblephysics.
+        '''
+        # simulate timestep in nimble
+        if action is None:
+            action = torch.zeros(self.nimble_world.getNumDofs())
+        self.nimble_state = nimble.timestep(self.nimble_world, self.nimble_state, action)
+        self.nimble_world.setState(self.nimble_state)
+
+        # transfer object state back into the stillleben context
+        obj_pos, obj_vel = torch.chunk(self.nimble_state.clone(), 2)
+        obj_pos = torch.chunk(obj_pos, obj_pos.shape[0] // 6)
+        obj_vel = torch.chunk(obj_vel, obj_vel.shape[0] // 6)
+        dynamic_objects = [obj for obj in self.scene.objects if not obj.static]
+        for obj, pos, vel in zip(dynamic_objects, obj_pos, obj_vel):
+            obj_pose = obj.pose()
+            obj_t, obj_rpy = pos.split([3, 3])
+            obj_pose[:3, :3] = utils.get_mat_from_rpy(obj_rpy)
+            obj_pose[:3,  3] = obj_t
+            obj.set_pose(obj_pose)
+            obj.linear_velocity, obj.angular_velocity = vel.split([3, 3])
 
     def add_object_to_scene(self, obj_info_mesh: Tuple[OBJECT_INFO.ObjectInfo, sl.Mesh], is_static: bool, **obj_mod):
         obj_info, obj_mesh = obj_info_mesh

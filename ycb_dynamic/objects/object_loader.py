@@ -1,0 +1,70 @@
+import stillleben as sl
+import torch
+
+from ycb_dynamic import OBJECT_INFO as OBJECT_INFO
+
+
+class ObjectLoader:
+    """
+    Class to load the objects in a scene
+    """
+    # this 'global' variable determines the objects' instance idx.
+    # It's re-set by the scenario so that multiple object loaders don't lead to duplicates
+    # IMPORTANT: use as ObjectLoader.scenario_objects_loaded, NOT loader.scenario_objects_loaded!!!
+    scenario_objects_loaded = 0
+
+    def __init__(self, scenario_reset=False):
+        """Module initializer"""
+        self.reset(scenario_reset)
+
+    def reset(self, new_scenario):
+        self.loaded_objects = dict()
+        if new_scenario:
+            ObjectLoader.scenario_objects_loaded = 0
+
+    @property
+    def static_objects(self):
+        return [obj for obj in self.loaded_objects.values() if obj.static]
+
+    @property
+    def dynamic_objects(self):
+        return [obj for obj in self.loaded_objects.values() if not obj.static]
+
+    def create_object(self, object_info: OBJECT_INFO.ObjectInfo, mesh: sl.Mesh, is_static: bool, **obj_mod):
+        """
+        Proper object setup
+        :param obj_mod: Optional object modifiers, specified with a leading 'mod_'.
+            IMPORTANT: scaling is done during mesh loading!!!
+        :return:
+        """
+        ObjectLoader.scenario_objects_loaded += 1
+        ins_idx = ObjectLoader.scenario_objects_loaded
+        obj = sl.Object(mesh)
+        mod_weight = obj_mod.get("mod_weight", obj_mod.get("mod_scale", 1.0) ** 3)
+        obj.mass = object_info.weight * mod_weight
+        obj.metallic = object_info.metallic
+        obj.roughness = object_info.roughness
+        obj.restitution = object_info.restitution
+        obj.static_friction = object_info.static_friction
+        obj.dynamic_friction = object_info.dynamic_friction
+        pose = obj_mod.get("mod_pose", torch.eye(4))
+        mod_R = obj_mod.get("mod_R", torch.eye(3))
+        pose[:3, :3] = torch.mm(mod_R, pose[:3, :3])
+        mod_t = obj_mod.get("mod_t", torch.tensor([obj_mod.get("mod_x", 0.0),
+                                                   obj_mod.get("mod_y", 0.0),
+                                                   obj_mod.get("mod_z", 0.0)]))
+        pose[:3, 3] += mod_t
+        obj.set_pose(pose)
+        obj.linear_velocity = obj_mod.get("mod_v_linear", torch.tensor([0.0, 0.0, 0.0]))
+        obj.angular_velocity = obj_mod.get("mod_v_angular", torch.tensor([0.0, 0.0, 0.0]))
+        obj.static = is_static
+        obj.instance_index = ins_idx
+        self.loaded_objects[ins_idx] = obj
+
+        return obj
+
+    def remove_object(self, instance_id, decrement_ins_idx=True):
+        obj = self.loaded_objects.pop(instance_id, None)
+        if decrement_ins_idx and obj is not None:
+            ObjectLoader.scenario_objects_loaded -= 1
+        return obj

@@ -87,9 +87,8 @@ class BowlingScenario(Scenario):
             self.update_camera_height(camera=cam, objs=[self.table]) for cam in self.cameras
         ]
 
-    def simulate(self, dt):
+    def simulate(self):
         # add bowling ball after preparation time to ensure that the object tower stands still
         if self.sim_t > self.prep_time and not self.bowling_ball_loaded:
             self.add_bowling_ball()
-        self.scene.simulate(dt)
-        self.sim_t += dt
+        super(BowlingScenario, self).simulate()

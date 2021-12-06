@@ -19,9 +19,10 @@ class TidyScenario(Scenario):
         self.config = CONFIG["scenes"]["tidy"]
         self.prep_time = 1.000  # during this time (in s), the scene will not be rendered
         self.remaining_pause = 0.000  # pause time remaining for the gripper
+        self.allow_multiple_cameras = False
         self.max_waypoint_deviation = 0.02  # in m
-        self.max_velocity = 0.6  # in m/s
-        self.acceleration = 1.5  # in m/s²
+        self.max_velocity = 0.5  # in m/s
+        self.acceleration = 1.0  # in m/s²
         self.ee = None
         self.robot_sim = None
         super(TidyScenario, self).__init__(cfg, scene)   # also calls reset_sim()
@@ -62,6 +63,7 @@ class TidyScenario(Scenario):
 
         # drop 10 random YCB-Video objects onto the table
         for obj_info_mesh in random.choices(ycbv_info_meshes, k=3):
+            print(" >>> trying to add object")
             mod_t = torch.tensor([
                 random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"]),
                 random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"]),
@@ -73,6 +75,7 @@ class TidyScenario(Scenario):
 
             # removing last object if colliding with anything else
             if self.is_there_collision():
+                print(" >>> object colliding!")
                 self.remove_obj_from_scene(obj)
 
     def setup_robot_sim(self):
@@ -90,7 +93,8 @@ class TidyScenario(Scenario):
         ])
         ee_pose[:3, 3] = ee_t
         ee_mod = {"mod_pose": ee_pose}
-        self.ee = self.add_object_to_scene(self.ee_mesh, is_static=True, **ee_mod)
+        self.start_ee_pose_ = ee_pose
+        self.ee = self.add_object_to_scene(self.ee_mesh, is_static=False, **ee_mod)
         self.ee = self.update_object_height(cur_obj=self.ee, objs=[self.table])
         self.table_height = self.ee.pose()[2, 3] - init_z
         self.ee_velocity = 0.0
@@ -112,8 +116,8 @@ class TidyScenario(Scenario):
         ]
 
         # set up the robot simulation
-        self.robot_sim = sl.ManipulationSim(self.scene, self.ee, self.ee_pose)
-        self.robot_sim.set_spring_parameters(1000.0, 1.0, 30.0)  # stiffness, damping, force_limit
+        self.robot_sim = sl.ManipulationSim(self.scene, self.ee, self.start_ee_pose_)
+        self.robot_sim.set_spring_parameters(3000.0, 10.0, 100.0)  # stiffness, damping, force_limit
 
     def setup_cameras_(self):
         """
@@ -124,23 +128,23 @@ class TidyScenario(Scenario):
             self.update_camera_height(camera=cam, objs=[self.table]) for cam in self.cameras
         ]
 
-    def simulate(self, dt):
+    def simulate(self):
 
-        self.sim_t += dt
+        self.sim_t += self.sim_dt
         # add robot after preparation time to ensure that the objects are not falling anymore
         if self.sim_t > self.prep_time and self.ee is None:
             self.setup_robot_sim()
 
         # if paused or gripper is not set up or no waypoints remaining -> simulate object physics without gripper
         if self.ee is None or self.remaining_pause > 0 or len(self.waypoints) < 1:
-            self.scene.simulate(dt)
+            self.sim_step_()
             if self.remaining_pause > 0:
-                self.remaining_pause -= dt
+                self.remaining_pause -= self.sim_dt
 
         # if gripper is loaded and there is another unreached waypoint for it: move the robot
         else:
             cur_waypoint = self.waypoints[0]
-            pose_delta = cur_waypoint - self.ee_t
+            pose_delta = cur_waypoint - self.start_ee_pose_[:3, 3]
             pose_delta_norm = torch.linalg.norm(pose_delta)
             pose_delta_normalized = pose_delta / pose_delta_norm
 
@@ -153,17 +157,14 @@ class TidyScenario(Scenario):
             # else: adjust movement velocity according to distance to waypoint
             else:
                 ideal_velocity = pose_delta_norm * 2.0
-                acceleration = self.acceleration * dt
+                acceleration = self.acceleration * self.sim_dt
                 if self.ee_velocity < ideal_velocity:
                     self.ee_velocity = min(self.ee_velocity + acceleration, self.max_velocity)
                 elif self.ee_velocity >= ideal_velocity:
                     self.ee_velocity = max(self.ee_velocity - acceleration, 0.0)
-                #print(self.ee_velocity)
 
             # calculate new gripper pose with calculated delta vector and velocity
-            ee_pose = self.ee_pose
-            ee_pose[:3, 3] += self.ee_velocity * dt * pose_delta_normalized
-            #print(f"new pos: {ee_pose[:3, 3]}")
-            self.robot_sim.step(ee_pose, dt)  # TODO doesn't work!
-            #self.ee.set_pose(ee_pose)
-            # print(f"after sim: {self.ee_pose[:3, 3]}")
+            ee_pose = self.start_ee_pose_
+            ee_pose[:3, 3] += self.ee_velocity * self.sim_dt * pose_delta_normalized
+            self.robot_sim.step(ee_pose, self.sim_dt)  # TODO move to sim_step()
+            self.start_ee_pose_ = ee_pose

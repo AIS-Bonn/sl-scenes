@@ -1,4 +1,5 @@
-import os, glob, re
+import os, glob, re, sys
+sys.path.append(".")
 from pathlib import Path
 
 from ycb_dynamic.utils.utils import copy_overwrite
@@ -35,9 +36,17 @@ def process_textures():
     dirs = [dir for dir in os.listdir(str(BASE_DIR)) if os.path.isdir(str(BASE_DIR / dir))]
     for dir in sorted(dirs):
 
+        # erase existing obj files
+        existing_objs = [
+            str(BASE_DIR / dir / obj_file) for obj_file in os.listdir(str(BASE_DIR / dir))
+            if obj_file.endswith(".obj")
+        ]
+        for existing_obj in existing_objs:
+            os.remove(existing_obj)
+
         # copy floor and wall object files
-        obj_files = ["floor_6m.obj", "floor_8m.obj", "floor_6m_tiled.obj", "floor_8m_tiled.obj",
-                     "wall_6m.obj", "wall_8m.obj", "wall_6m_tiled.obj", "wall_8m_tiled.obj"]
+        obj_files = ["floor_6m_flat.obj", "floor_6m_flat_tiled.obj", "wall_6m_flat.obj", "wall_6m_flat_tiled.obj"] \
+                    + ["floor_6m.obj", "floor_6m_tiled.obj", "wall_6m.obj", "wall_6m_tiled.obj"]
         for obj_file in obj_files:
             copy_overwrite(str(BASE_DIR / obj_file), str(BASE_DIR / dir / obj_file))
 

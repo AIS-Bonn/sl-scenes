@@ -7,7 +7,9 @@ import torch
 import random
 
 import ycb_dynamic.utils.utils as utils
-from ycb_dynamic.object_models import MeshLoader, ObjectLoader, OccupancyMatrix
+from ycb_dynamic.objects.mesh_loader import MeshLoader
+from ycb_dynamic.objects.object_loader import ObjectLoader
+from ycb_dynamic.objects.occupancy_matrix import OccupancyMatrix
 import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.CONFIG import CONFIG
 

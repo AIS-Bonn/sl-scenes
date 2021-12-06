@@ -72,8 +72,3 @@ class BowlScenario(Scenario):
             self.update_camera_height(camera=cam, objs=[self.table, self.bowl], scales=[1.0, 0.0])
             for cam in self.cameras
         ]
-
-    def simulate(self, dt):
-        """ """
-        self.scene.simulate(dt)
-        self.sim_t += dt

@@ -7,6 +7,7 @@ test.py
 *.png
 *.jpg
 *.jpeg
+*.urdf
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

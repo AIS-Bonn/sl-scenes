@@ -12,10 +12,10 @@ class Camera(object):
     The camera object provides a range of functionalities to better model real-world (stereo) cameras
     that might move around or behave otherwise as time passes.
     '''
-
-    def __init__(self, name: str, elev_angle: float, ori_angle: float, distance: float, lookat: torch.Tensor,
-                 stereo_pair_dist: float, stereo_positions: List[str], movement_complexity: int):
+    def __init__(self, name: str, cam_dt: float, elev_angle: float, ori_angle: float, distance: float,
+                 lookat: torch.Tensor, stereo_pair_dist: float, stereo_positions: List[str], movement_complexity: int):
         self.name = name  # can be used e.g. to name the corresponding output directories
+        self.cam_dt = cam_dt
         self.movement_complexity = movement_complexity
         self.moving = self.movement_complexity > 0
         self.stereo_pair_dist = stereo_pair_dist
@@ -128,5 +128,6 @@ class Camera(object):
     def get_posed_name(self, stereo_position="mono"):
         return f"{self.name}_{stereo_position}"
 
-    def step(self, dt):
+    def step(self, dt=None):
+        dt = dt or self.cam_dt
         self.t += dt
