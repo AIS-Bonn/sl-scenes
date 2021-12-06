@@ -3,7 +3,8 @@ from typing import List
 import stillleben as sl
 import torch
 
-from ycb_dynamic import CONSTANTS as CONSTANTS, OBJECT_INFO as OBJECT_INFO
+from ycb_dynamic.utils.utils import get_absolute_mesh_path
+from ycb_dynamic import OBJECT_INFO as OBJECT_INFO
 
 
 class MeshLoader:
@@ -13,8 +14,6 @@ class MeshLoader:
 
     def __init__(self):
         """Module initializer"""
-        self.base_dir = CONSTANTS.MESH_BASE_DIR
-        self.text_dir = CONSTANTS.TEXT_BASE_DIR
         self.reset()
 
     def reset(self):
@@ -32,10 +31,7 @@ class MeshLoader:
         :param obj_info: The object information of the meshes to be loaded.
         :param kwargs: additional mesh modifiers such as scale, specified with a leading 'mod_'
         """
-        paths = []
-        for obj in obj_info:
-            path = self.text_dir if obj.name.endswith("_floor") or obj.name.endswith("_wall") else self.base_dir
-            paths.append((path / obj.mesh_fp).resolve())
+        paths = [get_absolute_mesh_path(obj) for obj in obj_info]
         scales = [obj.scale for obj in obj_info]
         class_ids = [obj.class_id for obj in obj_info]
         mod_scales = kwargs.get("mod_scale", [1.0] * len(scales))
