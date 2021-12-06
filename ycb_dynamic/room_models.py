@@ -56,9 +56,7 @@ class RoomAssembler:
 
         # adding floor
         floor_info_mesh, wall_info_mesh = self.mesh_loader.get_meshes()
-        pose = torch.eye(4)
-        pose[2, -1] = -1
-        floor = self.add_object_to_scene(floor_info_mesh, pose=pose)
+        floor = self.add_object_to_scene(floor_info_mesh)
         x1, y1, x2, y2 = *floor.mesh.bbox.min[:2], *floor.mesh.bbox.max[:2]
         coords = [[0., y1], [x1, 0.], [0., y2], [x2, 0.]]
 
