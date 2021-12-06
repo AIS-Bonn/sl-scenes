@@ -113,6 +113,7 @@ BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
 WOODEN_BOX = [obj for obj in OBJECT_INFO if obj.name == "wooden_box"]
 CAMERA_OBJ = [obj for obj in OBJECT_INFO if obj.name == "camera_object"]
+DUMMY_CAMERA_OBJ = [obj for obj in OBJECT_INFO if obj.name == "dummy_camera_object"]
 
 # Decoration Objects
 CHAIRS = [obj for obj in OBJECT_INFO if obj.name.endswith("_chair")]

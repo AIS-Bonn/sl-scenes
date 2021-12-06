@@ -29,6 +29,7 @@ class Scenario(object):
 
     def __init__(self, cfg, scene: sl.Scene, randomize=True):
         self.device = cfg.device
+        self.viewer_mode = cfg.viewer
         self.scene = scene
         if randomize:
             utils.randomize()
@@ -141,6 +142,7 @@ class Scenario(object):
             return
         print("camera setup...")
         self.cameras = []
+        self.camera_objs = []
         cam_config = self.config["camera"]
         base_lookat = cam_config["base_lookat"]
 
@@ -158,18 +160,28 @@ class Scenario(object):
             cam_stereo_positions = ["left", "right"] if self.coplanar_stereo else ["mono"]
             self.cameras.append(Camera(cam_name, self.cam_dt, cam_elev_angle, cam_ori_angle, cam_dist, cam_lookat,
                                        self.coplanar_stereo_dist, cam_stereo_positions, self.cam_movement_complexity))
-            # adding a dummy tiny object so that camera uses one cell of the occupancy matrix
-            self.mesh_loader.load_meshes(CONSTANTS.CAMERA_OBJ)
-            camera_pos = self.cameras[-1].get_pos()
-            pose = torch.eye(4)
-            pose[:3, -1] = camera_pos
-            camera_info_mesh = self.mesh_loader.get_meshes()[-1]
-            obj = self.add_object_to_scene(camera_info_mesh, is_static=True)
-            obj.set_pose(pose)
-            self.scene.add_object(obj)
-
         self.setup_cameras_()  # e.g. scenario-specific height adjustment
+        self.setup_camera_objs()
         self.cameras_loaded = True
+
+    def setup_camera_objs(self):
+        """
+        Setting an object for each of the cameras.
+         - Viewer mode: A full mesh is displayed at the position and with the pose of the camera
+         - Normal mode: A tiny-dummy obj is place on the location of the camera to fill the occ-matrix cell
+        """
+        camera_mesh = CONSTANTS.CAMERA_OBJ if self.viewer_mode else CONSTANTS.DUMMY_CAMERA_OBJ
+        for camera_id, camera in enumerate(self.cameras):
+            self.mesh_loader.load_meshes(camera_mesh)
+            camera_pos = camera.get_pos()
+            camera_info_mesh = self.mesh_loader.get_meshes()[-1]
+            self.camera_objs.append(self.add_object_to_scene(camera_info_mesh, is_static=True))
+            pose = torch.eye(4)
+            pose[:2, -1] = camera_pos[:2]
+            pose[2, -1] = camera_pos[-1] + self.camera_objs[-1].mesh.bbox.min[-1]
+            self.camera_objs[-1].set_pose(pose)
+            self.scene.add_object(self.camera_objs[-1])
+        return
 
     def setup_cameras_(self):
         """
@@ -253,7 +265,7 @@ class Scenario(object):
 
     def update_object_height(self, cur_obj, objs=[], scales=None):
         """ Updating an object z-position given a list of supporting objects"""
-        scales = [1.0] * len(objs) if scales == None else scales
+        scales = [1.0] * len(objs) if scales is None else scales
         assert len(objs) == len(scales), "provided non-matching scales for update_camera_height"
         cur_obj_pose = cur_obj.pose()
         z_pose = self.get_obj_z_offset(cur_obj)
@@ -264,11 +276,10 @@ class Scenario(object):
         return cur_obj
 
     def update_camera_height(self, camera, objs=[], scales=None):
-        """ Updating the camera position and the look-at parameter"""
-        scales = [1.0] * len(objs) if scales == None else scales
+        """ Updating the camera position, camera-object position and the look-at parameter"""
+        scales = [1.0] * len(objs) if scales is None else scales
         assert len(objs) == len(scales), "provided non-matching scales for update_camera_height"
         z_lookat = deepcopy(camera.start_base_lookat[-1])
-
         for obj, scale in zip(objs, scales):
             z_lookat += self.get_obj_z_offset(obj) * scale
         camera.start_base_lookat[-1] = z_lookat

@@ -6,6 +6,18 @@
         "metallic": 0.0,
         "roughness": 0.0,
         "restitution": 0.0,
+        "scale": 0.001,
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0,
+        "class_id": 0
+    },
+    "dummy_camera_object": {
+        "mesh_fp": "ycbv_models/models_fine/obj_000001.ply",
+        "weight": 0.01,
+        "flags": 0,
+        "metallic": 0.0,
+        "roughness": 0.0,
+        "restitution": 0.0,
         "scale": 0.00001,
         "static_friction": 0.0,
         "dynamic_friction": 0.0,
