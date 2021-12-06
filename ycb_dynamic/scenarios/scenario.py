@@ -206,7 +206,7 @@ class Scenario(object):
         print("initializing nimble scene from sl...")
         # utils.dump_sl_scene_to_urdf(self.scene, "scene.urdf")
         self.nimble_world = nimble.simulation.World()
-        self.nimble_world.setGravity([0, -9.81, 0])
+        # TODO changes angular_velocity, not linear_velocity!
         self.nimble_world.setTimeStep(self.sim_dt)
         positions, velocities = [], []
         for obj in self.scene.objects:
@@ -235,11 +235,11 @@ class Scenario(object):
         dynamic_objects = [obj for obj in self.scene.objects if not obj.static]
         for obj, pos, vel in zip(dynamic_objects, obj_pos, obj_vel):
             obj_pose = obj.pose()
-            obj_t, obj_rpy = pos.split([3, 3])
+            obj_rpy, obj_t = pos.split([3, 3])
             obj_pose[:3, :3] = utils.get_mat_from_rpy(obj_rpy)
             obj_pose[:3,  3] = obj_t
             obj.set_pose(obj_pose)
-            obj.linear_velocity, obj.angular_velocity = vel.split([3, 3])
+            obj.angular_velocity, obj.linear_velocity = vel.split([3, 3])
 
     def add_object_to_scene(self, obj_info_mesh: Tuple[OBJECT_INFO.ObjectInfo, sl.Mesh], is_static: bool, **obj_mod):
         obj_info, obj_mesh = obj_info_mesh

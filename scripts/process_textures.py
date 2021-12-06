@@ -39,14 +39,15 @@ def process_textures():
         # erase existing obj files
         existing_objs = [
             str(BASE_DIR / dir / obj_file) for obj_file in os.listdir(str(BASE_DIR / dir))
-            if obj_file.endswith(".obj")
+            if obj_file.endswith(".obj") or obj_file.endswith(".sl_mesh")
         ]
         for existing_obj in existing_objs:
             os.remove(existing_obj)
 
         # copy floor and wall object files
-        obj_files = ["floor_6m_flat.obj", "floor_6m_flat_tiled.obj", "wall_6m_flat.obj", "wall_6m_flat_tiled.obj"] \
-                    + ["floor_6m.obj", "floor_6m_tiled.obj", "wall_6m.obj", "wall_6m_tiled.obj"]
+        obj_files = ["floor_6m.obj", "floor_6m_tiled.obj", "wall_6m.obj", "wall_6m_tiled.obj"]
+            # + ["floor_6m_flat.obj", "floor_6m_flat_tiled.obj", "wall_6m_flat.obj", "wall_6m_flat_tiled.obj"]
+
         for obj_file in obj_files:
             copy_overwrite(str(BASE_DIR / obj_file), str(BASE_DIR / dir / obj_file))
 

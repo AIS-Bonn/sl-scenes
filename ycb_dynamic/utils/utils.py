@@ -1,6 +1,9 @@
 """
 Utils methods
 """
+import sys
+
+sys.path.append(".")
 
 import os
 import random
@@ -20,7 +23,7 @@ PI = torch.acos(torch.tensor(-1))
 TAB = "    "
 
 def clear_cmd():
-    """Clearning command line window"""
+    """Clearing command line window"""
     os.system("cls" if os.name == "nt" else "clear")
     return
 
@@ -140,6 +143,13 @@ def copy_overwrite(src, dst):
     shutil.copy(src, dst)
 
 
+
+def get_absolute_mesh_path(obj_info : OBJECT_INFO):
+    floor_or_wall = obj_info.name.endswith("_floor") or obj_info.name.endswith("_wall")
+    path = CONSTANTS.TEXT_BASE_DIR if floor_or_wall else CONSTANTS.MESH_BASE_DIR
+    return str((path / obj_info.mesh_fp).resolve())
+
+
 def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO):
 
     skel = nimble.dynamics.Skeleton()
@@ -152,21 +162,22 @@ def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO):
         pose = obj.pose()
         t = pose[:3, 3]
         rpy = get_rpy_from_mat(pose[:3, :3])
-        print(t, rpy, obj.linear_velocity, obj.angular_velocity)
         # TODO do the angular velocities need to be converted as well?
-        print(skel.getPositions())
-        print(skel.getVelocities())
-        position.extend([t, rpy])
-        velocity.extend([obj.linear_velocity, obj.angular_velocity])
-    if obj_info.flags % 1 == 1:  # object is concave -> initialize with sub-parts
+        position.extend([rpy, t])
+        velocity.extend([obj.angular_velocity, obj.linear_velocity])
+    if False:  # obj_info.flags % 2 == 1:  # object is concave -> initialize with sub-parts # TODO deal with non-convex parts
         convex_parts = getattr(obj.mesh, "convex_parts", [None])
-        raise NotImplementedError  # TODO deal with non-convex parts
+        raise NotImplementedError
     else:
-        scale = obj_info.scale
-        skel_shape = skel_body.createShapeNode(nimble.dynamics.MeshShape(scale=torch.tensor([scale] * 3),
-                                                                       path=obj_info.mesh_fp))
-        inertia_moment = skel_shape.getShape().computeInertia(obj.mass)
-        skel_body.setInertia(nimble.dynamics.Inertia(obj.mass, obj.inertial_frame[:3, 3], inertia_moment))
+        scale = torch.tensor([obj_info.scale] * 3)
+        mesh_path = get_absolute_mesh_path(obj_info)
+        skel_shape = skel_body.createShapeNode(nimble.dynamics.MeshShape(scale=scale, path=mesh_path))
+        # inertia_moment1 = skel_shape.getShape().computeInertia(obj.mass)
+        inertia_moment = torch.diag(obj.inertia)
+        # print(inertia_moment1)  # roughly equal to obj.inertia
+        # print(inertia_moment)
+        obj_center_of_mass = obj.inertial_frame[:3, 3]
+        skel_body.setInertia(nimble.dynamics.Inertia(obj.mass, obj_center_of_mass, inertia_moment))
     return skel, position, velocity
 
 
