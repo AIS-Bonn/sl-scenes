@@ -32,6 +32,7 @@ class OccupancyMatrix:
     def init_occupancy_matrix(self, objects):
         """ Obtaining an occupancy matrix with empty and occupied positions"""
         for obj in objects:
+            # print(os.path.basename(obj.mesh.filename))
             if(os.path.basename(obj.mesh.filename) in CONSTANTS.FLOOR_NAMES):
                 continue
             self.update_occupancy_matrix(obj)
@@ -53,7 +54,8 @@ class OccupancyMatrix:
         Useful to place objects only next to walls.
         """
         matrix = self.get_empty_occ_matrix() + 1
-        scaled_width = int(ceil((width * 2 + self.bounds["dist"] + self.bounds["res"]) / self.bounds["res"]) + 1)
+        # scaled_width = int(ceil((width * 2 + self.bounds["dist"] + self.bounds["res"]) / self.bounds["res"]) + 1)
+        scaled_width = int(ceil((width * 2) / self.bounds["res"]))
 
         if(end_x is not None):
             matrix[:, :scaled_width] = 0 if end_x is False else 1
@@ -77,10 +79,11 @@ class OccupancyMatrix:
             bbox_x_max, bbox_y_max = bbox_y_max, bbox_x_max
 
         # using the 1e-3 to add some volume to walls
-        min_x, min_y = min(bbox_x_min, -1e-3) + pos_x, min(bbox_y_min, -1e-3) + pos_y
-        max_x, max_y = max(bbox_x_max, 1e-3) + pos_x, max(bbox_y_max, 1e-3) + pos_y
-        y_coords = (self.grid_y >= min_y) & (self.grid_y < max_y)
-        x_coords = (self.grid_x >= min_x) & (self.grid_x < max_x)
+        min_size = self.bounds["res"] / 2
+        min_x, min_y = min(bbox_x_min, -min_size) + pos_x, min(bbox_y_min, -min_size) + pos_y
+        max_x, max_y = max(bbox_x_max, min_size) + pos_x, max(bbox_y_max, min_size) + pos_y
+        y_coords = (self.grid_y >= min_y) & (self.grid_y <= max_y)
+        x_coords = (self.grid_x >= min_x) & (self.grid_x <= max_x)
         occ_coords = y_coords & x_coords
 
         self.occ_matrix[occ_coords] = 1
@@ -141,6 +144,6 @@ class OccupancyMatrix:
             pos_y, pos_x = free_positions[0][id], free_positions[1][id]
             position = torch.cat([self.x_vect[pos_x], self.y_vect[pos_y]])
         else:
-            print(f"No free positions...")
+            print("No free positions...")
 
         return position

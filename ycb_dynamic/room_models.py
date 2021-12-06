@@ -64,7 +64,7 @@ class RoomAssembler:
         walls = []
         for i, wall in enumerate(wall_info_mesh):
             pose = torch.eye(4)
-            # BUG in get_rot_matrix()
+            # BUG in get_rot_matrix() ?
             rot_matrix = utils.get_rot_matrix(angles=torch.cat([i * self.pi, torch.zeros(2)]))
             pose[:3, :3] = pose[:3, :3] @ rot_matrix
             pose[:2, -1] = torch.Tensor(coords[i])
@@ -84,8 +84,19 @@ class RoomAssembler:
                     objects=self.scene.objects
                 )
             n_objs = random.randint(a=3, b=6)  # TODO: get param from CONFIG
+
+            from matplotlib import pyplot as plt
+            plt.figure()
+            plt.imshow(self.occ_matrix.occ_matrix)
+            plt.show()
+
             for i in range(n_objs):
                 self.add_furniture_element(floor=self.floor, walls=self.walls)
+
+            plt.figure()
+            plt.imshow(self.occ_matrix.occ_matrix)
+            plt.show()
+
         return
 
     def add_furniture_element(self, floor, walls):
