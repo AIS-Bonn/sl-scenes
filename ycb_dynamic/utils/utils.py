@@ -151,22 +151,18 @@ def get_absolute_mesh_path(obj_info : OBJECT_INFO):
     return str((path / obj_info.mesh_fp).resolve())
 
 
-def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO):
+def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO, debug_mode=False):
 
     # create overall object
     skel = nimble.dynamics.Skeleton()
     skel.setName(str(obj.instance_index))
-    #mesh : sl.Mesh = obj.mesh.physics_mesh_data
-    position, velocity = [], []
-    if obj.static:
-        skel_joint, skel_body = skel.createWeldJointAndBodyNodePair()
-    else:
-        skel_joint, skel_body = skel.createFreeJointAndBodyNodePair()
-        pose = obj.pose()
-        t = pose[:3, 3]
-        rpy = get_rpy_from_mat(pose[:3, :3])
-        position.extend([rpy, t])
-        velocity.extend([obj.angular_velocity.flip(0), obj.linear_velocity])  # flip angular velocity for ZYX convention  # TODO actually ZYX convention in nimblephysics?
+    skel.setMobile(not obj.static)
+    skel_joint, skel_body = skel.createFreeJointAndBodyNodePair()
+    pose = obj.pose()
+    t = pose[:3, 3]
+    rpy = get_rpy_from_mat(pose[:3, :3])
+    position = [rpy, t]
+    velocity = [obj.angular_velocity.flip(0), obj.linear_velocity]  # flip angular velocity for ZYX convention  # TODO actually ZYX convention in nimblephysics?
 
     # create shape nodes of convex sub-parts
     scale = torch.tensor([obj_info.scale] * 3)
@@ -175,12 +171,14 @@ def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO):
         obj.mesh.dump_physics_meshes(temp_path)
         submesh_filenames = [f"{temp_path}/{fn}" for fn in sorted(os.listdir(temp_path))]
         for submesh_fn in submesh_filenames:
-            skel_shape = nimble.dynamics.MeshShape(scale=scale, path=submesh_fn)
-            skel_shape_node = skel_body.createShapeNode(skel_shape)
-            skel_shape_node.setCollisionAspect(nimble.dynamics.CollisionAspect())
+            submesh_shape = nimble.dynamics.MeshShape(scale=scale, path=submesh_fn)
+            submesh_shape_node = skel_body.createShapeNode(submesh_shape)
+            submesh_shape_node.setCollisionAspect(nimble.dynamics.CollisionAspect())
+            if debug_mode:
+                submesh_visual = submesh_shape_node.createVisualAspect()
+                submesh_visual.setColor(torch.rand(3))
 
     # finalizing setup
-    ## inertia_moment1 = skel_shape.computeInertia(obj.mass)
     inertia_moment = torch.diag(obj.inertia)
     obj_center_of_mass = obj.inertial_frame[:3, 3]
     skel_body.setInertia(nimble.dynamics.Inertia(obj.mass, obj_center_of_mass, inertia_moment))

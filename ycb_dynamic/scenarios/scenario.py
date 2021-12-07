@@ -52,6 +52,7 @@ class Scenario(object):
         self.sim_dt = cfg.sim_dt
         self.cam_dt = cfg.cam_dt
         self.physics_engine = cfg.physics_engine
+        self.nimble_debug = cfg.nimble_debug
         self.reset_sim()
         return
 
@@ -199,11 +200,11 @@ class Scenario(object):
         positions, velocities = [], []
         for obj in self.scene.objects:
             obj_info = OBJECT_INFO.get_object_by_class_id(obj.mesh.class_index)
-            skel, pos, vel = utils.sl_object_to_nimble(obj, obj_info)
+            skel, pos, vel = utils.sl_object_to_nimble(obj, obj_info, debug_mode=self.nimble_debug)
             self.nimble_world.addSkeleton(skel)
             positions.extend(pos)
             velocities.extend(vel)
-        self.nimble_state = torch.cat(positions + velocities)
+        self.nimble_states = [torch.cat(positions + velocities)]
         self.nimble_loaded = True
 
     def simulate_nimble_(self, action=None):
@@ -213,15 +214,15 @@ class Scenario(object):
         # simulate timestep in nimble
         if action is None:
             action = torch.zeros(self.nimble_world.getNumDofs())
-        self.nimble_state = nimble.timestep(self.nimble_world, self.nimble_state, action)
-        self.nimble_world.setState(self.nimble_state)
+        new_state = nimble.timestep(self.nimble_world, self.nimble_states[-1], action)
+        self.nimble_states.append(new_state)
+        self.nimble_world.setState(new_state)
 
         # transfer object state back into the stillleben context
-        obj_pos, obj_vel = torch.chunk(self.nimble_state.clone(), 2)
+        obj_pos, obj_vel = torch.chunk(new_state.clone(), 2)
         obj_pos = torch.chunk(obj_pos, obj_pos.shape[0] // 6)
         obj_vel = torch.chunk(obj_vel, obj_vel.shape[0] // 6)
-        dynamic_objects = [obj for obj in self.scene.objects if not obj.static]
-        for obj, pos, vel in zip(dynamic_objects, obj_pos, obj_vel):
+        for obj, pos, vel in zip(self.scene.objects, obj_pos, obj_vel):
             obj_pose = obj.pose()
             obj_rpy, obj_t = pos.split([3, 3])
             obj_pose[:3, :3] = utils.get_mat_from_rpy(obj_rpy)

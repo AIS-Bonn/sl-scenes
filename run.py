@@ -3,6 +3,7 @@ Main logic for running the simulator and generating data
 """
 import argparse
 import itertools
+import time
 from pathlib import Path
 from contextlib import ExitStack
 import tqdm
@@ -154,6 +155,15 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
             for writer in writers_list:
                 writer.assemble_rgb_video(in_fps=cfg.sim_fps, out_fps=cfg.sim_fps)
 
+        if cfg.physics_engine == "nimble" and cfg.nimble_debug:
+            import nimblephysics as nimble
+            gui = nimble.NimbleGUI(scenario.nimble_world)
+            gui.serve(8080)
+            gui.loopStates(scenario.nimble_states)
+            vis_secs = 60
+            print(f"serving nimblephysics visualization for {vis_secs}s at port 8080")
+            time.sleep(vis_secs)
+
 
 if __name__ == "__main__":
     utils.clear_cmd()
@@ -252,6 +262,10 @@ if __name__ == "__main__":
         choices=["physx", "nimble"],
         default="physx",
         help="specifies whether to use the default PhysX simulator or nimblephysics, a differentiable DART fork"
+    )
+    parser.add_argument(
+        "--nimble-debug",
+        action="store_true",
     )
     cfg = parser.parse_args()
 
