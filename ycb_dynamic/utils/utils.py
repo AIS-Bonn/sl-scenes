@@ -166,6 +166,8 @@ def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO, debug_mode=Fals
 
     # create shape nodes of convex sub-parts
     scale = torch.tensor([obj_info.scale] * 3)
+    if "wooden_bowl" in obj.mesh.filename or "red_bowl" in obj.mesh.filename:
+        scale *= 4.0  # TODO refactor this code to include obj. modifiers like scale
     with tempfile.TemporaryDirectory(f"{skel.getName()}_subpart_meshes") as temp_dir:
         temp_path = str(Path(temp_dir).absolute())
         obj.mesh.dump_physics_meshes(temp_path)
