@@ -1,3 +1,12 @@
+"""
+Implementation of a simple (currently 2D) occupancy matrix to fill the scenes with
+decorative objects such as chairs, tables and cupboards.
+This is also used to avoid collisions.
+
+TODO:
+  - Make occupancy matrix 3D voxel-based for further scene understanding
+"""
+
 import os
 from math import ceil
 

@@ -34,8 +34,7 @@ class RoomAssembler:
 
     def make_room(self):
         """ Main logic for obtaining a room for the scene """
-        # use_assembled = random.random() < self.config["prob_assembled"]
-        self.use_assembled = random.random() < 0
+        self.use_assembled = random.random() < self.config["prob_assembled"]
         if(self.use_assembled):
             self.get_existing_room()
         else:
@@ -76,7 +75,6 @@ class RoomAssembler:
 
     def add_wall_furniture(self):
         """ Adding furniture to the walls, e.g., cabinets and kitchen stuff"""
-
         if not self.use_assembled:
             # intializing occupancy matrix for collision avoidance
             self.occ_matrix = OccupancyMatrix(
@@ -84,25 +82,13 @@ class RoomAssembler:
                     objects=self.scene.objects
                 )
             n_objs = random.randint(a=3, b=6)  # TODO: get param from CONFIG
-
-            from matplotlib import pyplot as plt
-            plt.figure()
-            plt.imshow(self.occ_matrix.occ_matrix)
-            plt.show()
-
             for i in range(n_objs):
                 self.add_furniture_element(floor=self.floor, walls=self.walls)
-
-            plt.figure()
-            plt.imshow(self.occ_matrix.occ_matrix)
-            plt.show()
-
         return
 
     def add_furniture_element(self, floor, walls):
         """ Adding some pieces of furniture next to the walls"""
-
-        # sampling random wall and random object
+        # sampling random wall and random object –> greedy logic
         wall_id = random.randint(0, 3)
         wall = walls[wall_id]
 
@@ -129,14 +115,15 @@ class RoomAssembler:
         position = self.occ_matrix.find_free_spot(obj=obj, restriction=restriction_matrix, rotated=obj_rotated)
         if position is None:
             self.remove_object_from_scene(obj)
-        else:
-            # Adjusting object pose by translating and applying corresponding rotation
-            x_pos, y_pos = position
-            pose = obj.pose()
-            pose[:3, :3] = pose[:3, :3] @ rot_matrix
-            pose[0, -1] = pose[0, -1] + x_pos
-            pose[1, -1] = pose[1, -1] + y_pos
-            obj.set_pose(pose)
+            return
+
+        # Adjusting object pose by translating and applying corresponding rotation
+        x_pos, y_pos = position
+        pose = obj.pose()
+        pose[:3, :3] = pose[:3, :3] @ rot_matrix
+        pose[0, -1] = pose[0, -1] + x_pos
+        pose[1, -1] = pose[1, -1] + y_pos
+        obj.set_pose(pose)
 
         self.occ_matrix.update_occupancy_matrix(obj)
         self.occ_matrix.add_object_margings()

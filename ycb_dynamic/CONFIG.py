@@ -16,7 +16,7 @@ Explanations:
 
 CONFIG = {
     "room": {
-        "prob_assembled": 0.3
+        "prob_assembled": 0.0
     },
     "decorator": {
         "decorations": CONSTANTS.CHAIRS,
