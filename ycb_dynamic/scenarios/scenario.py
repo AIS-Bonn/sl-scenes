@@ -195,7 +195,6 @@ class Scenario(object):
         print("initializing nimble scene from sl...")
         # utils.dump_sl_scene_to_urdf(self.scene, "scene.urdf")
         self.nimble_world = nimble.simulation.World()
-        # TODO changes angular_velocity, not linear_velocity!
         self.nimble_world.setTimeStep(self.sim_dt)
         positions, velocities = [], []
         for obj in self.scene.objects:
@@ -228,7 +227,8 @@ class Scenario(object):
             obj_pose[:3, :3] = utils.get_mat_from_rpy(obj_rpy)
             obj_pose[:3,  3] = obj_t
             obj.set_pose(obj_pose)
-            obj.angular_velocity, obj.linear_velocity = vel.split([3, 3])
+            angular_velocity, obj.linear_velocity = vel.split([3, 3])
+            obj.angular_velocity = angular_velocity.flip(0)  # flip back from ZYX convention
 
     def add_object_to_scene(self, obj_info_mesh: Tuple[OBJECT_INFO.ObjectInfo, sl.Mesh], is_static: bool, **obj_mod):
         obj_info, obj_mesh = obj_info_mesh

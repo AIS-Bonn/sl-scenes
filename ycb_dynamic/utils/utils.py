@@ -9,6 +9,7 @@ import os
 import random
 import datetime
 import shutil
+import tempfile
 
 import torch
 import argparse
@@ -152,8 +153,10 @@ def get_absolute_mesh_path(obj_info : OBJECT_INFO):
 
 def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO):
 
+    # create overall object
     skel = nimble.dynamics.Skeleton()
     skel.setName(str(obj.instance_index))
+    #mesh : sl.Mesh = obj.mesh.physics_mesh_data
     position, velocity = [], []
     if obj.static:
         skel_joint, skel_body = skel.createWeldJointAndBodyNodePair()
@@ -162,22 +165,27 @@ def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO):
         pose = obj.pose()
         t = pose[:3, 3]
         rpy = get_rpy_from_mat(pose[:3, :3])
-        # TODO do the angular velocities need to be converted as well?
         position.extend([rpy, t])
-        velocity.extend([obj.angular_velocity, obj.linear_velocity])
-    if False:  # obj_info.flags % 2 == 1:  # object is concave -> initialize with sub-parts # TODO deal with non-convex parts
-        convex_parts = getattr(obj.mesh, "convex_parts", [None])
-        raise NotImplementedError
-    else:
-        scale = torch.tensor([obj_info.scale] * 3)
-        mesh_path = get_absolute_mesh_path(obj_info)
-        skel_shape = skel_body.createShapeNode(nimble.dynamics.MeshShape(scale=scale, path=mesh_path))
-        # inertia_moment1 = skel_shape.getShape().computeInertia(obj.mass)
-        inertia_moment = torch.diag(obj.inertia)
-        # print(inertia_moment1)  # roughly equal to obj.inertia
-        # print(inertia_moment)
-        obj_center_of_mass = obj.inertial_frame[:3, 3]
-        skel_body.setInertia(nimble.dynamics.Inertia(obj.mass, obj_center_of_mass, inertia_moment))
+        velocity.extend([obj.angular_velocity.flip(0), obj.linear_velocity])  # flip angular velocity for ZYX convention  # TODO actually ZYX convention in nimblephysics?
+
+    # create shape nodes of convex sub-parts
+    scale = torch.tensor([obj_info.scale] * 3)
+    with tempfile.TemporaryDirectory(f"{skel.getName()}_subpart_meshes") as temp_dir:
+        temp_path = str(Path(temp_dir).absolute())
+        obj.mesh.dump_physics_meshes(temp_path)
+        submesh_filenames = [f"{temp_path}/{fn}" for fn in sorted(os.listdir(temp_path))]
+        for submesh_fn in submesh_filenames:
+            skel_shape = nimble.dynamics.MeshShape(scale=scale, path=submesh_fn)
+            skel_shape_node = skel_body.createShapeNode(skel_shape)
+            skel_shape_node.setCollisionAspect(nimble.dynamics.CollisionAspect())
+
+    # finalizing setup
+    ## inertia_moment1 = skel_shape.computeInertia(obj.mass)
+    inertia_moment = torch.diag(obj.inertia)
+    obj_center_of_mass = obj.inertial_frame[:3, 3]
+    skel_body.setInertia(nimble.dynamics.Inertia(obj.mass, obj_center_of_mass, inertia_moment))
+    skel_body.setFrictionCoeff(obj_info.static_friction)  # TODO dynamic friction?
+    skel_body.setRestitutionCoeff(obj_info.restitution)
     return skel, position, velocity
 
 
