@@ -51,18 +51,18 @@ def get_rot_matrix(angles=None, yaw=None, pitch=None, roll=None):
         [torch.cos(angles[0]), -torch.sin(angles[0]), 0],
         [torch.sin(angles[0]), torch.cos(angles[0]), 0],
         [0, 0, 1]
-    ])
+    ], dtype=torch.double)
     pitch = torch.tensor([
         [torch.cos(angles[1]), 0, torch.sin(angles[1])],
         [0, 1, 0],
         [-torch.sin(angles[1]), 0, torch.cos(angles[1])],
-    ])
+    ], dtype=torch.double)
     roll = torch.tensor([
         [1, 0, 0],
         [0, torch.cos(angles[2]), -torch.sin(angles[2])],
         [0, torch.sin(angles[2]), torch.cos(angles[2])],
-    ])
-    rot_matrix = yaw @ pitch @ roll
+    ], dtype=torch.double)
+    rot_matrix = (yaw @ pitch @ roll).float()
     return rot_matrix
 
 
