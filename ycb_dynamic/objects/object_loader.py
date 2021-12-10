@@ -1,5 +1,6 @@
 import stillleben as sl
 import torch
+import threading
 
 from ycb_dynamic import OBJECT_INFO as OBJECT_INFO
 
@@ -8,27 +9,40 @@ class ObjectLoader:
     """
     Class to load the objects in a scene
     """
-    # this 'global' variable determines the objects' instance idx.
-    # It's re-set by the scenario so that multiple object loaders don't lead to duplicates
-    # IMPORTANT: use as ObjectLoader.scenario_objects_loaded, NOT loader.scenario_objects_loaded!!!
+    # These 'global' variables determine the loaded objects from ALL instantiated object loaders.
+    # They can be re-set by the scenario so that multiple object loaders don't lead to duplicates
+    # IMPORTANT: update them only inside a 'with ObjectLoader.lock:' statement!
     scenario_objects_loaded = 0
+    loaded_objects = dict()
+    lock = threading.Lock()
 
     def __init__(self, scenario_reset=False):
         """Module initializer"""
         self.reset(scenario_reset)
 
     def reset(self, new_scenario):
-        self.loaded_objects = dict()
         if new_scenario:
-            ObjectLoader.scenario_objects_loaded = 0
+            with ObjectLoader.lock:
+                ObjectLoader.scenario_objects_loaded = 0
+                ObjectLoader.loaded_objects = dict()
+
+    @property
+    def all_objects(self):
+        with ObjectLoader.lock:
+            objs = ObjectLoader.loaded_objects.values()
+        return objs
 
     @property
     def static_objects(self):
-        return [obj for obj in self.loaded_objects.values() if obj.static]
+        with ObjectLoader.lock:
+            static_objs = [obj for obj in ObjectLoader.loaded_objects.values() if obj.static]
+        return static_objs
 
     @property
     def dynamic_objects(self):
-        return [obj for obj in self.loaded_objects.values() if not obj.static]
+        with ObjectLoader.lock:
+            dynamic_objs = [obj for obj in ObjectLoader.loaded_objects.values() if not obj.static]
+        return dynamic_objs
 
     def create_object(self, object_info: OBJECT_INFO.ObjectInfo, mesh: sl.Mesh, is_static: bool, **obj_mod):
         """
@@ -37,8 +51,6 @@ class ObjectLoader:
             IMPORTANT: scaling is done during mesh loading!!!
         :return:
         """
-        ObjectLoader.scenario_objects_loaded += 1
-        ins_idx = ObjectLoader.scenario_objects_loaded
         obj = sl.Object(mesh)
         mod_weight = obj_mod.get("mod_weight", obj_mod.get("mod_scale", 1.0) ** 3)
         obj.mass = object_info.weight * mod_weight
@@ -58,13 +70,17 @@ class ObjectLoader:
         obj.linear_velocity = obj_mod.get("mod_v_linear", torch.tensor([0.0, 0.0, 0.0]))
         obj.angular_velocity = obj_mod.get("mod_v_angular", torch.tensor([0.0, 0.0, 0.0]))
         obj.static = is_static
-        obj.instance_index = ins_idx
-        self.loaded_objects[ins_idx] = obj
 
+        with ObjectLoader.lock:
+            ObjectLoader.scenario_objects_loaded += 1
+            ins_idx = ObjectLoader.scenario_objects_loaded
+            obj.instance_index = ins_idx
+            ObjectLoader.loaded_objects[ins_idx] = obj
         return obj
 
     def remove_object(self, instance_id, decrement_ins_idx=True):
-        obj = self.loaded_objects.pop(instance_id, None)
-        if decrement_ins_idx and obj is not None:
-            ObjectLoader.scenario_objects_loaded -= 1
+        with ObjectLoader.lock:
+            obj = ObjectLoader.loaded_objects.pop(instance_id, None)
+            if decrement_ins_idx and obj is not None:
+                ObjectLoader.scenario_objects_loaded -= 1
         return obj

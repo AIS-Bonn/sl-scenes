@@ -69,6 +69,10 @@ class Scenario(object):
         return
 
     @property
+    def all_objects(self):
+        return self.object_loader.all_objects
+
+    @property
     def static_objects(self):
         return self.object_loader.static_objects
 
