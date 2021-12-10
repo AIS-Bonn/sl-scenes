@@ -39,8 +39,14 @@ def timestamp():
     return timestamp
 
 
-def get_rot_matrix(angles):
-    """ Generating a rotation matrix given the rotation angles """
+def get_rot_matrix(angles=None, yaw=None, pitch=None, roll=None):
+    """ Generating a rotation matrix given the rotation (yaw, pitch, roll) angles """
+    if(angles is None):
+        assert yaw is not None and pitch is not None and roll is not None,\
+            "If angles list is not given, angles (yaw, pitch, roll) must be specified"
+        angles = (yaw, pitch, roll)
+    if yaw is None and pitch is None and roll is None:
+        assert angles is not None, "If angles (yaw, pitch, roll) not given, angle list must be specified"
     yaw = torch.tensor([
         [torch.cos(angles[0]), -torch.sin(angles[0]), 0],
         [torch.sin(angles[0]), torch.cos(angles[0]), 0],
@@ -70,6 +76,7 @@ def get_angle_from_mat(mat, deg=False):
     ang = ang * 180. / PI if deg else ang
     return ang
 
+
 def get_rpy_from_mat(mat : torch.Tensor):
     """Get roll-pitch-yaw angle (ZYX euler angle convention) from rotation matrix"""
     # TODO test this! What about singularity handling?
@@ -78,6 +85,7 @@ def get_rpy_from_mat(mat : torch.Tensor):
     pitch = torch.atan2(-mat[2, 0], sy)
     roll = 0 if sy < 1e-6 else torch.atan2(mat[2, 1], mat[2, 2])
     return torch.stack([roll, pitch, yaw])
+
 
 def get_mat_from_rpy(rpy : torch.Tensor):
     """Get rotation matrix from roll-pitch-yaw angle (ZYX euler angle convention)"""
@@ -94,6 +102,7 @@ def get_mat_from_rpy(rpy : torch.Tensor):
                                          0, torch.sin(roll),  torch.cos(roll)]).view(3, 3)
     R = torch.mm(Rz_y, torch.mm(Ry_p, Rx_r))
     return R
+
 
 def get_rand_num(N=1, low=0, high=1):
     """ Get N random uniformly distributed numbers on the specified range"""

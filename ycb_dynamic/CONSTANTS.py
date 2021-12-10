@@ -112,6 +112,8 @@ OTHER_OBJECTS = [obj for obj in OBJECT_INFO if not obj.name[0].isdigit()]
 BOWLING_BALL = [obj for obj in OBJECT_INFO if obj.name == "bowling_ball"]
 WOOD_BLOCK = [obj for obj in OBJECT_INFO if obj.name == "036_wood_block"]
 WOODEN_BOX = [obj for obj in OBJECT_INFO if obj.name == "wooden_box"]
+CAMERA_OBJ = [obj for obj in OBJECT_INFO if obj.name == "camera_object"]
+DUMMY_CAMERA_OBJ = [obj for obj in OBJECT_INFO if obj.name == "dummy_camera_object"]
 
 # Decoration Objects
 CHAIRS = [obj for obj in OBJECT_INFO if obj.name.endswith("_chair")]
@@ -119,7 +121,7 @@ CUPBOARDS = [obj for obj in OBJECT_INFO if obj.name.endswith("_cupboard")]
 TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table")]
 NO_POOL_TABLES = [obj for obj in OBJECT_INFO if obj.name.endswith("_table") and not obj.name.endswith("pool_table")]
 BOWLS = [obj for obj in OBJECT_INFO if obj.name.endswith("_bowl") and obj.name != "024_bowl"]
-BALL_BOXES = [obj for obj in OBJECT_INFO if obj.name in ["laundry_basket", "wooden_box"]]
+BALL_BOXES = [obj for obj in OBJECT_INFO if obj.name in ["laundry_basket"]]  #, "wooden_box"]]
 FURNITURES = [obj for obj in OBJECT_INFO if "furniture/" in obj.mesh_fp and
                                             "table" not in obj.name and
                                             "chair" not in obj.name]

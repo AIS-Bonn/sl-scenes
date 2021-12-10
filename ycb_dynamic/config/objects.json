@@ -1,4 +1,28 @@
 {
+    "camera_object": {
+        "mesh_fp": "ycbv_models/models_fine/obj_000002.ply",
+        "weight": 0.01,
+        "flags": 0,
+        "metallic": 0.0,
+        "roughness": 0.0,
+        "restitution": 0.0,
+        "scale": 0.001,
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0,
+        "class_id": 0
+    },
+    "dummy_camera_object": {
+        "mesh_fp": "ycbv_models/models_fine/obj_000002.ply",
+        "weight": 0.01,
+        "flags": 0,
+        "metallic": 0.0,
+        "roughness": 0.0,
+        "restitution": 0.0,
+        "scale": 0.00001,
+        "static_friction": 0.0,
+        "dynamic_friction": 0.0,
+        "class_id": 0
+    },
     "002_master_chef_can": {
         "mesh_fp": "ycbv_models/models_fine/obj_000001.ply",
         "weight": 0.414,
@@ -966,7 +990,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.2,
         "dynamic_friction": 0.1,
         "class_id": 81
@@ -978,7 +1002,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.2,
         "dynamic_friction": 0.1,
         "class_id": 82
@@ -990,7 +1014,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.1,
         "dynamic_friction": 0.0,
         "class_id": 83
@@ -1002,7 +1026,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.1,
         "dynamic_friction": 0.0,
         "class_id": 84
@@ -1014,7 +1038,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.0,
         "dynamic_friction": 0.0,
         "class_id": 85
@@ -1026,7 +1050,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.0,
         "dynamic_friction": 0.0,
         "class_id": 86
@@ -1038,7 +1062,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.0,
         "dynamic_friction": 0.0,
         "class_id": 87
@@ -1050,7 +1074,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.0,
         "dynamic_friction": 0.0,
         "class_id": 88
@@ -1062,7 +1086,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.0,
         "dynamic_friction": 0.0,
         "class_id": 89
@@ -1074,7 +1098,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.0,
         "dynamic_friction": 0.0,
         "class_id": 90
@@ -1086,7 +1110,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.0,
         "dynamic_friction": 0.0,
         "class_id": 91
@@ -1098,7 +1122,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.0,
         "dynamic_friction": 0.0,
         "class_id": 92
@@ -1110,7 +1134,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.2,
         "dynamic_friction": 0.1,
         "class_id": 93
@@ -1122,7 +1146,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.2,
         "dynamic_friction": 0.1,
         "class_id": 94
@@ -1134,7 +1158,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.2,
         "dynamic_friction": 0.1,
         "class_id": 95
@@ -1146,7 +1170,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.2,
         "dynamic_friction": 0.1,
         "class_id": 96
@@ -1158,7 +1182,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.0,
         "dynamic_friction": 0.0,
         "class_id": 97
@@ -1170,7 +1194,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.0,
         "dynamic_friction": 0.0,
         "class_id": 98
@@ -1182,7 +1206,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.1,
         "dynamic_friction": 0.0,
         "class_id": 99
@@ -1194,7 +1218,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.1,
         "dynamic_friction": 0.0,
         "class_id": 100
@@ -1206,7 +1230,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.8,
         "dynamic_friction": 0.8,
         "class_id": 101
@@ -1218,7 +1242,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.8,
         "dynamic_friction": 0.8,
         "class_id": 102
@@ -1230,7 +1254,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.8,
         "dynamic_friction": 0.8,
         "class_id": 103
@@ -1242,7 +1266,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.8,
         "dynamic_friction": 0.8,
         "class_id": 104
@@ -1254,7 +1278,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.8,
         "dynamic_friction": 0.8,
         "class_id": 105
@@ -1266,7 +1290,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.8,
         "dynamic_friction": 0.8,
         "class_id": 106
@@ -1278,7 +1302,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.8,
         "dynamic_friction": 0.8,
         "class_id": 107
@@ -1290,7 +1314,7 @@
         "metallic": 0.3,
         "roughness": 0.7,
         "restitution": 0.0,
-        "scale": 0.01,
+        "scale": 1.0,
         "static_friction": 0.8,
         "dynamic_friction": 0.8,
         "class_id": 108
