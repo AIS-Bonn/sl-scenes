@@ -20,8 +20,16 @@ import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
 import nimblephysics as nimble
 from pathlib import Path
 
+import subprocess
+import pathlib
+import shlex
+
 PI = torch.acos(torch.tensor(-1))
 TAB = "    "
+# z -> x, y -> z, x->y
+P = torch.tensor([1,0,0,
+                  0,0,-1,
+                  0,1,0]).view(3,3).double()
 
 def clear_cmd():
     """Clearing command line window"""
@@ -249,3 +257,24 @@ def dump_sl_scene_to_urdf(scene: sl.Scene, out_fp : str):
     urdf_lines = [line + "\n" for line in urdf_lines]
     with open(out_fp, "w") as urdf_file:
         urdf_file.writelines(urdf_lines)
+        
+def set_root_offset(robot : nimble.dynamics.Skeleton, offset : list = [0, 0, 0]):
+    rootJoint = robot.getJoint(0)
+    rootBody = robot.getBodyNode(0)
+    rootOffset = nimble.math.Isometry3()
+    rootOffset.set_matrix(rootBody.getWorldTransform().matrix())
+    rootOffset.set_translation(offset)
+    rootJoint.setTransformFromParentBodyNode(rootOffset)
+    return
+
+def stl_to_obj(stl_path: pathlib.Path, root: pathlib.Path = pathlib.Path('/assets/converted/'), overwrite: bool = False):
+    assert stl_path.is_file(), "Invalid .stl path!"
+    assert stl_path.suffix == '.STL', "Invalid file type!"
+    obj_path = root / stl_path.relative_to(stl_path.anchor)
+    obj_path = obj_path.with_suffix('.obj')
+    if obj_path.is_file() and not overwrite:
+        return obj_path
+    obj_path.parent.mkdir(parents=True, exist_ok=True)
+    command = f'assimp export {stl_path} {obj_path}'
+    subprocess.check_call(shlex.split(command))
+    return obj_path
