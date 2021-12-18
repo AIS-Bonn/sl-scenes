@@ -24,6 +24,8 @@ import subprocess
 import pathlib
 import shlex
 
+from scipy.spatial.transform import Rotation as R
+
 PI = torch.acos(torch.tensor(-1))
 TAB = "    "
 # z -> x, y -> z, x->y
@@ -112,6 +114,14 @@ def get_mat_from_rpy(rpy : torch.Tensor):
     return R
 
 
+def nimble_to_sl_rot(nimble_rot):
+    return P @ torch.from_numpy(R.from_rotvec(nimble_rot.numpy()).as_matrix())
+
+
+def sl_to_nimble_rot(sl_rot):
+    return torch.from_numpy(R.from_matrix((P.T @ sl_rot.double()).numpy()).as_rotvec())
+
+
 def get_rand_num(N=1, low=0, high=1):
     """ Get N random uniformly distributed numbers on the specified range"""
     nums = torch.rand(N,) * (high - low) + low
@@ -169,15 +179,14 @@ def get_absolute_mesh_path(obj_info : OBJECT_INFO):
 
 
 def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO, debug_mode=False):
-
     # create overall object
     skel = nimble.dynamics.Skeleton()
     skel.setName(str(obj.instance_index))
     skel.setMobile(not obj.static)
     skel_joint, skel_body = skel.createFreeJointAndBodyNodePair()
     pose = obj.pose()
-    t = pose[:3, 3]
-    rpy = get_rpy_from_mat(pose[:3, :3])
+    t = P.T @ pose[:3, 3].double()
+    rpy = sl_to_nimble_rot(pose[:3, :3])
     position = [rpy, t]
     velocity = [obj.angular_velocity.flip(0), obj.linear_velocity]  # flip angular velocity for ZYX convention  # TODO actually ZYX convention in nimblephysics?
 
@@ -198,8 +207,8 @@ def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO, debug_mode=Fals
                 submesh_visual.setColor(torch.rand(3))
 
     # finalizing setup
-    inertia_moment = torch.diag(obj.inertia)
-    obj_center_of_mass = obj.inertial_frame[:3, 3]
+    inertia_moment = torch.diag(obj.inertia).double()
+    obj_center_of_mass = P.T @ obj.inertial_frame[:3, 3].double()
     skel_body.setInertia(nimble.dynamics.Inertia(obj.mass, obj_center_of_mass, inertia_moment))
     skel_body.setFrictionCoeff(obj_info.static_friction)  # TODO dynamic friction?
     skel_body.setRestitutionCoeff(obj_info.restitution)

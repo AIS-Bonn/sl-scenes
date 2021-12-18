@@ -214,7 +214,7 @@ if __name__ == "__main__":
         action="store_true",
         help="if specified, creates mp4 video files from the RGB frames of an episode",
     )
-    # parser.add_argument("--resolution", nargs='+', type=int, default=(1920, 1080))
+    #parser.add_argument("--resolution", nargs='+', type=int, default=(1920, 1080))
     parser.add_argument("--resolution", nargs='+', type=int, default=(1280, 800))
     parser.add_argument(
         "--frames", type=int, default=180, help="number of frames generated per episode"
