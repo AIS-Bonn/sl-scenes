@@ -70,6 +70,9 @@ def main(cfg):
         scenario_ids = SCENARIOS.keys() if cfg.scenario == "all" else [cfg.scenario]
         for it in range(cfg.iterations):
             for scenario_id in scenario_ids:
+                if scenario_id in ["robopushing"] and cfg.physics_engine != "nimble":
+                    assert cfg.scenario == "all", "Robot scenarios require nimblephysics sim"
+                    continue
                 res = init_populate_scene(cfg, scenario_id=scenario_id)
                 if(res["render"]):
                     print(f"Scene successfully populated on iteration #{res['n_errors']}....")

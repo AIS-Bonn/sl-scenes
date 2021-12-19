@@ -12,11 +12,11 @@ from itertools import chain
 import ycb_dynamic.CONSTANTS as CONSTANTS
 from ycb_dynamic.CONFIG import CONFIG
 import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
-from ycb_dynamic.scenarios.scenario import Scenario
+from ycb_dynamic.scenarios.robot_scenario import RobotScenario
 import ycb_dynamic.utils.utils as utils
 
 
-class RobopushingScenario(Scenario):
+class RobopushingScenario(RobotScenario):
     def __init__(self, cfg, scene):
         self.name = "Robopushing"
         self.config = CONFIG["scenes"]["robopushing"]
@@ -33,7 +33,7 @@ class RobopushingScenario(Scenario):
         """
         SCENARIO-SPECIFIC
         """
-        self.mesh_loader.load_meshes(CONSTANTS.TABLE)
+        self.mesh_loader.load_meshes(CONSTANTS.NO_POOL_TABLE)
         self.mesh_loader.load_meshes(CONSTANTS.YCBV_OBJECTS)
 
     def setup_objects_(self):
@@ -48,64 +48,32 @@ class RobopushingScenario(Scenario):
         self.table = self.update_object_height(cur_obj=self.table)
         self.z_offset = self.table.pose()[2, -1]
         
-        # create nimble world
-        self.nimble_world = nimble.simulation.World()
-        self.nimble_world.setGravity([0, -9.81, 0])
-        self.nimble_world.setTimeStep(self.sim_dt)
-        
-        # add table and other static sl objects to nimble world
-        for obj in self.scene.objects:
-            obj_info = OBJECT_INFO.get_object_by_class_id(obj.mesh.class_index)
-            skel, pos, vel = utils.sl_object_to_nimble(obj, obj_info, debug_mode=self.nimble_debug)
-            skel.setPositions(torch.cat(pos))
-            self.nimble_world.addSkeleton(skel)
-        
-        # the robot descriptions start at this index in the state vector
-        self.nimble_robot_offset = self.nimble_world.getNumDofs()
+        # add table and other static sl objects to nimble world - must be called
+        self.add_static_sl_to_nimble()
         
         # place two robots on the table
         robot1 = self.nimble_world.loadSkeleton('/assets/KR5/KR5.urdf')
-        robot1.setName("Robot1")
         #robot1.enableSelfCollisionCheck()
         x_1 = 0.9 * self.config["pos"]["x_min"] + 0.1 * self.config["pos"]["x_max"]
         y_1 = 0.5 * self.config["pos"]["y_min"] + 0.5 * self.config["pos"]["y_max"]
         utils.set_root_offset(robot1, [x_1, self.z_offset+0.39, -y_1])
+        robot1.setPositions([0, 140*(3.1415/180), -115*(3.1415/180), 0, 0, 0])
         
         robot2 = self.nimble_world.loadSkeleton('/assets/KR5/KR5.urdf')
-        robot2.setName("Robot2")
         #robot2.enableSelfCollisionCheck()
         x_2 = 0.1 * self.config["pos"]["x_min"] + 0.9 * self.config["pos"]["x_max"]
         y_2 = 0.5 * self.config["pos"]["y_min"] + 0.5 * self.config["pos"]["y_max"]
         utils.set_root_offset(robot2, [x_2, self.z_offset+0.39, -y_2])
+        robot2.setPositions([150*(3.1415/180), 140*(3.1415/180), -115*(3.1415/180), 0, 0, 0])
+        
+        # self.robots must be populated before calling add_robots_nimble_to_sl()
         self.robots = [robot1, robot2]
-        self.robot_sl_objects = [[] for robot in self.robots]
         
-        # the prop descriptions start at this index in the state vector
-        self.nimble_prop_offset = self.nimble_world.getNumDofs()
+        # must be called! must be called after add_static_sl_to_nimble()
+        self.add_robots_nimble_to_sl()
         
-        # add robot meshes to sl scene
-        for i, robot in enumerate(self.robots):
-            for part in robot.getBodyNodes():
-                if part.getShapeNode(0) is not None:
-                    # transfer mesh
-                    mesh_path = pathlib.Path(part.getShapeNode(0).getShape().getMeshPath())
-                    obj_path = utils.stl_to_obj(mesh_path)
-                    mesh = sl.Mesh(obj_path)
-                    obj = sl.Object(mesh)
-                    obj.metallic = 1.0
-                    obj.roughness = 0.4
-                    # transfer pose
-                    pose_mat = part.getWorldTransform().matrix()
-                    p = obj.pose()
-                    p[:3,3] = utils.P @ pose_mat[:3,3]
-                    p[:3,:3] = utils.P @ pose_mat[:3,:3]
-                    obj.set_pose(p)
-                    self.scene.add_object(obj)
-                    self.robot_sl_objects[i].append(obj)
-        
-        self.prop_sl_objects = []
         # drop some random YCB-Video objects onto the table
-        for obj_info_mesh in random.choices(ycbv_info_meshes, k=8):
+        for obj_info_mesh in random.choices(ycbv_info_meshes, k=16):
             mod_t = torch.tensor([
                 random.uniform(self.config["pos"]["x_min"], self.config["pos"]["x_max"]),
                 random.uniform(self.config["pos"]["y_min"], self.config["pos"]["y_max"]),
@@ -119,56 +87,25 @@ class RobopushingScenario(Scenario):
             if self.is_there_collision():
                 self.remove_obj_from_scene(obj)
             else:
+                # must be populated
                 self.prop_sl_objects.append(obj)
                 
-        # sync nimble with sl scene objects
-        for obj in self.prop_sl_objects:
-            obj_info = OBJECT_INFO.get_object_by_class_id(obj.mesh.class_index)
-            skel, pos, vel = utils.sl_object_to_nimble(obj, obj_info, debug_mode=self.nimble_debug)
-            skel.setPositions(torch.cat(pos))
-            self.nimble_world.addSkeleton(skel)
+        # must be called! must be called after add_robots_nimble_to_sl()    
+        self.add_prop_objects_sl_to_nimble()
         
-        # ensure the action space contains only those actions related to the robots
-        for dof in chain(range(self.nimble_robot_offset), range(self.nimble_prop_offset, self.nimble_world.getNumDofs())):
-            self.nimble_world.removeDofFromActionSpace(dof)
-        # finish up
-        self.nimble_state = torch.from_numpy(self.nimble_world.getState())
-        self.nimble_loaded = True
-        
-    def simulate_nimble_(self, action=None):
-        '''
-        Simulates a timestep in nimblephysics.
-        '''
-        # simulate timestep in nimble
-        if action is None:
-            action = torch.zeros(self.nimble_world.getActionSize())
-            action[0] = 10.
-            action[6] = -10.
-        self.nimble_state = nimble.timestep(self.nimble_world, self.nimble_state, action)
-        
-        # transfer robot to sl context
-        for i, robot in enumerate(self.robots):
-            for j, part in enumerate(robot.getBodyNodes()):
-                # obtain corresponding object
-                obj = self.robot_sl_objects[i][j]
-                # transfer pose
-                pose_mat = part.getWorldTransform().matrix()
-                p = obj.pose()
-                p[:3,3] = utils.P @ pose_mat[:3,3]
-                p[:3,:3] = utils.P @ pose_mat[:3,:3]
-                obj.set_pose(p)
-        
-        # transfer prop objects to sl context
-        obj_pos, obj_vel = torch.chunk(self.nimble_state.clone(), 2)
-        obj_pos = obj_pos[self.nimble_prop_offset:]
-        obj_pos = torch.chunk(obj_pos, obj_pos.shape[0] // 6)
-        for obj, pos in zip(self.prop_sl_objects, obj_pos):
-            obj_pose = obj.pose()
-            obj_rot, obj_t = pos.split([3, 3])
-            obj_pose[:3, :3] = utils.nimble_to_sl_rot(obj_rot)
-            obj_pose[:3,  3] = utils.P @ obj_t
-            obj.set_pose(obj_pose)
-
+    def get_action(self):
+        """
+        SCENARIO-SPECIFIC: Actions are control forces applied on each DOF
+        """
+        sign = 1
+        for robot in self.robots:
+            # difficult to determine control forces
+            # lazy fix - set velocity state directly
+            robot.setVelocities([sign*180*(3.1415/180), 0, 0, 0, 0, 0])
+            self.nimble_state = torch.from_numpy(self.nimble_world.getState())
+            sign *= -1
+        return torch.zeros(self.nimble_world.getActionSize())
+    
     def setup_cameras_(self):
         """
         SCENARIO-SPECIFIC
