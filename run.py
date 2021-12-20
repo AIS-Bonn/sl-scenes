@@ -23,7 +23,8 @@ from ycb_dynamic.scenarios import (
     TabletopScenario,
     ThrowScenario,
     TidyScenario,
-    TestScenario
+    TestScenario,
+    RobopushingScenario
 )
 from ycb_dynamic.output import BOPWriter
 
@@ -38,6 +39,7 @@ SCENARIOS = {
     "tabletop": TabletopScenario,
     "throw": ThrowScenario,
     "tidy": TidyScenario,
+    "robopushing": RobopushingScenario,
     # "test": TestScenario,
 }
 
@@ -68,6 +70,9 @@ def main(cfg):
         scenario_ids = SCENARIOS.keys() if cfg.scenario == "all" else [cfg.scenario]
         for it in range(cfg.iterations):
             for scenario_id in scenario_ids:
+                if scenario_id in ["robopushing"] and cfg.physics_engine != "nimble":
+                    assert cfg.scenario == "all", "Robot scenarios require nimblephysics sim"
+                    continue
                 res = init_populate_scene(cfg, scenario_id=scenario_id)
                 if(res["render"]):
                     print(f"Scene successfully populated on iteration #{res['n_errors']}....")
@@ -212,7 +217,7 @@ if __name__ == "__main__":
         action="store_true",
         help="if specified, creates mp4 video files from the RGB frames of an episode",
     )
-    # parser.add_argument("--resolution", nargs='+', type=int, default=(1920, 1080))
+    #parser.add_argument("--resolution", nargs='+', type=int, default=(1920, 1080))
     parser.add_argument("--resolution", nargs='+', type=int, default=(1280, 800))
     parser.add_argument(
         "--frames", type=int, default=180, help="number of frames generated per episode"

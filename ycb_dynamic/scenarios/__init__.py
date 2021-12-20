@@ -7,6 +7,7 @@ from .stack import StackScenario
 from .tabletop import TabletopScenario
 from .throw import ThrowScenario
 from .tidy import TidyScenario
+from .robopushing import RobopushingScenario
 # from .test import TestScenario
 
 class TestScenario(object): pass
