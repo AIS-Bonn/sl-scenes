@@ -206,6 +206,14 @@ if __name__ == "__main__":
         help="specify which scenario to create and render",
     )
     parser.add_argument(
+        "--lights",
+        type=int,
+        default=0,
+        choices = [0, 1, 2, 3],
+        help="specify the amount of light sources placed around the scene (default: 0). "
+             "If 0 lights are specified, a lightmap is used instead."
+    )
+    parser.add_argument(
         "--lightmap",
         type=str,
         default="random",

@@ -40,7 +40,8 @@ class Scenario(object):
 
         self.meshes_loaded, self.objects_loaded = False, False
         self.z_offset = 0.
-        self.lightmap = cfg.lightmap
+        self.lights = cfg.lights
+        self.lightmap = cfg.lightmap if self.lights == 0 else None
 
         if getattr(self, "allow_multiple_cameras", True):
             self.n_cameras = cfg.cameras
@@ -63,10 +64,11 @@ class Scenario(object):
             self.nimble_loaded = False
         self.sim_t = 0
         self.setup_scene()
+        self.setup_lighting()
         self.setup_objects()
         self.setup_cameras()
         self.decorate_scene()
-        return
+        self.finalize_scene()
 
     @property
     def all_objects(self):
@@ -91,13 +93,38 @@ class Scenario(object):
         self.decorator_loader.decorate_scene(object_loader=self.object_loader)
         return
 
+    def finalize_scene(self):
+        """ Scene setup stuff that has to be done after everything else """
+        for obj in self.static_objects:
+            obj.casts_shadows = False
+
     def setup_scene(self):
-        """ Default setup_scene lighting and camera. Can be overriden from specific scenes """
-        self.scene.ambient_light = torch.tensor([0.1, 0.1, 0.1])
+        """ Default setup_scene. Can be overriden from specific scenes """
         _ = self.room_assembler.make_room()
-        self.scene.light_map = get_lightmap(self.lightmap)
-        # self.scene.choose_random_light_position()
-        return
+
+    def setup_lighting(self):
+        """ Default setup lighting. """
+        self.scene.ambient_light = torch.tensor([0.2, 0.2, 0.2])
+        if self.lightmap is not None:
+            self.scene.light_map = get_lightmap(self.lightmap)
+            self.scene.light_directions *= 0.  # disable point lights
+            self.scene.manual_exposure = 5.0
+        else:
+            for i in range(self.lights):
+                # self.scene.choose_random_light_direction()
+                ori_angle = np.random.uniform(0, 360)
+                elev_angle = np.random.uniform(30, 90)
+                light_x = np.cos(ori_angle * np.pi / 180.) * np.cos(elev_angle * np.pi / 180.)
+                light_y = np.sin(ori_angle * np.pi / 180.) * np.cos(elev_angle * np.pi / 180.)
+                light_z = np.sin(elev_angle * np.pi / 180.)
+                light_direction = torch.tensor([-light_x, -light_y, -light_z])
+                self.scene.light_directions[i] = light_direction
+
+                light_color = torch.tensor([4.0, 4.0, 4.0]) + torch.rand(3)
+                light_color_normalized = 5. * light_color / torch.linalg.norm(light_color)
+                self.scene.light_colors[i] = light_color_normalized
+
+            self.scene.manual_exposure = 3.0
 
     def get_separations(self):
         # assert len(self.dynamic_objects) > 0, "Objects must be added to dynamic_objects before computing collisions"
