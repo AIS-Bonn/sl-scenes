@@ -242,6 +242,10 @@ class BOPWriter(object):
         rgb_clip.write_videofile(str(self.path / "rgb_video.mp4"))
         rgb_clip.close()
 
+    def serialize_scene(self, scene : sl.Scene):
+        with open(str(self.path / "serialized_scene.txt"), "w") as f:
+            f.write(scene.serialize())
+
 
 class OverlayWriter(object):
     '''

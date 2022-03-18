@@ -135,6 +135,11 @@ def run_and_render_scenario(cfg, renderer, scenario, it):
         sim_steps, written_frames = 0, 0
         pbar = tqdm.tqdm(total=cfg.frames)
 
+        if cfg.serialize_scene:
+            print("Serializing scene...")
+            for writer in writers_list:
+                writer.serialize_scene(scenario.scene)
+
         while written_frames < cfg.frames:
             # after sim's prep period, save visualizations every SIM_STEPS_PER_FRAME sim steps
             if sim_steps % cfg.sim_steps_per_frame == 0 and scenario.can_render():
@@ -225,6 +230,9 @@ if __name__ == "__main__":
         action="store_true",
         help="if specified, creates mp4 video files from the RGB frames of an episode",
     )
+    parser.add_argument("--serialize-scene",
+                        action="store_true",
+                        help="if specified, serializes each scene to a txt file before simulating")
     #parser.add_argument("--resolution", nargs='+', type=int, default=(1920, 1080))
     parser.add_argument("--resolution", nargs='+', type=int, default=(1280, 800))
     parser.add_argument(
