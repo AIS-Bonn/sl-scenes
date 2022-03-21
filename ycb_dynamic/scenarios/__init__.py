@@ -8,6 +8,17 @@ from .tabletop import TabletopScenario
 from .throw import ThrowScenario
 from .tidy import TidyScenario
 from .robopushing import RobopushingScenario
-# from .test import TestScenario
 
-class TestScenario(object): pass
+SCENARIOS = {
+    "all": None,
+    "ball_box": BallBoxScenario,
+    "billards": BillardsScenario,
+    "bowl": BowlScenario,
+    "bowling": BowlingScenario,
+    "diceRoll": DiceRollScenario,
+    "stack": StackScenario,
+    "tabletop": TabletopScenario,
+    "throw": ThrowScenario,
+    "tidy": TidyScenario,
+    "robopushing": RobopushingScenario,
+}  #: All available scenarios and the string identifier with which they can be chosen. If the 'all' key (which maps to None) is used, all scenarios are generated.
