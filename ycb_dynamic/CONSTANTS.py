@@ -16,11 +16,12 @@ from ycb_dynamic.OBJECT_INFO import OBJECT_INFO
 PI = torch.acos(torch.tensor(-1))
 
 # Paths and Directories
-MESH_BASE_DIR = Path(".") / "external_data" / "object_models"
-TEXT_BASE_DIR = Path(".") / "external_data" / "textures"
-
-# Lighting
-IBL_BASE_PATH = Path(".") / "external_data" / "light_maps"
+PKG_ROOT_PATH = Path(__file__).parent.parent
+PKG_SRC_PATH = Path(__file__).parent
+EXT_DATA_PATH = PKG_SRC_PATH / "assets" / "external_data"
+MESH_BASE_DIR = EXT_DATA_PATH / "object_models"
+TEXT_BASE_DIR = EXT_DATA_PATH / "textures"
+IBL_BASE_PATH = EXT_DATA_PATH / "light_maps"
 ALL_LIGHTMAPS = {
     "Alexs_Apartment": IBL_BASE_PATH / "Alexs_Apartment" / "Alexs_Apartment.ibl",
     "Circus_Backstage": IBL_BASE_PATH / "Circus_Backstage" / "Circus_Backstage.ibl",
@@ -63,8 +64,8 @@ WOOD_BLOCK_POSES = [
     torch.tensor([[1, 0, 0, 0.395], [0, 0, 1,     0], [0, -1, 0, 0.45], [0, 0, 0, 1]]),
 ]
 
-# BILLIARDS
-BILLIARDS_TRIANLGE_POSES = [
+# BILLARDS
+BILLARDS_TRIANGLE_POSES = [
     torch.tensor([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0.0], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0.10], [0, 1, 0, -0.06], [0, 0, 1, 0.0], [0, 0, 0, 1]]),
     torch.tensor([[1, 0, 0, 0.10], [0, 1, 0, 0.06], [0, 0, 1, 0.0], [0, 0, 0, 1]]),

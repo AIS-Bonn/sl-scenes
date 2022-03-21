@@ -28,7 +28,7 @@ git clone --recursive THIS REPO
 cd sl-cutscenes
 bash scripts/install_sl.sh
 python setup.py release
-bash scripts/download_assets.sh
+bash scripts/download_external_data.sh
 ```
 
 ### Usage

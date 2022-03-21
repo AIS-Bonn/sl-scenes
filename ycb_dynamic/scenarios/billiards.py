@@ -44,8 +44,8 @@ class BillardsScenario(Scenario):
         self.table = self.update_object_height(cur_obj=self.table)
 
         # assemble several objects in a triangle-like shape
-        N = len(CONSTANTS.BILLIARDS_TRIANLGE_POSES)
-        obj_poses = deepcopy(CONSTANTS.BILLIARDS_TRIANLGE_POSES)
+        N = len(CONSTANTS.BILLARDS_TRIANGLE_POSES)
+        obj_poses = deepcopy(CONSTANTS.BILLARDS_TRIANGLE_POSES)
         for i, obj_info_mesh in enumerate(random.choices(billards_obj_info_mesh, k=N)):
             mod_pose = obj_poses[i]
             obj_mod = {"mod_pose": mod_pose}

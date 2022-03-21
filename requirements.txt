@@ -1,0 +1,7 @@
+matplotlib
+scipy
+pandas
+tqdm
+moviepy
+urllib3
+nimblephysics
