@@ -1,7 +1,7 @@
 import shutil
 import sys, os, argparse
 sys.path.append(".")
-import ycb_dynamic.utils.utils as utils
+import sl_cutscenes.utils.utils as utils
 from pathlib import Path
 
 def get_videos_from_folder(cfg):

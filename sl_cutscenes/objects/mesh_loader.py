@@ -3,8 +3,8 @@ from typing import List
 import stillleben as sl
 import torch
 
-from ycb_dynamic.utils.utils import get_absolute_mesh_path
-from ycb_dynamic import OBJECT_INFO as OBJECT_INFO
+from sl_cutscenes.utils.utils import get_absolute_mesh_path
+from sl_cutscenes import OBJECT_INFO as OBJECT_INFO
 
 
 class MeshLoader:

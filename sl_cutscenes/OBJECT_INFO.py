@@ -12,7 +12,7 @@ ObjectInfo = namedtuple(
      "restitution", "scale", "static_friction", "dynamic_friction", "class_id"],
 )
 
-with open('ycb_dynamic/assets/objects.json') as json_file:
+with open('sl_cutscenes/assets/objects.json') as json_file:
     obj_info_dict = json.load(json_file)
 
 """

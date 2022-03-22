@@ -1,10 +1,10 @@
 import os
 import argparse
 
-import ycb_dynamic.utils.utils as utils
-from ycb_dynamic import generate
-from ycb_dynamic.scenarios import SCENARIOS
-from ycb_dynamic.CONSTANTS import ALL_LIGHTMAPS
+import sl_cutscenes.utils.utils as utils
+from sl_cutscenes import generate
+from sl_cutscenes.scenarios import SCENARIOS
+from sl_cutscenes.CONSTANTS import ALL_LIGHTMAPS
 
 if __name__ == "__main__":
     os.system("cls" if os.name == "nt" else "clear")
@@ -125,6 +125,12 @@ if __name__ == "__main__":
         default="physx",
         help="Specifies whether to use the default Nvidia PhysX simulator or nimblephysics, "
              "a differentiable DART fork (feature is in beta)."
+    )
+    parser.add_argument(
+        "--nimble-debug",
+        action="store_true",
+        help="If specified, and the nimblephysics engine is used, starts a nimblephysics GUI after scene "
+             "simulation/rendering to let the user view the scene as it plays out in nimblephysics."
     )
 
     # config preparation

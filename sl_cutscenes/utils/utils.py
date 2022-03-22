@@ -15,8 +15,8 @@ import torch
 import argparse
 import stillleben as sl
 
-import ycb_dynamic.CONSTANTS as CONSTANTS
-import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
+import sl_cutscenes.CONSTANTS as CONSTANTS
+import sl_cutscenes.OBJECT_INFO as OBJECT_INFO
 import nimblephysics as nimble
 from pathlib import Path
 
@@ -267,7 +267,9 @@ def dump_sl_scene_to_urdf(scene: sl.Scene, out_fp : str):
     with open(out_fp, "w") as urdf_file:
         urdf_file.writelines(urdf_lines)
         
-def set_root_offset(robot : nimble.dynamics.Skeleton, offset : list = [0, 0, 0]):
+def set_root_offset(robot : nimble.dynamics.Skeleton, offset : list):
+    if offset is None:
+        offset = [0, 0, 0]
     rootJoint = robot.getJoint(0)
     rootBody = robot.getBodyNode(0)
     rootOffset = nimble.math.Isometry3()

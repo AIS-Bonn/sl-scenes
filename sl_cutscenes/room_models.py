@@ -1,17 +1,17 @@
 """
-Modules for assembling realistic rooms for the YCB-Dynamic scenes
+Modules for assembling realistic rooms for the scenes
 """
 
 import os
 import torch
 import random
 
-import ycb_dynamic.utils.utils as utils
-from ycb_dynamic.objects.mesh_loader import MeshLoader
-from ycb_dynamic.objects.object_loader import ObjectLoader
-from ycb_dynamic.objects.occupancy_matrix import OccupancyMatrix
-import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.CONFIG import CONFIG
+import sl_cutscenes.utils.utils as utils
+from sl_cutscenes.objects.mesh_loader import MeshLoader
+from sl_cutscenes.objects.object_loader import ObjectLoader
+from sl_cutscenes.objects.occupancy_matrix import OccupancyMatrix
+import sl_cutscenes.CONSTANTS as CONSTANTS
+from sl_cutscenes.CONFIG import CONFIG
 
 
 class RoomAssembler:
@@ -56,7 +56,8 @@ class RoomAssembler:
         # adding floor
         floor_info_mesh, wall_info_mesh = self.mesh_loader.get_meshes()
         floor = self.add_object_to_scene(floor_info_mesh)
-        x1, y1, x2, y2 = *floor.mesh.bbox.min[:2], *floor.mesh.bbox.max[:2]
+        x1, y1 = floor.mesh.bbox.min[:2]
+        x2, y2 = floor.mesh.bbox.max[:2]
         coords = [[0., y1], [x1, 0.], [0., y2], [x2, 0.]]
 
         # adding walls

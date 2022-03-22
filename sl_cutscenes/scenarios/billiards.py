@@ -5,10 +5,10 @@ import torch
 import random
 from copy import deepcopy
 
-import ycb_dynamic.utils.utils as utils
-from ycb_dynamic.CONFIG import CONFIG
-import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.scenarios.scenario import Scenario
+import sl_cutscenes.utils.utils as utils
+from sl_cutscenes.CONFIG import CONFIG
+import sl_cutscenes.CONSTANTS as CONSTANTS
+from sl_cutscenes.scenarios.scenario import Scenario
 
 
 class BillardsScenario(Scenario):

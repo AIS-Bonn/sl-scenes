@@ -5,9 +5,9 @@ import random
 import numpy as np
 import torch
 
-import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.CONFIG import CONFIG
-from ycb_dynamic.scenarios.scenario import Scenario
+import sl_cutscenes.CONSTANTS as CONSTANTS
+from sl_cutscenes.CONFIG import CONFIG
+from sl_cutscenes.scenarios.scenario import Scenario
 
 
 class StackScenario(Scenario):

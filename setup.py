@@ -9,7 +9,7 @@ here = Path(__file__).parent
 long_description = (here / 'README.md').read_text()
 
 
-def _load_py_module(fname, pkg="ycb_dynamic"):
+def _load_py_module(fname, pkg="sl_cutscenes"):
     spec = spec_from_file_location(os.path.join(pkg, fname), os.path.join(str(here), pkg, fname))
     py = module_from_spec(spec)
     spec.loader.exec_module(py)
@@ -64,7 +64,7 @@ setup(
     classifiers=about.__classifiers__,
     packages=find_packages(exclude=["tests*"]),
     include_package_data=True,
-    package_data={'ycb_dynamic': ['resources/*']},
+    package_data={'sl_cutscenes': ['resources/*']},
     zip_safe=False,
     setup_requires=[],
     install_requires=_load_requirements(str(here)),

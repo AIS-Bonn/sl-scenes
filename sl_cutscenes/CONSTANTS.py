@@ -11,7 +11,7 @@ from pathlib import Path
 
 import random
 import torch
-from ycb_dynamic.OBJECT_INFO import OBJECT_INFO
+from sl_cutscenes.OBJECT_INFO import OBJECT_INFO
 
 PI = torch.acos(torch.tensor(-1))
 

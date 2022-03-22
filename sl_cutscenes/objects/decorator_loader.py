@@ -2,11 +2,11 @@ import random
 
 import torch
 
-from ycb_dynamic import CONSTANTS as CONSTANTS
-from ycb_dynamic.CONFIG import CONFIG
-from ycb_dynamic.objects.mesh_loader import MeshLoader
-from ycb_dynamic.objects.occupancy_matrix import OccupancyMatrix
-from ycb_dynamic.utils import utils as utils
+from sl_cutscenes import CONSTANTS as CONSTANTS
+from sl_cutscenes.CONFIG import CONFIG
+from sl_cutscenes.objects.mesh_loader import MeshLoader
+from sl_cutscenes.objects.occupancy_matrix import OccupancyMatrix
+from sl_cutscenes.utils import utils as utils
 
 
 class DecoratorLoader:

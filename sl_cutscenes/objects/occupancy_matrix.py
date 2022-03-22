@@ -13,8 +13,8 @@ from math import ceil
 import torch
 from torch.nn import functional as F
 
-from ycb_dynamic import CONSTANTS as CONSTANTS
-from ycb_dynamic.utils import utils as utils
+from sl_cutscenes import CONSTANTS as CONSTANTS
+from sl_cutscenes.utils import utils as utils
 
 
 class OccupancyMatrix:

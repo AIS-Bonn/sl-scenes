@@ -5,10 +5,10 @@ Same as tabletop, but with intial linear velocity
 import random
 import torch
 
-import ycb_dynamic.utils.utils as utils
-import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.CONFIG import CONFIG
-from ycb_dynamic.scenarios.scenario import Scenario
+import sl_cutscenes.utils.utils as utils
+import sl_cutscenes.CONSTANTS as CONSTANTS
+from sl_cutscenes.CONFIG import CONFIG
+from sl_cutscenes.scenarios.scenario import Scenario
 
 
 class ThrowScenario(Scenario):

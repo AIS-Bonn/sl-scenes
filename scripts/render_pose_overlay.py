@@ -1,5 +1,5 @@
 import json
-import sys, os, shutil
+import sys, os
 sys.path.append(".")
 import argparse
 from contextlib import ExitStack
@@ -12,8 +12,8 @@ import torch
 from PIL import Image
 from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
 
-from ycb_dynamic.output import OverlayWriter
-from ycb_dynamic.OBJECT_INFO import get_objects_by_class_id
+from sl_cutscenes.output import OverlayWriter
+from sl_cutscenes.OBJECT_INFO import get_objects_by_class_id
 
 def main(cfg):
     '''

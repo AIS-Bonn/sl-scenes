@@ -2,7 +2,7 @@ import stillleben as sl
 import torch
 import threading
 
-from ycb_dynamic import OBJECT_INFO as OBJECT_INFO
+from sl_cutscenes import OBJECT_INFO as OBJECT_INFO
 
 
 class ObjectLoader:

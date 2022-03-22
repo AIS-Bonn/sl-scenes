@@ -1,18 +1,15 @@
 """
 Abstract scenario subclass for defining robot scenarios
 """
-import random
 import torch
 import nimblephysics as nimble
 import pathlib
 import stillleben as sl
 from itertools import chain
 
-import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.CONFIG import CONFIG
-import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
-from ycb_dynamic.scenarios.scenario import Scenario
-import ycb_dynamic.utils.utils as utils
+import sl_cutscenes.OBJECT_INFO as OBJECT_INFO
+from sl_cutscenes.scenarios.scenario import Scenario
+import sl_cutscenes.utils.utils as utils
 
 
 class RobotScenario(Scenario):

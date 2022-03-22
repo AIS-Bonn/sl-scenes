@@ -2,7 +2,7 @@
 Configurations and variables for each scene.
 """
 import torch
-import ycb_dynamic.CONSTANTS as CONSTANTS
+import sl_cutscenes.CONSTANTS as CONSTANTS
 
 """
 Explanations:

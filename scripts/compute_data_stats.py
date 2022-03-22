@@ -120,11 +120,12 @@ class DatasetStats:
 
         # aggregating
         seq_num = len(self.all_stats)
-        cur_stats = {}
-        cur_stats["scene"] = scene
-        cur_stats["seq_name"] = seq_name
-        cur_stats["gt_stats"] = gt_stats
-        cur_stats["info_stats"] = info_stats
+        cur_stats = {
+            "scene": scene,
+            "seq_name": seq_name,
+            "gt_stats": gt_stats,
+            "info_stats": info_stats
+        }
         self.all_stats[str(seq_num)] = cur_stats
 
         return

@@ -3,17 +3,11 @@ Robopushing Scenario: Objects free-fall on top of a table, two robots push them 
 """
 import random
 import torch
-import nimblephysics as nimble
-import pathlib
-import stillleben as sl
-from scipy.spatial.transform import Rotation as R
-from itertools import chain
 
-import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.CONFIG import CONFIG
-import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
-from ycb_dynamic.scenarios.robot_scenario import RobotScenario
-import ycb_dynamic.utils.utils as utils
+import sl_cutscenes.CONSTANTS as CONSTANTS
+from sl_cutscenes.CONFIG import CONFIG
+from sl_cutscenes.scenarios.robot_scenario import RobotScenario
+import sl_cutscenes.utils.utils as utils
 
 
 class RobopushingScenario(RobotScenario):

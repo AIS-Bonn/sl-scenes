@@ -1,6 +1,6 @@
 import random
 import stillleben as sl
-import ycb_dynamic.CONSTANTS as CONSTANTS
+import sl_cutscenes.CONSTANTS as CONSTANTS
 
 
 def get_lightmap(map_name="random"):

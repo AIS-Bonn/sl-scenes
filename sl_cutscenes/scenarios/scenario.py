@@ -9,15 +9,15 @@ import torch
 import stillleben as sl
 import nimblephysics as nimble
 
-from ycb_dynamic.room_models import RoomAssembler
-from ycb_dynamic.objects.mesh_loader import MeshLoader
-from ycb_dynamic.objects.object_loader import ObjectLoader
-from ycb_dynamic.objects.decorator_loader import DecoratorLoader
-from ycb_dynamic.lighting import get_lightmap
-from ycb_dynamic.camera import Camera
-import ycb_dynamic.utils.utils as utils
-import ycb_dynamic.CONSTANTS as CONSTANTS
-import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
+from sl_cutscenes.room_models import RoomAssembler
+from sl_cutscenes.objects.mesh_loader import MeshLoader
+from sl_cutscenes.objects.object_loader import ObjectLoader
+from sl_cutscenes.objects.decorator_loader import DecoratorLoader
+from sl_cutscenes.lighting import get_lightmap
+from sl_cutscenes.camera import Camera
+import sl_cutscenes.utils.utils as utils
+import sl_cutscenes.CONSTANTS as CONSTANTS
+import sl_cutscenes.OBJECT_INFO as OBJECT_INFO
 
 
 class Scenario(object):
@@ -299,8 +299,10 @@ class Scenario(object):
         self.scene.remove_object(obj)
         self.object_loader.remove_object(obj.instance_index, decrement_ins_idx=decrement_ins_idx)
 
-    def update_object_height(self, cur_obj, objs=[], scales=None):
+    def update_object_height(self, cur_obj, objs=None, scales=None):
         """ Updating an object z-position given a list of supporting objects"""
+        if objs is None:
+            objs = []
         scales = [1.0] * len(objs) if scales is None else scales
         assert len(objs) == len(scales), "provided non-matching scales for update_camera_height"
         cur_obj_pose = cur_obj.pose()
@@ -311,8 +313,10 @@ class Scenario(object):
         cur_obj.set_pose(cur_obj_pose)
         return cur_obj
 
-    def update_camera_height(self, camera, objs=[], scales=None):
+    def update_camera_height(self, camera, objs=None, scales=None):
         """ Updating the camera position, camera-object position and the look-at parameter"""
+        if objs is None:
+            objs = []
         scales = [1.0] * len(objs) if scales is None else scales
         assert len(objs) == len(scales), "provided non-matching scales for update_camera_height"
         z_lookat = deepcopy(camera.start_base_lookat[-1])

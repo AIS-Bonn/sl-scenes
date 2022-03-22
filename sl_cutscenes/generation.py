@@ -8,8 +8,8 @@ from contextlib import ExitStack
 import tqdm
 import stillleben as sl
 
-from ycb_dynamic.scenarios import SCENARIOS
-from ycb_dynamic.output import BOPWriter
+from sl_cutscenes.scenarios import SCENARIOS
+from sl_cutscenes.output import BOPWriter
 
 
 def generate(cfg):

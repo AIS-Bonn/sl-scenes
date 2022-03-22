@@ -1,14 +1,13 @@
 import stillleben as sl
 import random
 import torch
-from math import ceil, floor
 from typing import List
 
-from ycb_dynamic.objects.occupancy_matrix import OccupancyMatrix
-import ycb_dynamic.utils.utils as utils
-import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.CONFIG import CONFIG
-import ycb_dynamic.OBJECT_INFO as OBJECT_INFO
+from sl_cutscenes.objects.occupancy_matrix import OccupancyMatrix
+import sl_cutscenes.utils.utils as utils
+import sl_cutscenes.CONSTANTS as CONSTANTS
+from sl_cutscenes.CONFIG import CONFIG
+import sl_cutscenes.OBJECT_INFO as OBJECT_INFO
 
 
 class MeshLoader:

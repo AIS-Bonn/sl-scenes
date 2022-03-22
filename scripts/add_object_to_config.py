@@ -8,7 +8,7 @@ def add_object_to_config():
     One after another, object parameters like mesh filepath and weight are taken and
     added as a new dict entry to the json file.
     '''
-    with open('ycb_dynamic/assets/objects.json') as json_file:
+    with open('sl_cutscenes/assets/objects.json') as json_file:
         obj_info_dict = json.load(json_file)
 
     obj_name = input("new object name: ")
@@ -35,7 +35,7 @@ def add_object_to_config():
         obj_dict[key] = obj_param
 
     obj_info_dict[obj_name] = obj_dict
-    with open('ycb_dynamic/assets/objects.json', 'w', encoding='utf-8') as f:
+    with open('sl_cutscenes/assets/objects.json', 'w', encoding='utf-8') as f:
         json.dump(obj_info_dict, f, ensure_ascii=False, indent=4)
 
     print(f"added new object '{obj_name}' to objects.json. Goodbye!")

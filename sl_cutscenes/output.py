@@ -5,9 +5,8 @@ Taken from SynPick and modified
 
 import stillleben as sl
 import torch
-import time
 from pathlib import Path
-from ycb_dynamic.scenarios.scenario import Scenario
+from sl_cutscenes.scenarios.scenario import Scenario
 
 class BOPWriter(object):
     '''

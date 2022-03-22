@@ -4,9 +4,9 @@ Tabletop Scenario: Objects are left to free-fall on top of a table
 import random
 import torch
 
-import ycb_dynamic.CONSTANTS as CONSTANTS
-from ycb_dynamic.CONFIG import CONFIG
-from ycb_dynamic.scenarios.scenario import Scenario
+import sl_cutscenes.CONSTANTS as CONSTANTS
+from sl_cutscenes.CONFIG import CONFIG
+from sl_cutscenes.scenarios.scenario import Scenario
 
 
 class TabletopScenario(Scenario):

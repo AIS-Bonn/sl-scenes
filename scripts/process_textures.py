@@ -2,7 +2,7 @@ import os, glob, re, sys
 sys.path.append(".")
 from pathlib import Path
 
-from ycb_dynamic.utils.utils import copy_overwrite
+from sl_cutscenes.utils.utils import copy_overwrite
 
 BASE_DIR = Path('external_data') / 'textures'
 
