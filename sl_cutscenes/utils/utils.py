@@ -16,7 +16,7 @@ import argparse
 import stillleben as sl
 
 import sl_cutscenes.constants as CONSTANTS
-import sl_cutscenes.OBJECT_INFO as OBJECT_INFO
+from sl_cutscenes import object_info
 import nimblephysics as nimble
 from pathlib import Path
 
@@ -172,13 +172,13 @@ def copy_overwrite(src, dst):
 
 
 
-def get_absolute_mesh_path(obj_info : OBJECT_INFO):
+def get_absolute_mesh_path(obj_info : object_info.ObjectInfo):
     floor_or_wall = obj_info.name.endswith("_floor") or obj_info.name.endswith("_wall")
     path = CONSTANTS.TEXT_BASE_DIR if floor_or_wall else CONSTANTS.MESH_BASE_DIR
     return str((path / obj_info.mesh_fp).resolve())
 
 
-def sl_object_to_nimble(obj : sl.Object, obj_info : OBJECT_INFO, debug_mode=False):
+def sl_object_to_nimble(obj: sl.Object, obj_info: object_info.ObjectInfo, debug_mode=False):
     # create overall object
     skel = nimble.dynamics.Skeleton()
     skel.setName(str(obj.instance_index))

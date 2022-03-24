@@ -7,12 +7,12 @@ from sl_cutscenes.objects.occupancy_matrix import OccupancyMatrix
 import sl_cutscenes.utils.utils as utils
 import sl_cutscenes.constants as CONSTANTS
 from sl_cutscenes.constants import SCENARIO_DEFAULTS
-import sl_cutscenes.OBJECT_INFO as OBJECT_INFO
+from sl_cutscenes import object_info
 
 
 class MeshLoader:
     """
-    Class to load the meshes for the objects in a scene
+    Class to load the meshes for the objects in a scene.
     """
 
     def __init__(self):
@@ -29,7 +29,7 @@ class MeshLoader:
         extract_singular = lambda x: x[0] if len(x) == 1 else x
         return [extract_singular(item) for item in self.loaded_meshes]
 
-    def load_meshes(self, obj_info: List[OBJECT_INFO.ObjectInfo], **kwargs):
+    def load_meshes(self, obj_info: List[object_info.ObjectInfo], **kwargs):
         """
         Loads the meshes whose information is given in parameter 'obj_info.
         Each call of this method APPENDS a list to the loaded_meshes attribute.
@@ -58,8 +58,8 @@ class MeshLoader:
         self.loaded_meshes.append(info_mesh_tuples)
 
 
-def mesh_flags(info: OBJECT_INFO.ObjectInfo):
-    if info.flags >= OBJECT_INFO.FLAG_CONCAVE:
+def mesh_flags(info: object_info.ObjectInfo):
+    if info.flags >= object_info.FLAG_CONCAVE:
         return sl.Mesh.Flag.NONE
     else:
         return sl.Mesh.Flag.PHYSICS_FORCE_CONVEX_HULL
@@ -86,7 +86,7 @@ class ObjectLoader:
     def dynamic_objects(self):
         return [obj for obj in self.loaded_objects.values() if not obj.static]
 
-    def create_object(self, object_info: OBJECT_INFO.ObjectInfo, mesh: sl.Mesh, is_static: bool, **obj_mod):
+    def create_object(self, object_info: object_info.ObjectInfo, mesh: sl.Mesh, is_static: bool, **obj_mod):
         """
         Proper object setup
         :param mesh:

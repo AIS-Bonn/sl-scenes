@@ -13,7 +13,7 @@ from PIL import Image
 from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
 
 from sl_cutscenes.output import OverlayWriter
-from sl_cutscenes.OBJECT_INFO import get_objects_by_class_id
+from sl_cutscenes.object_info import get_objects_by_class_id
 
 def main(cfg):
     '''

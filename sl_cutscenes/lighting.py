@@ -4,7 +4,9 @@ import sl_cutscenes.constants as CONSTANTS
 
 
 def get_lightmap(map_name="random"):
-    """ Fetching lightmap given command line argument """
+    """
+    Fetches the right lightmap given command line argument.
+    """
     assert map_name in ["default", "random"] + list(CONSTANTS.ALL_LIGHTMAPS.keys()), f"Unknown lightmap {map_name}..."
 
     if map_name == "random":

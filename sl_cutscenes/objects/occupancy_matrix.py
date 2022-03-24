@@ -13,7 +13,7 @@ from math import ceil
 import torch
 from torch.nn import functional as F
 
-from sl_cutscenes import CONSTANTS as CONSTANTS
+from sl_cutscenes.constants import FLOOR_NAMES
 from sl_cutscenes.utils import utils as utils
 
 
@@ -42,7 +42,7 @@ class OccupancyMatrix:
         """ Obtaining an occupancy matrix with empty and occupied positions"""
         for obj in objects:
             # print(os.path.basename(obj.mesh.filename))
-            if(os.path.basename(obj.mesh.filename) in CONSTANTS.FLOOR_NAMES):
+            if os.path.basename(obj.mesh.filename) in FLOOR_NAMES:
                 continue
             self.update_occupancy_matrix(obj)
         self.add_object_margings()

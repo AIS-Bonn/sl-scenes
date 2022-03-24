@@ -2,8 +2,7 @@ import random
 
 import torch
 
-from sl_cutscenes import CONSTANTS as CONSTANTS
-from sl_cutscenes.constants import SCENARIO_DEFAULTS
+from sl_cutscenes.constants import SCENARIO_DEFAULTS, PI
 from sl_cutscenes.objects.mesh_loader import MeshLoader
 from sl_cutscenes.objects.occupancy_matrix import OccupancyMatrix
 from sl_cutscenes.utils import utils as utils
@@ -47,7 +46,7 @@ class DecoratorLoader:
         pose[2, -1] += obj.mesh.bbox.max[-1]
 
         # Rotating object in yaw direction
-        yaw_angle = random.choice([torch.tensor([i* CONSTANTS.PI / 2]) for i in range(4)])
+        yaw_angle = random.choice([torch.tensor([i*PI / 2]) for i in range(4)])
         angles = torch.cat([yaw_angle, torch.zeros(2)])
         rot_matrix = utils.get_rot_matrix(angles=angles)
         pose[:3, :3] = pose[:3, :3] @ rot_matrix

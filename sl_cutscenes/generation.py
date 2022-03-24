@@ -1,5 +1,5 @@
 """
-Main logic for running the simulator and generating data
+Main logic for running the simulator and generating data.
 """
 import itertools
 import time
@@ -80,7 +80,7 @@ def view_scenario(cfg, renderer, scenario):
 
 def run_and_render_scenario(cfg, renderer, scenario, it):
     """
-    TODO Doc
+    The actual scenario simulation and rendering happens in this method.
     """
 
     # a list of tuples (camera, writers), where each 'writers' itself is a list of tuples (stereo_position, writer)

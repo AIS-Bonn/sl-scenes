@@ -106,7 +106,7 @@ if __name__ == "__main__":
         "--coplanar-stereo-dist",
         type=float,
         default=0.06,
-        help="Distance between the cameras of a stereo pair (both in camera position and camera lookat)."
+        help="Distance between the cameras of a stereo pair in meters (both in camera position and camera lookat)."
     )
     parser.add_argument(
         "--cam-movement-complexity",
@@ -123,13 +123,13 @@ if __name__ == "__main__":
         type=str,
         choices=["physx", "nimble"],
         default="physx",
-        help="Specifies whether to use the default Nvidia PhysX simulator or nimblephysics, "
+        help="BETA: Specifies whether to use the default Nvidia PhysX simulator or nimblephysics, "
              "a differentiable DART fork (feature is in beta)."
     )
     parser.add_argument(
         "--nimble-debug",
         action="store_true",
-        help="If specified, and the nimblephysics engine is used, starts a nimblephysics GUI after scene "
+        help="BETA: If specified, and the nimblephysics engine is used, starts a nimblephysics GUI after scene "
              "simulation/rendering to let the user view the scene as it plays out in nimblephysics."
     )
 

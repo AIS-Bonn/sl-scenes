@@ -7,7 +7,7 @@ import pathlib
 import stillleben as sl
 from itertools import chain
 
-import sl_cutscenes.OBJECT_INFO as OBJECT_INFO
+from sl_cutscenes import object_info
 from sl_cutscenes.scenarios.scenario import Scenario
 import sl_cutscenes.utils.utils as utils
 
@@ -25,7 +25,7 @@ class RobotScenario(Scenario):
 
     def add_static_sl_to_nimble(self):
         for obj in self.scene.objects:
-            obj_info = OBJECT_INFO.get_object_by_class_id(obj.mesh.class_index)
+            obj_info = object_info.get_object_by_class_id(obj.mesh.class_index)
             skel, pos, vel = utils.sl_object_to_nimble(obj, obj_info, debug_mode=self.nimble_debug)
             skel.setPositions(torch.cat(pos))
             self.nimble_world.addSkeleton(skel)
@@ -74,7 +74,7 @@ class RobotScenario(Scenario):
         
     def add_prop_objects_sl_to_nimble(self):
         for obj in self.prop_sl_objects:
-            obj_info = OBJECT_INFO.get_object_by_class_id(obj.mesh.class_index)
+            obj_info = object_info.get_object_by_class_id(obj.mesh.class_index)
             skel, pos, vel = utils.sl_object_to_nimble(obj, obj_info, debug_mode=self.nimble_debug)
             skel.setPositions(torch.cat(pos))
             self.nimble_world.addSkeleton(skel)

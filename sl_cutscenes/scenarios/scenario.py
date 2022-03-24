@@ -17,7 +17,7 @@ from sl_cutscenes.lighting import get_lightmap
 from sl_cutscenes.camera import Camera
 import sl_cutscenes.utils.utils as utils
 import sl_cutscenes.constants as CONSTANTS
-import sl_cutscenes.OBJECT_INFO as OBJECT_INFO
+from sl_cutscenes import object_info
 
 
 class Scenario(object):
@@ -257,7 +257,7 @@ class Scenario(object):
         self.nimble_world.setTimeStep(self.sim_dt)
         positions, velocities = [], []
         for obj in self.scene.objects:
-            obj_info = OBJECT_INFO.get_object_by_class_id(obj.mesh.class_index)
+            obj_info = object_info.get_object_by_class_id(obj.mesh.class_index)
             skel, pos, vel = utils.sl_object_to_nimble(obj, obj_info, debug_mode=self.nimble_debug)
             self.nimble_world.addSkeleton(skel)
             positions.extend(pos)
@@ -289,7 +289,7 @@ class Scenario(object):
             angular_velocity, obj.linear_velocity = vel.split([3, 3])
             obj.angular_velocity = angular_velocity.flip(0)  # flip back from ZYX convention
 
-    def add_object_to_scene(self, obj_info_mesh: Tuple[OBJECT_INFO.ObjectInfo, sl.Mesh], is_static: bool, **obj_mod):
+    def add_object_to_scene(self, obj_info_mesh: Tuple[object_info.ObjectInfo, sl.Mesh], is_static: bool, **obj_mod):
         obj_info, obj_mesh = obj_info_mesh
         obj = self.object_loader.create_object(obj_info, obj_mesh, is_static, **obj_mod)
         self.scene.add_object(obj)

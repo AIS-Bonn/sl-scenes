@@ -2,7 +2,7 @@ import stillleben as sl
 import torch
 import threading
 
-from sl_cutscenes import OBJECT_INFO as OBJECT_INFO
+from sl_cutscenes import object_info
 
 
 class ObjectLoader:
@@ -44,7 +44,7 @@ class ObjectLoader:
             dynamic_objs = [obj for obj in ObjectLoader.loaded_objects.values() if not obj.static]
         return dynamic_objs
 
-    def create_object(self, object_info: OBJECT_INFO.ObjectInfo, mesh: sl.Mesh, is_static: bool, **obj_mod):
+    def create_object(self, object_info: object_info.ObjectInfo, mesh: sl.Mesh, is_static: bool, **obj_mod):
         """
         Proper object setup
         :param obj_mod: Optional object modifiers, specified with a leading 'mod_'.
