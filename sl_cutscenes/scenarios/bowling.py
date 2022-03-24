@@ -6,14 +6,14 @@ import random
 from copy import deepcopy
 
 import sl_cutscenes.utils.utils as utils
-from sl_cutscenes.CONFIG import CONFIG
-import sl_cutscenes.CONSTANTS as CONSTANTS
+from sl_cutscenes.constants import SCENARIO_DEFAULTS
+import sl_cutscenes.constants as CONSTANTS
 from sl_cutscenes.scenarios.scenario import Scenario
 
 class BowlingScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Bowling"
-        self.config = CONFIG["scenes"]["bowling"]
+        self.config = SCENARIO_DEFAULTS["scenes"]["bowling"]
         self.prep_time = 1.000  # during this time (in s), the scene will not be rendered
         self.bowling_ball_loaded = False
         super(BowlingScenario, self).__init__(cfg, scene)   # also calls reset_sim()

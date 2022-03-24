@@ -6,15 +6,15 @@ import random
 import torch
 
 import sl_cutscenes.utils.utils as utils
-import sl_cutscenes.CONSTANTS as CONSTANTS
-from sl_cutscenes.CONFIG import CONFIG
+import sl_cutscenes.constants as CONSTANTS
+from sl_cutscenes.constants import SCENARIO_DEFAULTS
 from sl_cutscenes.scenarios.scenario import Scenario
 
 
 class ThrowScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Throw"
-        self.config = CONFIG["scenes"]["throw"]
+        self.config = SCENARIO_DEFAULTS["scenes"]["throw"]
         self.prep_time = 0  # during this time (in s), the scene will not be rendered
         self.meshes_loaded = False
         self.bowling_ball_loaded = False

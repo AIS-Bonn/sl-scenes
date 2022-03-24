@@ -15,7 +15,7 @@ import torch
 import argparse
 import stillleben as sl
 
-import sl_cutscenes.CONSTANTS as CONSTANTS
+import sl_cutscenes.constants as CONSTANTS
 import sl_cutscenes.OBJECT_INFO as OBJECT_INFO
 import nimblephysics as nimble
 from pathlib import Path

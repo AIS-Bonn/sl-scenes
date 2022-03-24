@@ -4,7 +4,7 @@ import argparse
 import sl_cutscenes.utils.utils as utils
 from sl_cutscenes import generate
 from sl_cutscenes.scenarios import SCENARIOS
-from sl_cutscenes.CONSTANTS import ALL_LIGHTMAPS
+from sl_cutscenes.constants import ALL_LIGHTMAPS
 
 if __name__ == "__main__":
     os.system("cls" if os.name == "nt" else "clear")

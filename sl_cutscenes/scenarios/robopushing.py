@@ -4,8 +4,8 @@ Robopushing Scenario: Objects free-fall on top of a table, two robots push them 
 import random
 import torch
 
-import sl_cutscenes.CONSTANTS as CONSTANTS
-from sl_cutscenes.CONFIG import CONFIG
+import sl_cutscenes.constants as CONSTANTS
+from sl_cutscenes.constants import SCENARIO_DEFAULTS
 from sl_cutscenes.scenarios.robot_scenario import RobotScenario
 import sl_cutscenes.utils.utils as utils
 
@@ -13,7 +13,7 @@ import sl_cutscenes.utils.utils as utils
 class RobopushingScenario(RobotScenario):
     def __init__(self, cfg, scene):
         self.name = "Robopushing"
-        self.config = CONFIG["scenes"]["robopushing"]
+        self.config = SCENARIO_DEFAULTS["scenes"]["robopushing"]
         self.prep_time = 0.000  # during this time (in s), the scene will not be rendered
         super(RobopushingScenario, self).__init__(cfg, scene)   # also calls reset_sim()
 

@@ -5,8 +5,8 @@ import random
 import numpy as np
 import torch
 
-import sl_cutscenes.CONSTANTS as CONSTANTS
-from sl_cutscenes.CONFIG import CONFIG
+import sl_cutscenes.constants as CONSTANTS
+from sl_cutscenes.constants import SCENARIO_DEFAULTS
 from sl_cutscenes.scenarios.scenario import Scenario
 
 
@@ -14,7 +14,7 @@ class StackScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Stack"
         self.prep_time = 0.002  # during this time (in s), the scene will not be rendered
-        self.config = CONFIG["scenes"]["stack"]
+        self.config = SCENARIO_DEFAULTS["scenes"]["stack"]
         super(StackScenario, self).__init__(cfg, scene)   # also calls reset_sim()
 
     def can_render(self):

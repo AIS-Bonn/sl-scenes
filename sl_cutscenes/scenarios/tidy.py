@@ -6,15 +6,15 @@ import torch
 import random
 import stillleben as sl
 
-from sl_cutscenes.CONFIG import CONFIG
-import sl_cutscenes.CONSTANTS as CONSTANTS
+from sl_cutscenes.constants import SCENARIO_DEFAULTS
+import sl_cutscenes.constants as CONSTANTS
 from sl_cutscenes.scenarios.scenario import Scenario
 
 
 class TidyScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Tidy"
-        self.config = CONFIG["scenes"]["tidy"]
+        self.config = SCENARIO_DEFAULTS["scenes"]["tidy"]
         self.prep_time = 1.000  # during this time (in s), the scene will not be rendered
         self.remaining_pause = 0.000  # pause time remaining for the gripper
         self.allow_multiple_cameras = False

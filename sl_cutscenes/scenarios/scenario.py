@@ -16,7 +16,7 @@ from sl_cutscenes.objects.decorator_loader import DecoratorLoader
 from sl_cutscenes.lighting import get_lightmap
 from sl_cutscenes.camera import Camera
 import sl_cutscenes.utils.utils as utils
-import sl_cutscenes.CONSTANTS as CONSTANTS
+import sl_cutscenes.constants as CONSTANTS
 import sl_cutscenes.OBJECT_INFO as OBJECT_INFO
 
 

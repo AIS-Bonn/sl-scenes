@@ -1,10 +1,10 @@
 import numpy as np
 import torch
 from typing import List
-from sl_cutscenes.CONFIG import CONFIG
+from sl_cutscenes.constants import SCENARIO_DEFAULTS
 from sl_cutscenes.utils.camera_utils import ConstFunc, LinFunc, LinFuncOnce, SinFunc, TanhFunc
 
-camera_movement_constraints = CONFIG["camera_movement"]
+camera_movement_constraints = SCENARIO_DEFAULTS["camera_movement"]
 
 
 class Camera(object):

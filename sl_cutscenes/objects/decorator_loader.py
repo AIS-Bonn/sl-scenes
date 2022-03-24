@@ -3,7 +3,7 @@ import random
 import torch
 
 from sl_cutscenes import CONSTANTS as CONSTANTS
-from sl_cutscenes.CONFIG import CONFIG
+from sl_cutscenes.constants import SCENARIO_DEFAULTS
 from sl_cutscenes.objects.mesh_loader import MeshLoader
 from sl_cutscenes.objects.occupancy_matrix import OccupancyMatrix
 from sl_cutscenes.utils import utils as utils
@@ -17,7 +17,7 @@ class DecoratorLoader:
 
     def __init__(self, scene):
         """ Object initializer """
-        self.config = CONFIG["decorator"]
+        self.config = SCENARIO_DEFAULTS["decorator"]
         decorations = self.config["decorations"]
         bounds = self.config["bounds"]
         self.bounds = bounds

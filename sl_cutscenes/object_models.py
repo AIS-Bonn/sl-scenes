@@ -5,8 +5,8 @@ from typing import List
 
 from sl_cutscenes.objects.occupancy_matrix import OccupancyMatrix
 import sl_cutscenes.utils.utils as utils
-import sl_cutscenes.CONSTANTS as CONSTANTS
-from sl_cutscenes.CONFIG import CONFIG
+import sl_cutscenes.constants as CONSTANTS
+from sl_cutscenes.constants import SCENARIO_DEFAULTS
 import sl_cutscenes.OBJECT_INFO as OBJECT_INFO
 
 
@@ -137,7 +137,7 @@ class DecoratorLoader:
 
     def __init__(self, scene):
         """ Object initializer """
-        self.config = CONFIG["decorator"]
+        self.config = SCENARIO_DEFAULTS["decorator"]
         decorations = self.config["decorations"]
         bounds = self.config["bounds"]
         self.bounds = bounds

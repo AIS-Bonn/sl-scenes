@@ -4,15 +4,15 @@ Tabletop Scenario: Objects are left to free-fall on top of a table
 import random
 import torch
 
-import sl_cutscenes.CONSTANTS as CONSTANTS
-from sl_cutscenes.CONFIG import CONFIG
+import sl_cutscenes.constants as CONSTANTS
+from sl_cutscenes.constants import SCENARIO_DEFAULTS
 from sl_cutscenes.scenarios.scenario import Scenario
 
 
 class TabletopScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Tabletop"
-        self.config = CONFIG["scenes"]["tabletop"]
+        self.config = SCENARIO_DEFAULTS["scenes"]["tabletop"]
         self.prep_time = 0.000  # during this time (in s), the scene will not be rendered
         super(TabletopScenario, self).__init__(cfg, scene)   # also calls reset_sim()
 

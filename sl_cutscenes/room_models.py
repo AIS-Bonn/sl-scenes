@@ -10,8 +10,8 @@ import sl_cutscenes.utils.utils as utils
 from sl_cutscenes.objects.mesh_loader import MeshLoader
 from sl_cutscenes.objects.object_loader import ObjectLoader
 from sl_cutscenes.objects.occupancy_matrix import OccupancyMatrix
-import sl_cutscenes.CONSTANTS as CONSTANTS
-from sl_cutscenes.CONFIG import CONFIG
+import sl_cutscenes.constants as CONSTANTS
+from sl_cutscenes.constants import SCENARIO_DEFAULTS
 
 
 class RoomAssembler:
@@ -24,7 +24,7 @@ class RoomAssembler:
         """ Module initializer """
         self.pi = torch.acos(torch.zeros(1))
         self.scene = scene
-        self.config = CONFIG["room"]
+        self.config = SCENARIO_DEFAULTS["room"]
 
         self.mesh_loader = MeshLoader()
         self.object_loader = ObjectLoader()
@@ -79,7 +79,7 @@ class RoomAssembler:
         if not self.use_assembled:
             # intializing occupancy matrix for collision avoidance
             self.occ_matrix = OccupancyMatrix(
-                    bounds=CONFIG["decorator"]["bounds"],
+                    bounds=SCENARIO_DEFAULTS["decorator"]["bounds"],
                     objects=self.scene.objects
                 )
             n_objs = random.randint(a=3, b=6)  # TODO: get param from CONFIG

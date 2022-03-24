@@ -6,15 +6,15 @@ import torch
 import random
 from copy import deepcopy
 
-from sl_cutscenes.CONFIG import CONFIG
-import sl_cutscenes.CONSTANTS as CONSTANTS
+from sl_cutscenes.constants import SCENARIO_DEFAULTS
+import sl_cutscenes.constants as CONSTANTS
 from sl_cutscenes.scenarios.scenario import Scenario
 
 
 class BowlScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "Bowl"
-        self.config = CONFIG["scenes"]["bowl"]
+        self.config = SCENARIO_DEFAULTS["scenes"]["bowl"]
         self.prep_time = 0.0  # during this time (in s), the scene will not be rendered
         super(BowlScenario, self).__init__(cfg, scene)   # also calls reset_sim()
 

@@ -6,15 +6,15 @@ import random
 import torch
 
 import sl_cutscenes.utils.utils as utils
-import sl_cutscenes.CONSTANTS as CONSTANTS
-from sl_cutscenes.CONFIG import CONFIG
+import sl_cutscenes.constants as CONSTANTS
+from sl_cutscenes.constants import SCENARIO_DEFAULTS
 from sl_cutscenes.scenarios.scenario import Scenario
 
 
 class DiceRollScenario(Scenario):
     def __init__(self, cfg, scene):
         self.name = "DiceRoll"
-        self.config = CONFIG["scenes"]["dice_roll"]
+        self.config = SCENARIO_DEFAULTS["scenes"]["dice_roll"]
         self.prep_time = 0.002  # during this time (in s), the scene will not be rendered
         super(DiceRollScenario, self).__init__(cfg, scene)
 
