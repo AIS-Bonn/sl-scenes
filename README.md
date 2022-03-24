@@ -19,7 +19,7 @@ following prerequisites:
 
 For installation, executing the following steps:
 
-1. Create a new conda environment with `python>3.6`.
+1. Create a new conda environment with `python>3.6` and switch to the new environment. 
 2. Install `stillleben` as shown [here](https://ais-bonn.github.io/stillleben/installation.html).
 3. Execute the following commands to install `sl-cutscenes`:
 
