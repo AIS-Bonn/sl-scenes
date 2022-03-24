@@ -9,6 +9,7 @@ test.py
 *.jpeg
 *.urdf
 out
+!img/*.jpg
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

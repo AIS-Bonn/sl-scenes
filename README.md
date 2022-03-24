@@ -7,7 +7,41 @@ This way, creating visually diverse video datasets for Computer Vision and Robot
 
 ### Examples
 
-TODO
+<details>
+<summary><b>A collapsing stack of objects</b></summary>
+
+![image1](img/000008.jpg)
+</details>
+
+<details>
+<summary><b>Household items falling onto a pool table</b></summary>
+
+![image2](img/000015_1.jpg)
+</details>
+
+<details>
+<summary><b>Items about to be swept away by a robotic arm</b></summary>
+
+![image3](img/000016_1.jpg)
+</details>
+
+<details>
+<summary><b>Fruits falling into a big bowl</b></summary>
+
+![image4](img/000022.jpg)
+</details>
+
+<details>
+<summary><b>Bowling ball crashing into wooden blocks</b></summary>
+
+![image5](img/000030.jpg)
+</details>
+
+<details>
+<summary><b>Balls falling into a laundry basket</b></summary>
+
+![image6](img/000031.jpg)
+</details>
 
 ### Installation
 
