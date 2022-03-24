@@ -10,7 +10,6 @@ from .tidy import TidyScenario
 from .robopushing import RobopushingScenario
 
 SCENARIOS = {
-    "all": None,
     "ball_box": BallBoxScenario,
     "billards": BillardsScenario,
     "bowl": BowlScenario,
@@ -21,4 +20,4 @@ SCENARIOS = {
     "throw": ThrowScenario,
     "tidy": TidyScenario,
     "robopushing": RobopushingScenario,
-}  #: All available scenarios and the string identifier with which they can be chosen. If the 'all' key (which maps to None) is used, all scenarios are generated.
+}  #: All available scenarios and the string identifier with which they can be chosen. If the 'all' key (which maps to None) is provided as a command line argument, all scenarios are generated.

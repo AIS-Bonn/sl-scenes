@@ -38,7 +38,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--scenario",
         type=str,
-        choices=list(SCENARIOS.keys()),
+        choices=list(SCENARIOS.keys()) + ["all"],
         help="Specify which scenario to create and render.",
     )
     parser.add_argument(
