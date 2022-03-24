@@ -21,15 +21,10 @@ For installation, executing the following steps:
 
 1. Create a new conda environment with `python>3.6` and switch to the new environment. 
 2. Install `stillleben` as shown [here](https://ais-bonn.github.io/stillleben/installation.html).
-3. Execute the following commands to install `sl-cutscenes`:
-
-```
-git clone --recursive THIS REPO
-cd sl-cutscenes
-bash scripts/install_sl.sh
-python setup.py release
-bash scripts/download_external_data.sh
-```
+3. Clone this repo to wherever you want and `cd` into it.
+4. Download the external asset data from [here](https://uni-bonn.sciebo.de/s/Bk9o0sctQmFcddI) 
+   and unpack it into `sl_cutscenes/assets/external_data`.
+5. Install the remaining dependencies and the package: `pip install .`.
 
 ### Usage
 

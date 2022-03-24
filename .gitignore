@@ -9,7 +9,6 @@ test.py
 *.jpeg
 *.urdf
 out
-sl_cutscenes/assets/external_data
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
